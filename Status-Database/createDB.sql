@@ -1,0 +1,1 @@
+create table status(id varchar primary key,fcmToken varchar unique,socketid varchar unique,isonline boolean)
