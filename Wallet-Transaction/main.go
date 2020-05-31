@@ -53,6 +53,10 @@ func handelRequest() {
 	r.HandleFunc("/getState", func(response http.ResponseWriter, request *http.Request) {
 		if request.Method == "GET" {
 
+			jwtToken := request.Header.Get("jwtToken")
+			log.Println(jwtToken)
+			decryptJwtToken(jwtToken)
+			
 			response.Header().Set("Content-type", "application/json")
 
 			userJSON, err := json.Marshal(getState(db))
