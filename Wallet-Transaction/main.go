@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
 )
 
@@ -12,9 +13,29 @@ var r = mux.NewRouter()
 
 var db = Connect()
 
+func decryptJwtToken(tokenString string) {
+	claims := jwt.MapClaims{}
+	_, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+		return []byte("<YOUR VERIFICATION KEY>"), nil
+	})
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	for key, val := range claims {
+		log.Println(key, " -> ", val)
+	}
+}
+
 func handelRequest() {
 	r.HandleFunc("/pay", func(response http.ResponseWriter, request *http.Request) {
+
 		if request.Method == "POST" {
+
+			jwtToken := request.Header.Get("jwtToken")
+			log.Println(jwtToken)
+			decryptJwtToken(jwtToken)
 
 			userJSON, err := json.Marshal(map[string]string{
 				"message": "Wellcome to rec wallet",
