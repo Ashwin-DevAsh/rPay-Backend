@@ -5,6 +5,8 @@ RUN apk add git
 
 RUN go get github.com/gorilla/mux
 RUN go get github.com/lib/pq
+RUN go get github.com/dgrijalva/jwt-go
+
 
 WORKDIR /usr/Wallet-Transaction
 
