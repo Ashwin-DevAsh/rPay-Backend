@@ -1,0 +1,16 @@
+FROM golang:alpine
+
+RUN apk add git
+
+
+RUN go get github.com/gorilla/mux
+RUN go get github.com/lib/pq
+
+COPY . .
+
+
+RUN go build .
+
+EXPOSE 10000
+
+CMD ./Wallet-Transaction

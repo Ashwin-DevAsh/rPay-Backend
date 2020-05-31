@@ -29,3 +29,25 @@ func Connect() *sql.DB {
 
 	return db
 }
+
+func getState(db *sql.DB) map[string]int {
+
+	state := map[string]int{}
+
+	row, err := db.Query("select * from amount")
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	for row.Next() {
+		var id string
+		var balance int
+		row.Scan(&id, &balance)
+		state[id] = balance
+
+	}
+
+	return state
+
+}

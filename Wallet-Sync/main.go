@@ -42,7 +42,7 @@ func main() {
 		if data != nil {
 			updateOnline(db, data["number"], s.ID(), true)
 		}
-
+		s.Emit("doUpdate")
 	})
 
 	server.OnDisconnect("/", func(s socketio.Conn, reason string) {

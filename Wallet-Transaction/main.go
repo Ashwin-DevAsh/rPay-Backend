@@ -10,6 +10,8 @@ import (
 
 var r = mux.NewRouter()
 
+var db = Connect()
+
 func handelRequest() {
 	r.HandleFunc("/pay", func(response http.ResponseWriter, request *http.Request) {
 		if request.Method == "POST" {
@@ -27,11 +29,24 @@ func handelRequest() {
 		}
 	})
 
+	r.HandleFunc("/getState", func(response http.ResponseWriter, request *http.Request) {
+		if request.Method == "GET" {
+
+			response.Header().Set("Content-type", "application/json")
+
+			userJSON, err := json.Marshal(getState(db))
+
+			if err != nil {
+				log.Println(err)
+			}
+
+			response.Write(userJSON)
+		}
+	})
+
 }
 
 func main() {
-
-	db := Connect()
 
 	log.Println(db)
 
