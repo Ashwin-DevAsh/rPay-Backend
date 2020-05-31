@@ -4,7 +4,7 @@ const client = new Client({
     port: 5432,
     user: 'postgres',
     password: process.env.POSTGRES_PASSWORD,
-    database:"status"
+    database:"Rec_Wallet"
   })
 
 client.connect(err=>{

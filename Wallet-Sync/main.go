@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 
 	"net/http"
@@ -20,39 +19,6 @@ func sendNotification(devices []string) {
 	c := fcm.NewFcmClient(serverKey)
 	c.AppendDevices(devices)
 	c.Send()
-}
-
-func connect() *sql.DB {
-	const (
-		host     = "status-database"
-		port     = 5432
-		user     = "postgres"
-		password = "2017PASS"
-		dbname   = "status"
-	)
-
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
-		"password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbname)
-	db, err := sql.Open("postgres", psqlInfo)
-
-	if err != nil {
-		log.Println(err)
-	}
-
-	return db
-}
-
-func updateOnline(db *sql.DB, id string, socketID string, isOnline bool) {
-	insertStatement := `update status set isonline=$3 , socketid=$2 where id=$1`
-	_, err := db.Exec(insertStatement, id, socketID, isOnline)
-	log.Println("UpdatedOnline", err)
-}
-
-func updateOffline(db *sql.DB, socketID string) {
-	insertStatement := `update status set socketid=null , isonline=false where socketid=$1`
-	_, err := db.Exec(insertStatement, socketID)
-	log.Println("UpdatedOffline", err)
 }
 
 func main() {
@@ -85,7 +51,7 @@ func main() {
 
 		var fcmToken string = ""
 
-		err := db.QueryRow("select fcmToken from status where socketid = $1", s.ID()).Scan(&fcmToken)
+		err := db.QueryRow("select fcmToken from info where socketid = $1", s.ID()).Scan(&fcmToken)
 
 		if err == sql.ErrNoRows {
 			log.Println("No Results Found")

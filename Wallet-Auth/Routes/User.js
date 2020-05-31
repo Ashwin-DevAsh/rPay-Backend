@@ -20,46 +20,58 @@ app.post("/addUser",(req,res)=>{
               if(otpDoc && otpDoc.verified){
 
                     Users.findOne({number:user.number}).exec().then((doc)=>{
-                              postgres.query("delete from status where id=$1",
+                            
+                              postgres.query("delete from info where id=$1",
                               [user.number],
                               (err,result)=>{
                                 postgres.query(
-                                    "insert into status values($1,$2,null,null)",
+                                    "insert into info values($1,$2,null,null)",
                                     [user.number,user.fcmToken],
                                     (err,result)=>{
                                       if(!err){  
-                                          if(doc){
-                                              res.json([{message:"User already exist"}])
-                                          }else{
-                                              let userObject = new Users({
-                                                  name:user.name,
-                                                  time:user.time,
-                                                  number:user.number,
-                                                  email:user.email,
-                                                  password:user.password
-                                              })
-                                              jwt.sign(
-                                                  {
-                                                      name:user.name,
-                                                      number:user.number,
-                                                      email:user.email,
-                                                      password:user.password
-                                                  },
-                                                  process.env.PRIVATE_KEY,
-                                                  (err,token)=>{
-                                                      if(err){
-                                                          res.json([{message:err.getName()}])
-                                                      }else{
-                                                          userObject.save().then((result)=>{
-                                                              res.json([{message:"done",token}])
-                                                          }).catch((err)=>{
-                                                              res.json([{message:"failed"}])
-                                                          })
-                                                      }
-          
-                                                  }
+                                          postgres.query(
+                                              "insert into amount values($1,3501000)",
+                                              [user.number],
+                                              (err,result)=>{
+                                                 if(!err){
+                                                    if(doc){
+                                                        res.json([{message:"User already exist"}])
+                                                    }else{
+                                                        let userObject = new Users({
+                                                            name:user.name,
+                                                            time:user.time,
+                                                            number:user.number,
+                                                            email:user.email,
+                                                            password:user.password
+                                                        })
+                                                        jwt.sign(
+                                                            {
+                                                                name:user.name,
+                                                                number:user.number,
+                                                                email:user.email,
+                                                                password:user.password
+                                                            },
+                                                            process.env.PRIVATE_KEY,
+                                                            (err,token)=>{
+                                                                if(err){
+                                                                    res.json([{message:err.getName()}])
+                                                                }else{
+                                                                    userObject.save().then((result)=>{
+                                                                        res.json([{message:"done",token}])
+                                                                    }).catch((err)=>{
+                                                                        res.json([{message:"failed"}])
+                                                                    })
+                                                                }
+                    
+                                                            }
+                                                        )
+                                                    }
+                                                 }else{
+                                                     res.json([{message:err}])
+                                                 }
+                                              }
                                               )
-                                          }
+                                         
                                       }else{
                                           res.json([{message:err}])
                                       }
