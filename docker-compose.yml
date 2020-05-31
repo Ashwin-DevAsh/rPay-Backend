@@ -23,5 +23,5 @@ services:
          build: Wallet-Transaction
          depends_on: [status-database]
          ports: 
-            -10000:10000
+            - 10000:10000
 
