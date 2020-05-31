@@ -8,6 +8,8 @@ RUN go get github.com/googollee/go-socket.io
 RUN go get github.com/lib/pq
 RUN go get github.com/NaySoftware/go-fcm
 
+WORKDIR /usr/Wallet-Sync
+
 
 COPY . .
 
