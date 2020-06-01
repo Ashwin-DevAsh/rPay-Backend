@@ -96,6 +96,7 @@ app.post("/addUser",(req,res)=>{
 
 app.post("/updateFcmToken",(req,res)=>{
     var object = req.body
+    console.log("Update token")
     if(!object.number || !object.fcmToken){
         res.json([{message:"missing parameter"}]) 
     }else{
