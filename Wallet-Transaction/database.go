@@ -34,6 +34,7 @@ func doTransaction(db *sql.DB, from string, to string, amount uint64) bool {
 	_, err := db.Exec("update amount set balance = balance - $1 where id = $2", amount, from)
 
 	if err == nil {
+		log.Println(err)
 		return false
 	}
 
