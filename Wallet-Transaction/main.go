@@ -16,7 +16,7 @@ var db = Connect()
 func decryptJwtToken(tokenString string) {
 	claims := jwt.MapClaims{}
 	_, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
-		return []byte("<YOUR VERIFICATION KEY>"), nil
+		return []byte("DEVASH"), nil
 	})
 
 	if err != nil {
@@ -56,7 +56,7 @@ func handelRequest() {
 			jwtToken := request.Header.Get("jwtToken")
 			log.Println(jwtToken)
 			decryptJwtToken(jwtToken)
-			
+
 			response.Header().Set("Content-type", "application/json")
 
 			userJSON, err := json.Marshal(getState(db))
