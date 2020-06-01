@@ -33,7 +33,7 @@ func Connect() *sql.DB {
 func doTransaction(db *sql.DB, from string, to string, amount uint64) bool {
 	result, errFrom := db.Exec("update amount set balance = balance - $1 where id = $2", amount, from)
 
-	log.Panicln(result)
+	log.Println(result)
 
 	if errFrom != nil {
 		log.Println(errFrom)
