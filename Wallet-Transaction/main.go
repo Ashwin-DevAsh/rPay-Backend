@@ -16,7 +16,7 @@ var db = Connect()
 func decryptJwtToken(tokenString string) {
 	claims := jwt.MapClaims{}
 	_, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
-		return []byte("DEASH"), nil
+		return []byte("DEVASH"), nil
 	})
 
 	if err != nil {
