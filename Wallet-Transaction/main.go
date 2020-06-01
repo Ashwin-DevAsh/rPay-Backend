@@ -13,7 +13,7 @@ var r = mux.NewRouter()
 
 var db = Connect()
 
-func decryptJwtToken(tokenString string) {
+func decryptJwtToken(tokenString string) jwt.MapClaims {
 	claims := jwt.MapClaims{}
 	_, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
 		return []byte("DEVASH"), nil
@@ -21,11 +21,13 @@ func decryptJwtToken(tokenString string) {
 
 	if err != nil {
 		log.Println(err)
+		return nil
 
 	} else {
 		for key, val := range claims {
 			log.Println(key, " -> ", val)
 		}
+		return claims
 	}
 
 }
@@ -55,19 +57,22 @@ func handelRequest() {
 	r.HandleFunc("/getState", func(response http.ResponseWriter, request *http.Request) {
 		if request.Method == "GET" {
 
-			jwtToken := request.Header.Get("jwtToken")
-			log.Println(jwtToken)
-			decryptJwtToken(jwtToken)
-
 			response.Header().Set("Content-type", "application/json")
 
-			userJSON, err := json.Marshal(getState(db))
+			jwtToken := request.Header.Get("jwtToken")
+			log.Println(jwtToken)
+			data := decryptJwtToken(jwtToken)
 
-			if err != nil {
-				log.Println(err)
+			if data != nil {
+				userJSON, err := json.Marshal(getState(db))
+
+				if err != nil {
+					log.Println(err)
+				}
+
+				response.Write(userJSON)
 			}
 
-			response.Write(userJSON)
 		}
 	})
 
