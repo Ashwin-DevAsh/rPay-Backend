@@ -30,6 +30,16 @@ func Connect() *sql.DB {
 	return db
 }
 
+func doTransaction(db *sql.DB, from string, to string, amount uint64) bool {
+	_, err := db.Exec("update amount set balance = balance - $1 where id = $2", amount, from)
+
+	if err == nil {
+		return false
+	}
+
+	return true
+}
+
 func getState(db *sql.DB) map[string]int {
 
 	state := map[string]int{}

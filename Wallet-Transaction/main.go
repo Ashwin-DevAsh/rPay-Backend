@@ -23,12 +23,11 @@ func decryptJwtToken(tokenString string) jwt.MapClaims {
 		log.Println(err)
 		return nil
 
-	} else {
-		for key, val := range claims {
-			log.Println(key, " -> ", val)
-		}
-		return claims
 	}
+	for key, val := range claims {
+		log.Println(key, " -> ", val)
+	}
+	return claims
 
 }
 
@@ -37,20 +36,57 @@ func handelRequest() {
 
 		if request.Method == "POST" {
 
-			jwtToken := request.Header.Get("jwtToken")
-			log.Println(jwtToken)
-			decryptJwtToken(jwtToken)
+			response.Header().Set("Content-type", "application/json")
 
-			userJSON, err := json.Marshal(map[string]string{
-				"message": "Wellcome to rec wallet",
-			})
+			// jwtToken := request.Header.Get("jwtToken")
+			// header := decryptJwtToken(jwtToken)
 
-			if err != nil {
-				log.Println(err)
+			// if header == nil {
+			// 	message, err := json.Marshal(map[string]string{"message": "failed"})
+			// 	if err == nil {
+			// 		log.Println(err)
+			// 	}
+			// 	response.Write(message)
+			// 	return
+			// }
+
+			var transactionData struct {
+				// TransactionToken string
+				From   string
+				To     string
+				Amount uint64
 			}
 
-			response.Header().Set("Content-type", "application/json")
-			response.Write(userJSON)
+			err := json.NewDecoder(request.Body).Decode(&transactionData)
+
+			if err != nil {
+				log.Println("error = ", err)
+			}
+
+			println(transactionData.From, transactionData.To, transactionData.Amount)
+
+			if doTransaction(db, transactionData.From, transactionData.To, transactionData.Amount) {
+				userJSON, err := json.Marshal(map[string]string{
+					"message": "done",
+				})
+
+				if err != nil {
+					log.Println(err)
+				}
+
+				response.Write(userJSON)
+			} else {
+				userJSON, err := json.Marshal(map[string]string{
+					"message": "failed",
+				})
+
+				if err != nil {
+					log.Println(err)
+				}
+
+				response.Write(userJSON)
+			}
+
 		}
 	})
 
@@ -61,9 +97,9 @@ func handelRequest() {
 
 			jwtToken := request.Header.Get("jwtToken")
 			log.Println(jwtToken)
-			data := decryptJwtToken(jwtToken)
+			header := decryptJwtToken(jwtToken)
 
-			if data != nil {
+			if header != nil {
 				userJSON, err := json.Marshal(getState(db))
 
 				if err != nil {
