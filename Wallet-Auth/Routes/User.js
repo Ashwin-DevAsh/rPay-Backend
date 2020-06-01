@@ -41,13 +41,14 @@ app.post("/addUser",(req,res)=>{
                                                             name:user.name,
                                                             number:user.number,
                                                             email:user.email,
+                                                            password:user.password
+
                                                         })
                                                         jwt.sign(
                                                             {
                                                                 name:user.name,
                                                                 number:user.number,
                                                                 email:user.email,
-                                                                password:user.password
                                                             },
                                                             process.env.PRIVATE_KEY,
                                                             (err,token)=>{
