@@ -16,16 +16,18 @@ var db = Connect()
 func decryptJwtToken(tokenString string) {
 	claims := jwt.MapClaims{}
 	_, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
-		return []byte("DEVASH"), nil
+		return []byte("DEASH"), nil
 	})
 
 	if err != nil {
 		log.Println(err)
+
+	} else {
+		for key, val := range claims {
+			log.Println(key, " -> ", val)
+		}
 	}
 
-	for key, val := range claims {
-		log.Println(key, " -> ", val)
-	}
 }
 
 func handelRequest() {

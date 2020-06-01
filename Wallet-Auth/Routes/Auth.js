@@ -52,7 +52,6 @@ app.post("/setOtp",(req,res)=>{
                                             name:doc.name,
                                             number:doc.number,
                                             email:doc.email,
-                                            password:doc.password
                                         },
                                         process.env.PRIVATE_KEY,
                                         (err,token)=>{

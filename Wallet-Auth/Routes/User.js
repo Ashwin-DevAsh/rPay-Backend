@@ -39,10 +39,8 @@ app.post("/addUser",(req,res)=>{
                                                     }else{
                                                         let userObject = new Users({
                                                             name:user.name,
-                                                            time:user.time,
                                                             number:user.number,
                                                             email:user.email,
-                                                            password:user.password
                                                         })
                                                         jwt.sign(
                                                             {
