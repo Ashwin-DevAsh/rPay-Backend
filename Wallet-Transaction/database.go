@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"time"
 
 	_ "github.com/lib/pq"
 )
@@ -31,9 +32,7 @@ func Connect() *sql.DB {
 }
 
 func doTransaction(db *sql.DB, from string, to string, amount uint64) bool {
-	result, errFrom := db.Exec("update amount set balance = balance - $1 where id = $2", amount, from)
-
-	log.Println(result)
+	_, errFrom := db.Exec("update amount set balance = balance - $1 where id = $2", amount, from)
 
 	if errFrom != nil {
 		log.Println(errFrom)
@@ -46,8 +45,18 @@ func doTransaction(db *sql.DB, from string, to string, amount uint64) bool {
 		db.Exec("update amount set balance = balance + $1 where id = $2", amount, from)
 		return false
 	}
-	return true
 
+	dt := time.Now()
+
+	_, errTrans := db.Exec("insert into amount(transactionTime,fromID,toID,amount) values($1,$2,$3,$4)", dt.Format("01-02-2006 15:04:05"), from, to, amount)
+
+	if errTrans != nil {
+		db.Exec("update amount set balance = balance + $1 where id = $2", amount, from)
+		db.Exec("update amount set balance = balance - $1 where id = $2", amount, to)
+		return false
+	}
+
+	return true
 }
 
 func getState(db *sql.DB) map[string]int {
