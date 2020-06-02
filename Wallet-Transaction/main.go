@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
@@ -38,23 +39,23 @@ func handelRequest() {
 
 			response.Header().Set("Content-type", "application/json")
 
-			// jwtToken := request.Header.Get("jwtToken")
-			// header := decryptJwtToken(jwtToken)
+			jwtToken := request.Header.Get("jwtToken")
+			header := decryptJwtToken(jwtToken)
 
-			// if header == nil {
-			// 	message, err := json.Marshal(map[string]string{"message": "failed"})
-			// 	if err == nil {
-			// 		log.Println(err)
-			// 	}
-			// 	response.Write(message)
-			// 	return
-			// }
+			if header == nil {
+				message, err := json.Marshal(map[string]string{"message": "failed"})
+				if err == nil {
+					log.Println(err)
+				}
+				response.Write(message)
+				return
+			}
 
 			var transactionData struct {
 				// TransactionToken string
 				From   string
 				To     string
-				Amount uint64
+				Amount string
 			}
 
 			err := json.NewDecoder(request.Body).Decode(&transactionData)
@@ -65,16 +66,21 @@ func handelRequest() {
 
 			println(transactionData.From, transactionData.To, transactionData.Amount)
 
-			if doTransaction(db, transactionData.From, transactionData.To, transactionData.Amount) {
+			amount, _ := strconv.ParseUint(transactionData.Amount, 10, 64)
+
+			if doTransaction(db, transactionData.From, transactionData.To, amount) {
 				userJSON, err := json.Marshal(map[string]string{
 					"message": "done",
 				})
 
 				if err != nil {
 					log.Println(err)
+
+				} else {
+					response.Write(userJSON)
+
 				}
 
-				response.Write(userJSON)
 			} else {
 				userJSON, err := json.Marshal(map[string]string{
 					"message": "failed",
