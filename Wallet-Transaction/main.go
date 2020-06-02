@@ -47,6 +47,7 @@ func handelRequest() {
 				if err == nil {
 					log.Println(err)
 				}
+				log.Println("Header error")
 				response.Write(message)
 				return
 			}
@@ -57,6 +58,8 @@ func handelRequest() {
 				To     string
 				Amount string
 			}
+
+			log.Println(request.Body)
 
 			err := json.NewDecoder(request.Body).Decode(&transactionData)
 
