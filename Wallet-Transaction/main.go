@@ -39,21 +39,20 @@ func handelRequest() {
 
 			response.Header().Set("Content-type", "application/json")
 
-			jwtToken := request.Header.Get("jwtToken")
-			header := decryptJwtToken(jwtToken)
+			// jwtToken := request.Header.Get("jwtToken")
+			// header := decryptJwtToken(jwtToken)
 
-			if header == nil {
-				message, err := json.Marshal(map[string]string{"message": "failed"})
-				if err == nil {
-					log.Println(err)
-				}
-				log.Println("Header error")
-				response.Write(message)
-				return
-			}
+			// if header == nil {
+			// 	message, err := json.Marshal(map[string]string{"message": "failed"})
+			// 	if err == nil {
+			// 		log.Println(err)
+			// 	}
+			// 	log.Println("Header error")
+			// 	response.Write(message)
+			// 	return
+			// }
 
 			var transactionData struct {
-				// TransactionToken string
 				From   string
 				To     string
 				Amount string
