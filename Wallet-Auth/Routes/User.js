@@ -96,11 +96,11 @@ app.post("/addUser",(req,res)=>{
 
 app.post("/updateFcmToken",(req,res)=>{
     var object = req.body
-    console.log("Update token")
+    console.log("Update token = ",object)
     if(!object.number || !object.fcmToken){
         res.json([{message:"missing parameter"}]) 
     }else{
-        postgres.query("update status set fcmToken=$2 where id=$1",
+        postgres.query("update info set fcmToken=$2 where id=$1",
                       [object.number,object.fcmToken],
                       (err,result)=>{
                           if(err){
