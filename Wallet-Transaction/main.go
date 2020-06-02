@@ -64,6 +64,7 @@ func handelRequest() {
 
 			if err != nil {
 				log.Println("error = ", err)
+				return
 			}
 
 			println(transactionData.From, transactionData.To, transactionData.Amount)
