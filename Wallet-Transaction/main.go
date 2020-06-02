@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"strconv"
@@ -60,7 +61,17 @@ func handelRequest() {
 
 			log.Println(request.Body)
 
-			err := json.NewDecoder(request.Body).Decode(&transactionData)
+			// err := json.NewDecoder(request.Body).Decode(&transactionData)
+
+			body, err := ioutil.ReadAll(request.Body)
+			if err != nil {
+				panic(err)
+			}
+			log.Println(string(body))
+			err = json.Unmarshal(body, &transactionData)
+			if err != nil {
+				panic(err)
+			}
 
 			if err != nil {
 				log.Println("error = ", err)
