@@ -107,7 +107,7 @@ type Transaction struct {
 	ToID            string
 	TransactionID   int
 	TransactionTime string
-	Amount          int
+	Amount          string
 }
 
 func getTransaction(sb *sql.DB, number string) []Transaction {
