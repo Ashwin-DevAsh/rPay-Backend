@@ -103,8 +103,8 @@ func getState(db *sql.DB) map[string]int {
 
 // Transaction ...
 type Transaction struct {
-	From            string
-	To              string
+	FromID          string
+	ToID            string
 	TransactionID   int
 	TransactionTime string
 	Amount          int
@@ -122,7 +122,7 @@ func getTransaction(sb *sql.DB, number string) []Transaction {
 
 	for row.Next() {
 		var transaction Transaction
-		row.Scan(&transaction.TransactionID, &transaction.TransactionTime, &transaction.From, &transaction.To, &transaction.Amount)
+		row.Scan(&transaction.TransactionID, &transaction.TransactionTime, &transaction.FromID, &transaction.ToID, &transaction.Amount)
 		transactions = append(transactions, transaction)
 	}
 
