@@ -106,7 +106,7 @@ type Transaction struct {
 	FromID          string
 	ToID            string
 	TransactionID   int
-	TransactionTime string
+	TransactionTime interface{}
 	Amount          string
 }
 
@@ -122,7 +122,7 @@ func getTransaction(sb *sql.DB, number string) []Transaction {
 
 	for row.Next() {
 		var transaction Transaction
-		row.Scan(&transaction)
+		row.Scan(&transaction.TransactionID, &transaction.TransactionTime, &transaction.FromID, &transaction.ToID, &transaction.Amount)
 		transactions = append(transactions, transaction)
 	}
 
