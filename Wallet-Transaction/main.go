@@ -108,7 +108,7 @@ func handelRequest() {
 			log.Println(jwtToken)
 			header := decryptJwtToken(jwtToken)
 
-			if header != nil || true {
+			if header != nil {
 				userJSON, err := json.Marshal(getState(db))
 
 				if err != nil {
@@ -134,7 +134,7 @@ func handelRequest() {
 			log.Println(jwtToken)
 			header := decryptJwtToken(jwtToken)
 
-			if header != nil || true {
+			if header != nil {
 				userJSON, err := json.Marshal(getMyState(db, number))
 
 				if err != nil {
