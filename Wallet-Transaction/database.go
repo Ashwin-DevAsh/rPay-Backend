@@ -121,9 +121,17 @@ func getTransaction(sb *sql.DB, number string) []Transaction {
 	}
 
 	for row.Next() {
-		var transaction Transaction
-		row.Scan(&transaction.TransactionID, &transaction.TransactionTime, &transaction.FromID, &transaction.ToID, &transaction.Amount)
-		transactions = append(transactions, transaction)
+
+		var FromID string
+		var ToID string
+		var TransactionID int
+		var TransactionTime string
+		var Amount string
+
+		row.Scan(&FromID, &TransactionTime, &FromID, &ToID, &Amount)
+		transactions = append(transactions, Transaction{
+			FromID, ToID, TransactionID, TransactionTime, Amount,
+		})
 	}
 
 	return transactions
