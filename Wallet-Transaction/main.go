@@ -147,6 +147,32 @@ func handelRequest() {
 		}
 	})
 
+	r.HandleFunc("/getTransaction", func(response http.ResponseWriter, request *http.Request) {
+		if request.Method == "GET" {
+
+			response.Header().Set("Content-type", "application/json")
+
+			number := request.URL.Query().Get("number")
+
+			log.Println(number)
+
+			jwtToken := request.Header.Get("jwtToken")
+			log.Println(jwtToken)
+			header := decryptJwtToken(jwtToken)
+
+			if header != nil {
+				userJSON, err := json.Marshal(getTransaction(db, number))
+
+				if err != nil {
+					log.Println(err)
+				}
+
+				response.Write(userJSON)
+			}
+
+		}
+	})
+
 }
 
 func main() {

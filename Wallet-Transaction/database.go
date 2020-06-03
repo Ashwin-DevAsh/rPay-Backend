@@ -100,3 +100,31 @@ func getState(db *sql.DB) map[string]int {
 	return state
 
 }
+
+// Transaction ...
+type Transaction struct {
+	From            string
+	To              string
+	TransactionID   int
+	TransactionTime string
+	Amount          int
+}
+
+func getTransaction(sb *sql.DB, number string) []Transaction {
+
+	transactions := []Transaction{}
+
+	row, err := db.Query("select * from transactions where fromID = $1 or toID = $1", number)
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	for row.Next() {
+		var transaction Transaction
+		row.Scan(&transaction.TransactionID, &transaction.TransactionTime, &transaction.From, &transaction.To, &transaction.Amount)
+		transactions = append(transactions, transaction)
+	}
+
+	return transactions
+}
