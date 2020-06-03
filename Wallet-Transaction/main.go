@@ -128,6 +128,8 @@ func handelRequest() {
 
 			number := request.URL.Query().Get("number")
 
+			log.Println(number)
+
 			jwtToken := request.Header.Get("jwtToken")
 			log.Println(jwtToken)
 			header := decryptJwtToken(jwtToken)
