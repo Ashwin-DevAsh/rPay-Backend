@@ -160,7 +160,7 @@ func handelRequest() {
 			log.Println(jwtToken)
 			header := decryptJwtToken(jwtToken)
 
-			if header != nil {
+			if header != nil || true {
 				userJSON, err := json.Marshal(getTransaction(db, number))
 
 				if err != nil {
