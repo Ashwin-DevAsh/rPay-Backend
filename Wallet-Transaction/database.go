@@ -63,7 +63,7 @@ func getMyState(db *sql.DB, number string) map[string]int {
 
 	state := map[string]int{}
 
-	row, err := db.Query("select * from amount where id=$1")
+	row, err := db.Query("select * from amount where id=$1", number)
 
 	if err != nil {
 		log.Println(err)
