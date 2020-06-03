@@ -59,6 +59,26 @@ func doTransaction(db *sql.DB, from string, to string, amount uint64) bool {
 	return true
 }
 
+func getMyState(db *sql.DB, number string) map[string]int {
+
+	state := map[string]int{}
+
+	row, err := db.Query("select * from amount where id=$1")
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	for row.Next() {
+		var id string
+		var balance int
+		row.Scan(&id, &balance)
+		state[id] = balance
+	}
+
+	return state
+}
+
 func getState(db *sql.DB) map[string]int {
 
 	state := map[string]int{}

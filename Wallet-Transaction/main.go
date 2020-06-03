@@ -39,18 +39,18 @@ func handelRequest() {
 
 			response.Header().Set("Content-type", "application/json")
 
-			// jwtToken := request.Header.Get("jwtToken")
-			// header := decryptJwtToken(jwtToken)
+			jwtToken := request.Header.Get("jwtToken")
+			header := decryptJwtToken(jwtToken)
 
-			// if header == nil {
-			// 	message, err := json.Marshal(map[string]string{"message": "failed"})
-			// 	if err == nil {
-			// 		log.Println(err)
-			// 	}
-			// 	log.Println("Header error")
-			// 	response.Write(message)
-			// 	return
-			// }
+			if header == nil {
+				message, err := json.Marshal(map[string]string{"message": "failed"})
+				if err == nil {
+					log.Println(err)
+				}
+				log.Println("Header error")
+				response.Write(message)
+				return
+			}
 
 			var transactionData struct {
 				From   string
@@ -110,6 +110,30 @@ func handelRequest() {
 
 			if header != nil {
 				userJSON, err := json.Marshal(getState(db))
+
+				if err != nil {
+					log.Println(err)
+				}
+
+				response.Write(userJSON)
+			}
+
+		}
+	})
+
+	r.HandleFunc("/getMyState", func(response http.ResponseWriter, request *http.Request) {
+		if request.Method == "GET" {
+
+			response.Header().Set("Content-type", "application/json")
+
+			number := request.URL.Query().Get("number")
+
+			jwtToken := request.Header.Get("jwtToken")
+			log.Println(jwtToken)
+			header := decryptJwtToken(jwtToken)
+
+			if header != nil {
+				userJSON, err := json.Marshal(getMyState(db, number))
 
 				if err != nil {
 					log.Println(err)
