@@ -103,11 +103,11 @@ func getState(db *sql.DB) map[string]int {
 
 // Transaction ...
 type Transaction struct {
-	FromID          string
-	ToID            string
-	TransactionID   int
+	FromID          interface{}
+	ToID            interface{}
+	TransactionID   interface{}
 	TransactionTime interface{}
-	Amount          string
+	Amount          interface{}
 }
 
 func getTransaction(sb *sql.DB, number string) []Transaction {
