@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+
 	_ "github.com/lib/pq"
 )
 
@@ -28,9 +29,9 @@ func connect() *sql.DB {
 	return db
 }
 
-func updateOnline(db *sql.DB, id string, socketID string, isOnline bool) {
-	insertStatement := `update info set isonline=$3 , socketid=$2 where id=$1`
-	_, err := db.Exec(insertStatement, id, socketID, isOnline)
+func updateOnline(db *sql.DB, id string, socketID string, fcmToken string, isOnline bool) {
+	insertStatement := `update info set isonline=$4 , socketid=$2 , fcmToken = $3  where id=$1`
+	_, err := db.Exec(insertStatement, id, socketID, fcmToken, isOnline)
 	log.Println("UpdatedOnline", err)
 }
 

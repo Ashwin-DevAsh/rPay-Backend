@@ -40,7 +40,7 @@ func main() {
 	server.OnEvent("/", "getInformation", func(s socketio.Conn, data map[string]string) {
 		log.Println(s.ID(), " = ", data)
 		if data != nil {
-			updateOnline(db, data["number"], s.ID(), true)
+			updateOnline(db, data["number"], s.ID(), data["fcmToken"], true)
 		}
 		s.Emit("doUpdate")
 	})
