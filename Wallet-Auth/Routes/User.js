@@ -21,7 +21,7 @@ app.post("/addUser",(req,res)=>{
 
                     Users.findOne({number:user.number}).exec().then((doc)=>{
                             
-                              postgres.query("delete from info where id=$1;delete from amount where id=$1;delete from transactions where id=$1",
+                              postgres.query("delete from info where id=$1;",
                               [user.number],
                               (err,result)=>{
                                 postgres.query(
