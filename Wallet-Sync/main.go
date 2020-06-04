@@ -60,7 +60,7 @@ func main() {
 			log.Println(err)
 		}
 
-		log.Println(fcmToken)
+		log.Println("the token is = ", fcmToken)
 
 		if fcmToken != "" {
 			sendNotification([]string{fcmToken})
