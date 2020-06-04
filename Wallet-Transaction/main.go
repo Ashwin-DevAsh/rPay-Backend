@@ -58,8 +58,6 @@ func handelRequest() {
 				Amount string
 			}
 
-			log.Println(request.Body)
-
 			err := json.NewDecoder(request.Body).Decode(&transactionData)
 
 			if err != nil {
@@ -105,7 +103,6 @@ func handelRequest() {
 			response.Header().Set("Content-type", "application/json")
 
 			jwtToken := request.Header.Get("jwtToken")
-			log.Println(jwtToken)
 			header := decryptJwtToken(jwtToken)
 
 			if header != nil {
@@ -131,7 +128,6 @@ func handelRequest() {
 			log.Println(number)
 
 			jwtToken := request.Header.Get("jwtToken")
-			log.Println(jwtToken)
 			header := decryptJwtToken(jwtToken)
 
 			if header != nil {
@@ -157,7 +153,6 @@ func handelRequest() {
 			log.Println(number)
 
 			jwtToken := request.Header.Get("jwtToken")
-			log.Println(jwtToken)
 			header := decryptJwtToken(jwtToken)
 
 			if header != nil || true {
