@@ -147,7 +147,7 @@ func handelRequest() {
 		}
 	})
 
-	r.HandleFunc("/getTransaction", func(response http.ResponseWriter, request *http.Request) {
+	r.HandleFunc("/getTransactions", func(response http.ResponseWriter, request *http.Request) {
 		if request.Method == "GET" {
 
 			response.Header().Set("Content-type", "application/json")
@@ -161,7 +161,7 @@ func handelRequest() {
 			header := decryptJwtToken(jwtToken)
 
 			if header != nil || true {
-				userJSON, err := json.Marshal(getTransaction(db, number))
+				userJSON, err := json.Marshal(getTransactions(db, number))
 
 				if err != nil {
 					log.Println(err)

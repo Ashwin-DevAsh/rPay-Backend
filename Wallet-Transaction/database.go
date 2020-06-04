@@ -110,7 +110,7 @@ type Transaction struct {
 	Amount          interface{}
 }
 
-func getTransaction(sb *sql.DB, number string) []Transaction {
+func getTransactions(sb *sql.DB, number string) []Transaction {
 
 	log.Println("getting data of ", number)
 
