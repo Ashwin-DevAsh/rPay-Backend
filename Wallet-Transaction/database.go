@@ -112,16 +112,17 @@ type Transaction struct {
 
 func getTransaction(sb *sql.DB, number string) []Transaction {
 
+	log.Println("getting data of ", number)
+
 	transactions := []Transaction{}
 
-	row, err := db.Query("select * from transactions")
+	row, err := db.Query("select * from transactions where fromid = $1 or toid = $1", number)
 
 	if err != nil {
 		log.Println(err)
 	}
 
 	for row.Next() {
-		log.Println("Row 1")
 		var transaction Transaction
 		row.Scan(&transaction.TransactionID, &transaction.TransactionTime, &transaction.FromID, &transaction.ToID, &transaction.Amount)
 		transactions = append(transactions, transaction)
