@@ -50,7 +50,7 @@ func main() {
 		log.Println(" disconnected : ", s.ID())
 		s.LeaveAll()
 
-		var fcmToken string = ""
+		var fcmToken string
 
 		err := db.QueryRow("select fcmToken from info where socketid = $1", s.ID()).Scan(&fcmToken)
 
@@ -58,7 +58,7 @@ func main() {
 			log.Println("No Results Found")
 		}
 		if err != nil {
-			log.Println(err)
+			log.Println("erroe while disconnect ", err)
 		}
 
 		log.Println("the token is = ", fcmToken)
