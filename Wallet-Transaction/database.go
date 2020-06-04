@@ -114,14 +114,14 @@ func getTransaction(sb *sql.DB, number string) []Transaction {
 
 	transactions := []Transaction{}
 
-	row, err := db.Query("select * from transactions", number)
+	row, err := db.Query("select * from transactions")
 
 	if err != nil {
 		log.Println(err)
 	}
 
 	for row.Next() {
-		log.Panicln("Row 1")
+		log.Println("Row 1")
 		var transaction Transaction
 		row.Scan(&transaction.TransactionID, &transaction.TransactionTime, &transaction.FromID, &transaction.ToID, &transaction.Amount)
 		transactions = append(transactions, transaction)
