@@ -56,6 +56,7 @@ func handelRequest() {
 				From   string
 				To     string
 				Amount string
+				ToName string
 			}
 
 			err := json.NewDecoder(request.Body).Decode(&transactionData)
@@ -69,7 +70,7 @@ func handelRequest() {
 
 			amount, _ := strconv.ParseUint(transactionData.Amount, 10, 64)
 
-			if doTransaction(db, transactionData.From, transactionData.To, amount) {
+			if doTransaction(db, transactionData.From, transactionData.To, transactionData.ToName, amount) {
 				userJSON, err := json.Marshal(map[string]string{
 					"message": "done",
 				})

@@ -31,7 +31,7 @@ func Connect() *sql.DB {
 	return db
 }
 
-func doTransaction(db *sql.DB, from string, to string, amount uint64) bool {
+func doTransaction(db *sql.DB, from string, to string, toName string, amount uint64) bool {
 	_, errFrom := db.Exec("update amount set balance = balance - $1 where id = $2", amount, from)
 
 	if errFrom != nil {
@@ -48,7 +48,7 @@ func doTransaction(db *sql.DB, from string, to string, amount uint64) bool {
 
 	dt := time.Now()
 
-	_, errTrans := db.Exec("insert into transactions(transactionTime,fromID,toID,amount) values($1,$2,$3,$4)", dt.Format("01-02-2006 15:04:05"), from, to, amount)
+	_, errTrans := db.Exec("insert into transactions(transactionTime,fromID,toID,toName,amount) values($1,$2,$3,$4,$5)", dt.Format("01-02-2006 15:04:05"), from, to, toName, amount)
 
 	if errTrans != nil {
 		db.Exec("update amount set balance = balance + $1 where id = $2", amount, from)
