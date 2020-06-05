@@ -32,6 +32,16 @@ func decryptJwtToken(tokenString string) jwt.MapClaims {
 
 }
 
+func notify(from string, to string, amount string) {
+	var fcmToken string
+	db.QueryRow("select fcmtoken from info where id=$1", to).Scan(&fcmToken)
+	sendNotification([]string{fcmToken}, map[string]string{
+		"type":   "receivedMoney",
+		"from":   from,
+		"amount": amount,
+	})
+}
+
 func handelRequest() {
 	r.HandleFunc("/pay", func(response http.ResponseWriter, request *http.Request) {
 
@@ -79,6 +89,7 @@ func handelRequest() {
 					log.Println(err)
 
 				} else {
+					notify(transactionData.From, transactionData.To, transactionData.Amount)
 					response.Write(userJSON)
 
 				}
