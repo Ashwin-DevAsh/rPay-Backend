@@ -31,7 +31,7 @@ func Connect() *sql.DB {
 	return db
 }
 
-func doTransaction(db *sql.DB, from string, to string, toName string, amount uint64) bool {
+func doTransaction(db *sql.DB, from string, fromName string, to string, toName string, amount uint64) bool {
 	_, errFrom := db.Exec("update amount set balance = balance - $1 where id = $2", amount, from)
 
 	if errFrom != nil {
@@ -48,7 +48,9 @@ func doTransaction(db *sql.DB, from string, to string, toName string, amount uin
 
 	dt := time.Now()
 
-	_, errTrans := db.Exec("insert into transactions(transactionTime,fromID,toID,toName,amount) values($1,$2,$3,$4,$5)", dt.Format("01-02-2006 15:04:05"), from, to, toName, amount)
+	_, errTrans :=
+		db.Exec("insert into transactions(transactionTime,fromID,toID,toName,amount,fromName) values($1,$2,$3,$4,$5,$6)",
+			dt.Format("01-02-2006 15:04:05"), from, to, toName, amount, fromName)
 
 	if errTrans != nil {
 		db.Exec("update amount set balance = balance + $1 where id = $2", amount, from)
@@ -109,6 +111,7 @@ type Transaction struct {
 	TransactionTime interface{}
 	ToName          interface{}
 	Amount          interface{}
+	FromName        interface{}
 }
 
 func getTransactions(sb *sql.DB, number string) []Transaction {
@@ -125,7 +128,7 @@ func getTransactions(sb *sql.DB, number string) []Transaction {
 
 	for row.Next() {
 		var transaction Transaction
-		row.Scan(&transaction.TransactionID, &transaction.TransactionTime, &transaction.From, &transaction.To, &transaction.ToName, &transaction.Amount)
+		row.Scan(&transaction.TransactionID, &transaction.TransactionTime, &transaction.From, &transaction.To, &transaction.ToName, &transaction.FromName, &transaction.Amount)
 		transactions = append(transactions, transaction)
 	}
 
