@@ -14,8 +14,6 @@ func sendNotification(devices []string, data map[string]string) {
 	c.AppendDevices(devices)
 	c.NewFcmRegIdsMsg(devices, map[string]string{
 		"type": "receivedMoney",
-	})
-	c.NewFcmRegIdsMsg(devices, map[string]string{
 		"name": "receivedMoney",
 	})
 	c.Send()
