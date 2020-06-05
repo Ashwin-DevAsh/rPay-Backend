@@ -13,7 +13,9 @@ func sendNotification(devices []string, data map[string]string) {
 	c := fcm.NewFcmClient(serverKey)
 	c.AppendDevices(devices)
 	c.NewFcmRegIdsMsg(devices, map[string]string{
-		"type": "awake",
+		"type":   "receivedMoney",
+		"from":   "from",
+		"amount": "amount",
 	})
 	c.Send()
 }
