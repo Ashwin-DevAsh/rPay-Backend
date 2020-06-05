@@ -36,11 +36,7 @@ func notify(from string, to string, amount string) {
 	log.Println("to ", to)
 	var fcmToken string
 	db.QueryRow("select fcmtoken from info where id=$1", to).Scan(&fcmToken)
-	sendNotification([]string{fcmToken}, map[string]string{
-		"type":   "receivedMoney",
-		"from":   from,
-		"amount": amount,
-	})
+	sendNotification([]string{fcmToken}, from)
 }
 
 func handelRequest() {
