@@ -39,12 +39,14 @@ func notify(from string, to string, fromName string, amount string) {
 	log.Println("to ", to)
 	jsonBody, _ := json.Marshal(map[string]string{
 		"From": "RECPAY",
-		"To":   to,
+		"To":   "+" + to,
 		"Msg":  amount + " deposited to A/c " + to + " From " + fromName + " ( " + from + " ) ",
 	})
-	_, err := http.Post("https://2factor.in/API/V1/"+smsApiKey+"/ADDON_SERVICES/SEND/TSMS", "application/json", bytes.NewBuffer(jsonBody))
+	result, err := http.Post("https://2factor.in/API/V1/"+smsApiKey+"/ADDON_SERVICES/SEND/TSMS", "application/json", bytes.NewBuffer(jsonBody))
 	if err != nil {
 		log.Println(err)
+	} else {
+		log.Println(result)
 	}
 	// var fcmToken string
 	// db.QueryRow("select fcmtoken from info where id=$1", to).Scan(&fcmToken)
