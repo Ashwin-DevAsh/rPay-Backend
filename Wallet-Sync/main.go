@@ -45,9 +45,16 @@ func main() {
 	server.OnEvent("/", "getInformation", func(s socketio.Conn, data map[string]string) {
 		log.Println(s.ID(), " = ", data)
 		if data != nil {
+			s.Join(data["number"])
 			updateOnline(db, data["number"], s.ID(), data["fcmToken"], true)
 		}
 		s.Emit("doUpdate")
+	})
+
+	server.OnEvent("/notifyPayment", func(s socketio.Conn, data map[string]string) {
+		if data != nil {
+			server.BroadcastToRoom("/", data["to"], "receivedPayment")
+		}
 	})
 
 	server.OnDisconnect("/", func(s socketio.Conn, reason string) {

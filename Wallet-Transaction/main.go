@@ -15,7 +15,7 @@ var r = mux.NewRouter()
 
 var db = Connect()
 
-var smsApiKey string = "bf344e3e-a1c5-11ea-9fa5-0200cd936042"
+var smsAPIKey string = "bf344e3e-a1c5-11ea-9fa5-0200cd936042"
 
 func decryptJwtToken(tokenString string) jwt.MapClaims {
 	claims := jwt.MapClaims{}
@@ -49,9 +49,6 @@ func notify(from string, to string, fromName string, amount string) {
 	} else {
 		log.Println(result)
 	}
-	// var fcmToken string
-	// db.QueryRow("select fcmtoken from info where id=$1", to).Scan(&fcmToken)
-	// sendNotification([]string{fcmToken}, from)
 }
 
 func handelRequest() {
