@@ -44,7 +44,7 @@ func notify(from string, to string, fromName string, amount string) {
 	})
 	result, err := http.Post("https://2factor.in/API/V1/"+smsApiKey+"/ADDON_SERVICES/SEND/TSMS", "application/json", bytes.NewBuffer(jsonBody))
 	if err != nil {
-		log.Println(err)
+		log.Println("error"=err)
 	} else {
 		log.Println(result)
 	}
