@@ -37,7 +37,7 @@ func decryptJwtToken(tokenString string) jwt.MapClaims {
 
 func notify(from string, to string, fromName string, amount string) {
 	log.Println("to ", to)
-	jsonBodyData:=map[string]string{
+	jsonBodyData := map[string]string{
 		"From": "RECPAY",
 		"To":   "+" + to,
 		"Msg":  amount + " deposited to A/c " + to + " From " + fromName + " ( " + from + " ) ",
@@ -45,7 +45,7 @@ func notify(from string, to string, fromName string, amount string) {
 	jsonBody, _ := json.Marshal(jsonBodyData)
 	result, err := http.Post("https://2factor.in/API/V1/"+smsApiKey+"/ADDON_SERVICES/SEND/TSMS", "application/json", bytes.NewBuffer(jsonBody))
 	if err != nil {
-		log.Println("error"=err)
+		log.Println("error = ", err)
 	} else {
 		log.Println(result)
 	}
