@@ -36,13 +36,16 @@ func decryptJwtToken(tokenString string) jwt.MapClaims {
 
 func notify(from string, to string,fromName string ,amount string) {
 	log.Println("to ", to)
-	http.Post("https://2factor.in/API/V1/" + smsApiKey + "/ADDON_SERVICES/SEND/TSMS","application/json",bytes.Buffer(
+	_,err:=http.Post("https://2factor.in/API/V1/" + smsApiKey + "/ADDON_SERVICES/SEND/TSMS","application/json",bytes.Buffer(
 		json.Marshal(map[string]string{
 			"From":"RECPAY",
 			"To":to,
 			"Msg": amount+" deposited to A/c "+to+" From "+fromName+" ( "+from+" ) "
 		})
-	)).
+	))
+	if(err!=nil){
+		log.Println(err)
+	}
 	// var fcmToken string
 	// db.QueryRow("select fcmtoken from info where id=$1", to).Scan(&fcmToken)
 	// sendNotification([]string{fcmToken}, from)
