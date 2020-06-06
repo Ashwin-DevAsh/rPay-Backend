@@ -14,6 +14,8 @@ var r = mux.NewRouter()
 
 var db = Connect()
 
+var smsApiKey string = "bf344e3e-a1c5-11ea-9fa5-0200cd936042"
+
 func decryptJwtToken(tokenString string) jwt.MapClaims {
 	claims := jwt.MapClaims{}
 	_, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
@@ -32,11 +34,18 @@ func decryptJwtToken(tokenString string) jwt.MapClaims {
 
 }
 
-func notify(from string, to string, amount string) {
+func notify(from string, to string,fromName string ,amount string) {
 	log.Println("to ", to)
-	var fcmToken string
-	db.QueryRow("select fcmtoken from info where id=$1", to).Scan(&fcmToken)
-	sendNotification([]string{fcmToken}, from)
+	http.Post("https://2factor.in/API/V1/" + smsApiKey + "/ADDON_SERVICES/SEND/TSMS","application/json",bytes.Buffer(
+		json.Marshal(map[string]string{
+			"From":"RECPAY",
+			"To":to,
+			"Msg": amount+" deposited to A/c "+to+" From "+fromName+" ( "+from+" ) "
+		})
+	)).
+	// var fcmToken string
+	// db.QueryRow("select fcmtoken from info where id=$1", to).Scan(&fcmToken)
+	// sendNotification([]string{fcmToken}, from)
 }
 
 func handelRequest() {
@@ -87,7 +96,7 @@ func handelRequest() {
 					log.Println(err)
 
 				} else {
-					notify(transactionData.From, transactionData.To, transactionData.Amount)
+					notify(transactionData.From, transactionData.To, transactionData.FromName,transactionData.Amount)
 					response.Write(userJSON)
 
 				}
