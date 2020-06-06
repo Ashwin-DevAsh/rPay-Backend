@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -34,16 +35,15 @@ func decryptJwtToken(tokenString string) jwt.MapClaims {
 
 }
 
-func notify(from string, to string,fromName string ,amount string) {
+func notify(from string, to string, fromName string, amount string) {
 	log.Println("to ", to)
-	_ , err:=http.Post("https://2factor.in/API/V1/" + smsApiKey + "/ADDON_SERVICES/SEND/TSMS","application/json",bytes.Buffer(
-		json.Marshal(map[string]string{
-			"From":"RECPAY",
-			"To":to,
-			"Msg": amount+" deposited to A/c "+to+" From "+fromName+" ( "+from+" ) ",
-		})
-	))
-	if(err!=nil){
+	jsonBody, _ = json.Marshal(map[string]string{
+		"From": "RECPAY",
+		"To":   to,
+		"Msg":  amount + " deposited to A/c " + to + " From " + fromName + " ( " + from + " ) ",
+	})
+	_, err := http.Post("https://2factor.in/API/V1/"+smsApiKey+"/ADDON_SERVICES/SEND/TSMS", "application/json", bytes.Buffer(jsonBody))
+	if err != nil {
 		log.Println(err)
 	}
 	// var fcmToken string
@@ -99,7 +99,7 @@ func handelRequest() {
 					log.Println(err)
 
 				} else {
-					notify(transactionData.From, transactionData.To, transactionData.FromName,transactionData.Amount)
+					notify(transactionData.From, transactionData.To, transactionData.FromName, transactionData.Amount)
 					response.Write(userJSON)
 
 				}
