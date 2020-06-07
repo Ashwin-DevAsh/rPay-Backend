@@ -52,6 +52,7 @@ func main() {
 	})
 
 	server.OnEvent("/notifyPayment", func(s socketio.Conn, data map[string]string) {
+		log.Println(data)
 		if data != nil {
 			server.BroadcastToRoom("/", data["to"], "receivedPayment")
 		}
