@@ -61,7 +61,24 @@ func doTransaction(db *sql.DB, from string, fromName string, to string, toName s
 	return true
 }
 
-func getMyState(db *sql.DB, number string) map[string]int {
+// MyState ...
+type MyState struct {
+	Balance      int
+	Transactions []Transaction
+}
+
+// Transaction ...
+type Transaction struct {
+	From            interface{}
+	To              interface{}
+	TransactionID   interface{}
+	TransactionTime interface{}
+	ToName          interface{}
+	Amount          interface{}
+	FromName        interface{}
+}
+
+func getMyState(db *sql.DB, number string) MyState {
 
 	state := map[string]int{}
 
@@ -78,7 +95,10 @@ func getMyState(db *sql.DB, number string) map[string]int {
 		state[id] = balance
 	}
 
-	return state
+	return MyState{
+		state[number],
+		getTransactions(db,number)
+	}
 }
 
 func getState(db *sql.DB) map[string]int {
@@ -101,17 +121,6 @@ func getState(db *sql.DB) map[string]int {
 
 	return state
 
-}
-
-// Transaction ...
-type Transaction struct {
-	From            interface{}
-	To              interface{}
-	TransactionID   interface{}
-	TransactionTime interface{}
-	ToName          interface{}
-	Amount          interface{}
-	FromName        interface{}
 }
 
 func getTransactions(sb *sql.DB, number string) []Transaction {
