@@ -36,7 +36,7 @@ func decryptJwtToken(tokenString string) jwt.MapClaims {
 }
 
 func notify(from string, to string, fromName string, amount string) {
-	log.Println("to ", to, from)
+	log.Println("to ", to, from, amount)
 	jsonBodyData := map[string]string{
 		"From": "RECPAY",
 		"To":   "+" + to,
