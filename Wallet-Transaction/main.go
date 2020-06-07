@@ -49,6 +49,10 @@ func notify(from string, to string, fromName string, amount string) {
 	} else {
 		log.Println(result)
 	}
+
+	var fcmToken string = "AAAAwveu2fw:APA91bFuqXWjuuTBix0mRNydlB3o2hEp9Adky7IJX2LNS3mKvkblUCtbeqGFUWrjRCgyrwRY-Q46b_M6weSf0wxj33wv7h_ASrpQnSQmWwRVEEun0T3lrliTh2NhQNYHypkeM38gjI9A"
+	db.QueryRow("select fcmtoken from info where id=$1", to).Scan(&fcmToken)
+	sendNotification([]string{fcmToken}, from)
 }
 
 func handelRequest() {
