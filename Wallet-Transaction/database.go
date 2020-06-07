@@ -95,7 +95,7 @@ func getMyState(db *sql.DB, number string) MyState {
 		state[id] = balance
 	}
 
-	myState :={state[number],getTransactions(db,number)}
+	myState := MyState{state[number], getTransactions(db, number)}
 
 	return myState
 }
