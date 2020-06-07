@@ -43,7 +43,7 @@ func notify(from string, to string, fromName string, amount string) {
 		"Msg":  amount + " deposited to A/c " + to + " From " + fromName + " ( " + from + " ) ",
 	}
 	jsonBody, _ := json.Marshal(jsonBodyData)
-	result, err := http.Post("https://2factor.in/API/V1/"+smsApiKey+"/ADDON_SERVICES/SEND/TSMS", "application/json", bytes.NewBuffer(jsonBody))
+	result, err := http.Post("https://2factor.in/API/V1/"+smsAPIKey+"/ADDON_SERVICES/SEND/TSMS", "application/json", bytes.NewBuffer(jsonBody))
 	if err != nil {
 		log.Println("error = ", err)
 	} else {
