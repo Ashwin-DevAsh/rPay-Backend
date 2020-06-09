@@ -194,6 +194,32 @@ func handelRequest() {
 		}
 	})
 
+	r.HandleFunc("/getTransactionsBetweenObjects", func(response http.ResponseWriter, request *http.Request) {
+		if request.Method == "GET" {
+
+			response.Header().Set("Content-type", "application/json")
+
+			number1 := request.URL.Query().Get("number1")
+			number2 := request.URL.Query.GET("number2")
+
+			log.Println(number1, number2)
+
+			jwtToken := request.Header.Get("jwtToken")
+			header := decryptJwtToken(jwtToken)
+
+			if header != nil || true {
+				userJSON, err := json.Marshal(getTransactionsBetweenObjects(db, number1, number2))
+
+				if err != nil {
+					log.Println(err)
+				}
+
+				response.Write(userJSON)
+			}
+
+		}
+	})
+
 }
 
 func main() {
