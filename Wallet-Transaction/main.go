@@ -200,7 +200,7 @@ func handelRequest() {
 			response.Header().Set("Content-type", "application/json")
 
 			number1 := request.URL.Query().Get("number1")
-			number2 := request.URL.Query.GET("number2")
+			number2 := request.URL.Query().Get("number2")
 
 			log.Println(number1, number2)
 
