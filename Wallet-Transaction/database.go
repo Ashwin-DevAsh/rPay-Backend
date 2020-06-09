@@ -147,7 +147,7 @@ func getTransactionsBetweenObjects(sb *sql.DB, number1 string, number2 string) [
 
 	transactions := []Transaction{}
 
-	row, err := db.Query("select * from transactions where fromid = $1 or fromid = $2 or toid = $1 or toid = $2", number1, number2)
+	row, err := db.Query("select * from transactions where (fromid = $1 or fromid = $2) and (toid = $1 or toid = $2)", number1, number2)
 
 	if err != nil {
 		log.Println(err)
