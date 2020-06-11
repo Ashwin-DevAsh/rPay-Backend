@@ -67,6 +67,8 @@ func main() {
 			updateOnline(db, data["number"], s.ID(), data["fcmToken"], true)
 			server.BroadcastToRoom("/", "", "addNewUser", data)
 		}
+		s.Emit("doUpdate")
+
 	})
 
 	server.OnDisconnect("/", func(s socketio.Conn, reason string) {
