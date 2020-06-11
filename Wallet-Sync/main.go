@@ -65,7 +65,7 @@ func main() {
 			s.Join(data["number"])
 			s.Join("all")
 			updateOnline(db, data["number"], s.ID(), data["fcmToken"], true)
-			server.BroadcastToRoom("/", "", "addNewUser", data)
+			server.BroadcastToRoom("/", "all", "addNewUser", data)
 		}
 		s.Emit("doUpdate")
 
