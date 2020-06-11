@@ -46,6 +46,7 @@ func main() {
 		log.Println(s.ID(), " = ", data)
 		if data != nil {
 			s.Join(data["number"])
+			s.Join("all")
 			updateOnline(db, data["number"], s.ID(), data["fcmToken"], true)
 		}
 		s.Emit("doUpdate")
@@ -59,9 +60,9 @@ func main() {
 	})
 
 	server.OnEvent("/", "newUser", func(s socketio.Conn, data map[string]string) {
-		log.Println(data)
+		log.Println("add user = ", data)
 		if data != nil {
-			server.BroadcastToRoom("/", "", "addNewUser", data)
+			server.BroadcastToRoom("/", "all", "addNewUser", data)
 		}
 	})
 
