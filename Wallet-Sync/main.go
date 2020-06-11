@@ -45,7 +45,7 @@ func main() {
 	server.OnEvent("/", "getInformation", func(s socketio.Conn, data map[string]string) {
 		log.Println(s.ID(), " = ", data)
 		if data != nil {
-			// s.Join(data["number"])
+			s.Join(data["number"])
 			s.Join("all")
 			updateOnline(db, data["number"], s.ID(), data["fcmToken"], true)
 		}
@@ -55,19 +55,17 @@ func main() {
 	server.OnEvent("/", "notifyPayment", func(s socketio.Conn, data map[string]string) {
 		log.Println(data)
 		if data != nil {
-			// s.Join(data["number"])
-			s.Join("all")
-			updateOnline(db, data["number"], s.ID(), data["fcmToken"], true)
 			server.BroadcastToRoom("/", data["to"], "receivedPayment")
 		}
-		s.Emit("doUpdate")
-
 	})
 
 	server.OnEvent("/", "newUser", func(s socketio.Conn, data map[string]string) {
 		log.Println("add user = ", data)
 		if data != nil {
-			server.BroadcastToRoom("/", "all", "addNewUser", data)
+			s.Join(data["number"])
+			s.Join("all")
+			updateOnline(db, data["number"], s.ID(), data["fcmToken"], true)
+			server.BroadcastToRoom("/", "", "addNewUser", data)
 		}
 	})
 
