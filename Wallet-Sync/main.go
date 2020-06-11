@@ -61,11 +61,15 @@ func main() {
 
 	server.OnEvent("/", "newUser", func(s socketio.Conn, data map[string]string) {
 		log.Println("add user = ", data)
+
 		if data != nil {
 			s.Join("all")
 			s.Join(data["number"])
 			updateOnline(db, data["number"], s.ID(), data["fcmToken"], true)
-			server.BroadcastToRoom("/", "all", "addNewUser", data)
+			server.BroadcastToRoom("/", "all", "addNewUser", map[string]string{
+				"number": data["number"],
+				"amount": data["amount"],
+			})
 		}
 		s.Emit("doUpdate")
 
