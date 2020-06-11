@@ -58,6 +58,13 @@ func main() {
 		}
 	})
 
+	server.OnEvent("/", "newUser", func(s socketio.Conn, data map[string]string) {
+		log.Println(data)
+		if data != nil {
+			server.BroadcastToRoom("/", "", "addNewUser", data)
+		}
+	})
+
 	server.OnDisconnect("/", func(s socketio.Conn, reason string) {
 		log.Println(" disconnected : ", s.ID())
 		s.LeaveAll()
