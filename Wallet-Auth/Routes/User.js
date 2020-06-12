@@ -30,7 +30,7 @@ app.post("/addUser",(req,res)=>{
                                     (err,result)=>{
                                       if(!err){  
                                           postgres.query(
-                                              "insert into amount values($1,3501000)",
+                                              "insert into amount(id,balance) values($1,3501000)",
                                               [user.number],
                                               (err,result)=>{
                                                  if(!err){

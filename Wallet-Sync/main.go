@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+
 	"log"
 
 	"net/http"
@@ -57,22 +58,6 @@ func main() {
 		if data != nil {
 			server.BroadcastToRoom("/", data["to"], "receivedPayment")
 		}
-	})
-
-	server.OnEvent("/", "newUser", func(s socketio.Conn, data map[string]string) {
-		log.Println("add user = ", data)
-
-		if data != nil {
-			s.Join("all")
-			s.Join(data["number"])
-			updateOnline(db, data["number"], s.ID(), data["fcmToken"], true)
-			server.BroadcastToRoom("/", "all", "addNewUser", map[string]string{
-				"number": data["number"],
-				"amount": data["amount"],
-			})
-		}
-		s.Emit("doUpdate")
-
 	})
 
 	server.OnDisconnect("/", func(s socketio.Conn, reason string) {
