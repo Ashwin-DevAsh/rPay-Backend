@@ -32,31 +32,35 @@ func Connect() *sql.DB {
 }
 
 func doTransaction(db *sql.DB, from string, fromName string, to string, toName string, amount uint64) bool {
-	_, errFrom := db.Exec("update amount set balance = balance - $1 where id = $2", amount, from)
+	_, errFrom := db.Exec("BEGIN;"+
+						  "update amount set balance = balance - $1 where id = $2;"+
+						  "insert into transactions(transactionTime,fromID,toID,toName,amount,fromName) values($1,$2,$3,$4,$5,$6);"+
+						  "COMMIT TRANSACTION"
+						  , amount, from)
 
 	if errFrom != nil {
 		log.Println(errFrom)
 		return false
 	}
 
-	_, errTo := db.Exec("update amount set balance = balance + $1 where id = $2", amount, to)
+	// _, errTo := db.Exec("update amount set balance = balance + $1 where id = $2", amount, to)
 
-	if errTo != nil {
-		db.Exec("update amount set balance = balance + $1 where id = $2", amount, from)
-		return false
-	}
+	// if errTo != nil {
+	// 	db.Exec("update amount set balance = balance + $1 where id = $2", amount, from)
+	// 	return false
+	// }
 
-	dt := time.Now()
+	// dt := time.Now()
 
-	_, errTrans :=
-		db.Exec("insert into transactions(transactionTime,fromID,toID,toName,amount,fromName) values($1,$2,$3,$4,$5,$6)",
-			dt.Format("01-02-2006 15:04:05"), from, to, toName, amount, fromName)
+	// _, errTrans :=
+	// 	db.Exec("insert into transactions(transactionTime,fromID,toID,toName,amount,fromName) values($1,$2,$3,$4,$5,$6)",
+	// 		dt.Format("01-02-2006 15:04:05"), from, to, toName, amount, fromName)
 
-	if errTrans != nil {
-		db.Exec("update amount set balance = balance + $1 where id = $2", amount, from)
-		db.Exec("update amount set balance = balance - $1 where id = $2", amount, to)
-		return false
-	}
+	// if errTrans != nil {
+	// 	db.Exec("update amount set balance = balance + $1 where id = $2", amount, from)
+	// 	db.Exec("update amount set balance = balance - $1 where id = $2", amount, to)
+	// 	return false
+	// }
 
 	return true
 }
