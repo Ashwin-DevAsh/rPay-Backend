@@ -32,11 +32,11 @@ func Connect() *sql.DB {
 }
 
 func doTransaction(db *sql.DB, from string, fromName string, to string, toName string, amount uint64) bool {
-	_, errFrom := db.Exec("BEGIN;"+
-						  "update amount set balance = balance - $1 where id = $2;"+
-						  "insert into transactions(transactionTime,fromID,toID,toName,amount,fromName) values($1,$2,$3,$4,$5,$6);"+
-						  "COMMIT TRANSACTION"
-						  , amount, from)
+	var query = "BEGIN;"+
+				"update amount set balance = balance - $1 where id = $2;"+
+				"insert into transactions(transactionTime,fromID,toID,toName,amount,fromName) values($1,$2,$3,$4,$5,$6);"+
+				"COMMIT TRANSACTION"
+	_, errFrom := db.Exec(query , amount, from)
 
 	if errFrom != nil {
 		log.Println(errFrom)
