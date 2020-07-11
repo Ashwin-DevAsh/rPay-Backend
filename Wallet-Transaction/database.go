@@ -79,8 +79,8 @@ func addMoney(db *sql.DB, from string, fromName string, to string, toName string
 	}
 	dt := time.Now()
 	_, errTrans :=
-		tx.Exec("insert into transactions(transactionTime,toID,toName,amount,fromName) values($1,$2,$3,$4,$5)",
-			dt.Format("01-02-2006 15:04:05"), to, toName, amount, fromName)
+		tx.Exec("insert into transactions(transactionTime,toID,toName,amount,fromName) values($1,$2,$3,$4,$6)",
+			dt.Format("01-02-2006 15:04:05"), from, to, toName, amount, fromName)
 
 	if errTrans != nil {
 		tx.Rollback()
