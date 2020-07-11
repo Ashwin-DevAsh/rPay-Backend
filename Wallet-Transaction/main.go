@@ -56,6 +56,70 @@ func notify(from string, to string, fromName string, amount string) {
 }
 
 func handelRequest() {
+	r.HandleFunc("/addMoney",func(response http.ResponseWriter, request *http.Request){
+		if request.Method == "POST"{
+			response.Header().Set("Content-type", "application/json")
+
+			jwtToken := request.Header.Get("jwtToken")
+			header := decryptJwtToken(jwtToken)
+
+			if header == nil {
+				message, err := json.Marshal(map[string]string{"message": "failed"})
+				if err == nil {
+					log.Println(err)
+				}
+				log.Println("Header error")
+				response.Write(message)
+				return
+			}
+
+				var transactionData struct {
+				From     string
+				To       string
+				Amount   string
+				ToName   string
+				FromName string
+			}
+
+			err := json.NewDecoder(request.Body).Decode(&transactionData)
+
+			if err != nil {
+				log.Printf("verbose error info: %#v", err)
+				return
+			}
+
+			println(transactionData.From, transactionData.To, transactionData.Amount)
+
+			amount, _ := strconv.ParseUint(transactionData.Amount, 10, 64)
+
+			if addMoney(db, transactionData.From, transactionData.FromName, transactionData.To, transactionData.ToName, amount) {
+				userJSON, err := json.Marshal(map[string]string{
+					"message": "done",
+				})
+
+				if err != nil {
+					log.Println(err)
+
+				} else {
+					notify(transactionData.From, transactionData.To, transactionData.FromName, transactionData.Amount)
+					response.Write(userJSON)
+
+				}
+
+			} else {
+				userJSON, err := json.Marshal(map[string]string{
+					"message": "failed",
+				})
+
+				if err != nil {
+					log.Println(err)
+				}
+
+				response.Write(userJSON)
+			}
+
+		}
+	})
 	r.HandleFunc("/pay", func(response http.ResponseWriter, request *http.Request) {
 
 		if request.Method == "POST" {

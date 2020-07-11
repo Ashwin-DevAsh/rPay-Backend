@@ -67,6 +67,29 @@ func doTransaction(db *sql.DB, from string, fromName string, to string, toName s
 	return true
 }
 
+func addMoney(db *sql.DB, from string, fromName string, to string, toName string, amount uint64) bool {
+	tx, err := db.Begin()
+    if err != nil {
+        return false
+    }
+	_, errTo := tx.Exec("update amount set balance = balance + $1 where id = $2", amount, to)
+	if errTo != nil {
+		tx.Rollback()
+		return false
+	}
+	dt := time.Now()
+	_, errTrans :=
+		tx.Exec("insert into transactions(transactionTime,toID,toName,amount,fromName) values($1,$3,$4,$5,$6)",
+			dt.Format("01-02-2006 15:04:05"), from, to, toName, amount, fromName)
+
+	if errTrans != nil {
+		tx.Rollback()
+		return false
+	}
+	tx.Commit()
+	return true
+}
+
 // MyState ...
 type MyState struct {
 	Balance      int
