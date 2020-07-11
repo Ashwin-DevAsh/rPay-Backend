@@ -33,7 +33,6 @@ func Connect() *sql.DB {
 
 func doTransaction(db *sql.DB, from string, fromName string, to string, toName string, amount uint64) bool {
 	
-	state := map[string]int{}
 
 	row, err := db.Query("select * from amount where id=$1", from)
 
@@ -46,7 +45,6 @@ func doTransaction(db *sql.DB, from string, fromName string, to string, toName s
 
 	for row.Next() {
 		row.Scan(&id, &balance)
-		state[id] = balance
 	}
 
 	if(balance<amount){
