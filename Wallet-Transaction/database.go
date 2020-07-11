@@ -42,7 +42,7 @@ func doTransaction(db *sql.DB, from string, fromName string, to string, toName s
 	}
 
 	var id string
-    var balance int
+    var balance uint64
 
 	for row.Next() {
 		row.Scan(&id, &balance)
