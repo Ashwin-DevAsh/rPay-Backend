@@ -34,7 +34,7 @@ func Connect() *sql.DB {
 func doTransaction(db *sql.DB, from string, fromName string, to string, toName string, amount uint64) bool {
 	tx, err := db.Begin()
     if err != nil {
-        return err
+        return false
     }
 	_, errFrom := tx.Exec("update amount set balance = balance - $1 where id = $2", amount, from)
 
