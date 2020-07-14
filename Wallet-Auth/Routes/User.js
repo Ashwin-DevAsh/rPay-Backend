@@ -131,11 +131,15 @@ app.delete("/deleteAllUsers", (req, res) => {
 });
 
 app.get("/getUser", (req, res) => {
-  if (req.query.number)
+  if (req.query.number) {
     Users.find({ number: req.query.number }).then((doc) => {
+      console.log(doc);
       res.status(200).send(doc);
     });
-  else res.json([{ message: "failed" }]);
+  } else {
+    console.log(err);
+    res.json([{ message: "failed" }]);
+  }
 });
 
 app.post("/getUsersWithContacts", (req, res) => {
