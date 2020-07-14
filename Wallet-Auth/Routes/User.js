@@ -161,9 +161,12 @@ app.get("/getUsers", (req, res) => {
   Users.find({}, ["name", "number", "email"])
     .exec()
     .then((doc) => {
+      console.log(doc);
       res.status(200).send(doc);
     })
     .catch((e) => {
+      console.log(e);
+
       res.send(e);
     });
 });
