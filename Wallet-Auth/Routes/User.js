@@ -159,7 +159,7 @@ app.get("/getUsers", (req, res) => {
     });
 });
 
-app.get("/changePassword", (req, res) => {
+app.post("/changePassword", (req, res) => {
   console.log(req.header.get("token"));
 
   console.log("Changing password...");
