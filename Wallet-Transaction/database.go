@@ -32,8 +32,11 @@ func Connect() *sql.DB {
 }
 
 func doTransaction(db *sql.DB, from string, fromName string, to string, toName string, amount uint64) bool {
-	
 
+	if(from==to){
+		return false
+	}
+	
 	row, err := db.Query("select * from amount where id=$1", from)
 
 	if err != nil {
@@ -50,8 +53,6 @@ func doTransaction(db *sql.DB, from string, fromName string, to string, toName s
 	if(balance<amount){
 		return false
 	}
-
-
 
 	tx, err := db.Begin()
     if err != nil {
@@ -75,8 +76,8 @@ func doTransaction(db *sql.DB, from string, fromName string, to string, toName s
 	dt := time.Now()
 
 	_, errTrans :=
-		tx.Exec("insert into transactions(transactionTime,fromID,toID,toName,amount,fromName) values($1,$2,$3,$4,$5,$6)",
-			dt.Format("01-02-2006 15:04:05"), from, to, toName, amount, fromName)
+		tx.Exec("insert into transactions(transactionTime,fromID,toID,toName,amount,fromName,isGenerated) values($1,$2,$3,$4,$5,$6,$7)",
+			dt.Format("01-02-2006 15:04:05"), from, to, toName, amount, fromName,false)
 
 	if errTrans != nil {
 		tx.Rollback()
@@ -89,9 +90,6 @@ func doTransaction(db *sql.DB, from string, fromName string, to string, toName s
 }
 
 func addMoney(db *sql.DB, from string, fromName string, to string, toName string, amount uint64) bool {
-
-	
-
 	tx, err := db.Begin()
     if err != nil {
         return false
@@ -103,8 +101,8 @@ func addMoney(db *sql.DB, from string, fromName string, to string, toName string
 	}
 	dt := time.Now()
 	_, errTrans :=
-		tx.Exec("insert into transactions(transactionTime,fromID,toID,toName,amount,fromName) values($1,$2,$3,$4,$5,$6)",
-			dt.Format("01-02-2006 15:04:05"), from, to, toName, amount, fromName)
+		tx.Exec("insert into transactions(transactionTime,fromID,toID,toName,amount,fromName,isGenerated) values($1,$2,$3,$4,$5,$6,$7)",
+			dt.Format("01-02-2006 15:04:05"), from, to, toName, amount, fromName,true)
 
 	if errTrans != nil {
 		tx.Rollback()

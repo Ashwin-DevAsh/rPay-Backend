@@ -102,7 +102,6 @@ app.post("/addUser", (req, res) => {
 
 app.post("/updateFcmToken", (req, res) => {
   var object = req.body;
-  console.log("Update token = ", object);
   if (!object.number || !object.fcmToken) {
     res.json([{ message: "missing parameter" }]);
   } else {
@@ -120,16 +119,6 @@ app.post("/updateFcmToken", (req, res) => {
   }
 });
 
-app.delete("/deleteAllUsers", (req, res) => {
-  Users.remove({}, (err, result) => {
-    if (err) {
-      res.status(200).send({ message: err.getName() });
-    } else {
-      res.status(200).send(result);
-    }
-  });
-});
-
 app.get("/getUser", (req, res) => {
   if (req.query.number) {
     Users.find({ number: req.query.number }).then((doc) => {
@@ -145,7 +134,7 @@ app.get("/getUser", (req, res) => {
 app.post("/getUsersWithContacts", (req, res) => {
   var contacts = req.body["myContacts"];
 
-  Users.find({}, ["name", "number", "email"])
+  Users.find({}, ["name", "number", "email", "imageURL"])
     .where("number")
     .in(contacts)
     .exec()
@@ -158,7 +147,7 @@ app.post("/getUsersWithContacts", (req, res) => {
 });
 
 app.get("/getUsers", (req, res) => {
-  Users.find({}, ["name", "number", "email"])
+  Users.find({}, ["name", "number", "email", "imageURL"])
     .exec()
     .then((doc) => {
       console.log(doc);
@@ -166,7 +155,6 @@ app.get("/getUsers", (req, res) => {
     })
     .catch((e) => {
       console.log(e);
-
       res.send(e);
     });
 });
