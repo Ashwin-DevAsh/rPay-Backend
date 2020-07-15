@@ -159,4 +159,42 @@ app.get("/getUsers", (req, res) => {
     });
 });
 
+app.get("/changePassword", (req, res) => {
+  console.log("Changing password...");
+  var data = req.body;
+  console.log(data);
+  if (!data.id || !data.oldPassword || !data.newPassword) {
+    res.status(200).send({ message: "error" });
+    return;
+  }
+
+  Users.findOne({ number: data.id })
+    .exec()
+    .then((docs) => {
+      console.log("data = ", doc);
+
+      if (docs.password == data.password) {
+        Users.findOneAndUpdate(
+          { number: data.id },
+          { password: data.newPassword },
+          (err, doc) => {
+            if (err) {
+              console.log(err);
+              res.status(200).send({ message: "error" });
+              return;
+            } else {
+              res.status(200).send({ message: "done" });
+              return;
+            }
+          }
+        );
+      } else {
+        console.log("data = ", null);
+
+        res.status(200).send({ message: "error" });
+        return;
+      }
+    });
+});
+
 module.exports = app;
