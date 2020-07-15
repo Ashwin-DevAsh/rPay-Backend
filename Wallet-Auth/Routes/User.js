@@ -160,6 +160,8 @@ app.get("/getUsers", (req, res) => {
 });
 
 app.get("/changePassword", (req, res) => {
+  console.log(req.header.get("token"));
+
   console.log("Changing password...");
   var data = req.body;
   console.log(data);
