@@ -3,8 +3,9 @@ const Otp = require("../Schemas/otp");
 const https = require("https");
 const User = require("../Schemas/users");
 const jwt = require("jsonwebtoken");
-
 const api_key_otp = "b614c4f7-c046-11ea-9fa5-0200cd936042";
+
+//change database
 
 app.get("/getOtp", (req, res) => {
   var number = req.query["number"];
