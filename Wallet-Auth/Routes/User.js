@@ -162,7 +162,10 @@ app.get("/getUsers", (req, res) => {
 app.post("/changePassword", (req, res) => {
   console.log(req.get("token"));
 
-  jwt.verify(token, process.env.PRIVATE_KEY, function (err, decoded) {
+  jwt.verify(req.get("token"), process.env.PRIVATE_KEY, function (
+    err,
+    decoded
+  ) {
     if (err) {
       console.log(err);
       res.status(200).send({ message: "error" });
