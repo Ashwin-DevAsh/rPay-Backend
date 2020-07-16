@@ -2,7 +2,7 @@ create table info
 (
     id varchar primary key,
     fcmToken varchar,
-    socketid varchar unique,
+    socketid varchar,
     isonline boolean
 );
 
