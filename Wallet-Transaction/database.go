@@ -127,6 +127,7 @@ type Transaction struct {
 	ToName          interface{}
 	Amount          interface{}
 	FromName        interface{}
+	isGenerated  	interface{}
 }
 
 func getMyState(db *sql.DB, number string) MyState {
@@ -187,7 +188,7 @@ func getTransactions(sb *sql.DB, number string) []Transaction {
 
 	for row.Next() {
 		var transaction Transaction
-		row.Scan(&transaction.TransactionID, &transaction.TransactionTime, &transaction.From, &transaction.To, &transaction.ToName, &transaction.FromName, &transaction.Amount)
+		row.Scan(&transaction.TransactionID, &transaction.TransactionTime, &transaction.From, &transaction.To, &transaction.ToName, &transaction.FromName, &transaction.Amount &transaction.isGenerated)
 		transactions = append(transactions, transaction)
 	}
 
@@ -206,7 +207,7 @@ func getTransactionsBetweenObjects(sb *sql.DB, number1 string, number2 string) [
 
 	for row.Next() {
 		var transaction Transaction
-		row.Scan(&transaction.TransactionID, &transaction.TransactionTime, &transaction.From, &transaction.To, &transaction.ToName, &transaction.FromName, &transaction.Amount)
+		row.Scan(&transaction.TransactionID, &transaction.TransactionTime, &transaction.From, &transaction.To, &transaction.ToName, &transaction.FromName, &transaction.Amount, &transaction.isGenerated)
 		transactions = append(transactions, transaction)
 	}
 
