@@ -66,6 +66,7 @@ app.post("/addUser", (req, res) => {
                                     userObject
                                       .save()
                                       .then((result) => {
+                                        console.log(token);
                                         res.json([{ message: "done", token }]);
                                       })
                                       .catch((err) => {
