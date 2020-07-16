@@ -162,41 +162,53 @@ app.get("/getUsers", (req, res) => {
 app.post("/changePassword", (req, res) => {
   console.log(req.get("token"));
 
-  console.log("Changing password...");
-  var data = req.body;
-  console.log(data);
-  if (!data.id || !data.oldPassword || !data.newPassword) {
-    res.status(200).send({ message: "error" });
-    return;
-  }
-
-  Users.findOne({ number: data.id })
-    .exec()
-    .then((docs) => {
-      console.log("data = ", docs);
-
-      if (docs.password == data.oldPassword) {
-        Users.findOneAndUpdate(
-          { number: data.id },
-          { password: data.newPassword },
-          (err, doc) => {
-            if (err) {
-              console.log(err);
-              res.status(200).send({ message: "error" });
-              return;
-            } else {
-              res.status(200).send({ message: "done" });
-              return;
-            }
-          }
-        );
-      } else {
-        console.log("data = ", null);
-
+  jwt.verify(token, process.env.PRIVATE_KEY, function (err, decoded) {
+    if (err) {
+      console.log(err);
+      res.status(200).send({ message: "error" });
+      return;
+    } else {
+      console.log("Changing password...");
+      var data = req.body;
+      console.log(data);
+      if (!data.id || !data.oldPassword || !data.newPassword) {
         res.status(200).send({ message: "error" });
         return;
       }
-    });
+
+      Users.findOne({ number: data.id })
+        .exec()
+        .then((docs) => {
+          console.log("data = ", docs);
+          if (docs == null) {
+            res.status(200).send({ message: "error" });
+            return;
+          }
+
+          if (docs.password == data.oldPassword) {
+            Users.findOneAndUpdate(
+              { number: data.id },
+              { password: data.newPassword },
+              (err, doc) => {
+                if (err) {
+                  console.log(err);
+                  res.status(200).send({ message: "error" });
+                  return;
+                } else {
+                  res.status(200).send({ message: "done" });
+                  return;
+                }
+              }
+            );
+          } else {
+            console.log("data = ", null);
+
+            res.status(200).send({ message: "error" });
+            return;
+          }
+        });
+    }
+  });
 });
 
 module.exports = app;
