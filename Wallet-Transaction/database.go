@@ -211,9 +211,10 @@ func getTransactionsBetweenObjects(sb *sql.DB, number1 string, number2 string) [
 		var transaction Transaction
 		row.Scan(&transaction.TransactionID, &transaction.TransactionTime, &transaction.From, &transaction.To, &transaction.ToName, &transaction.FromName, &transaction.Amount, &transaction.isGenerated)
 		transactions = append(transactions, transaction)
+    	log.Println(transaction.TransactionID, transaction.TransactionTime, transaction.From, transaction.To, transaction.ToName, transaction.FromName, transaction.Amount, transaction.isGenerated)
+
 	}
 
-	log.Println(transactions)
 
 	return transactions
 }
