@@ -115,6 +115,7 @@ func addMoney(db *sql.DB, from string, fromName string, to string, toName string
 // MyState ...
 type MyState struct {
 	Balance      int
+	demo bool
 	Transactions []Transaction
 }
 
@@ -147,7 +148,9 @@ func getMyState(db *sql.DB, number string) MyState {
 		state[id] = balance
 	}
 
-	myState := MyState{state[number], getTransactions(db, number)}
+
+
+	myState := MyState{state[number],false, getTransactions(db, number)}
     log.Println(myState)
 	return myState
 }
