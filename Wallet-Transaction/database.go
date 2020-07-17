@@ -170,7 +170,7 @@ func getState(db *sql.DB) map[string]int {
 
 	}
 
-	log.Println(state)
+	
 
 	return state
 
@@ -212,6 +212,8 @@ func getTransactionsBetweenObjects(sb *sql.DB, number1 string, number2 string) [
 		row.Scan(&transaction.TransactionID, &transaction.TransactionTime, &transaction.From, &transaction.To, &transaction.ToName, &transaction.FromName, &transaction.Amount, &transaction.isGenerated)
 		transactions = append(transactions, transaction)
 	}
+
+	log.Println(transactions)
 
 	return transactions
 }
