@@ -196,6 +196,8 @@ func getTransactions(sb *sql.DB, number string) []Transaction {
 
 	}
 
+	log.Println(transactions)
+
 	return transactions
 }
 
