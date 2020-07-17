@@ -127,7 +127,7 @@ type Transaction struct {
 	ToName          interface{}
 	Amount          interface{}
 	FromName        interface{}
-	isGenerated  	bool
+	isGenerated  	interface{}
 }
 
 func getMyState(db *sql.DB, number string) MyState {
