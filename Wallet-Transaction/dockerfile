@@ -8,7 +8,7 @@ RUN go get github.com/lib/pq
 RUN go get github.com/dgrijalva/jwt-go
 RUN go get github.com/NaySoftware/go-fcm
 
-RUN go clean -cache -modcache -i -r
+
 
 WORKDIR /usr/Wallet-Transaction
 
