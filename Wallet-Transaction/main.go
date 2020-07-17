@@ -226,9 +226,6 @@ func handelRequest() {
 					log.Println(err)
 				}
 
-				log.Println(userJSON)
-
-				response.Write(userJSON)
 			}
 
 		}

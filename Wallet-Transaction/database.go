@@ -148,7 +148,7 @@ func getMyState(db *sql.DB, number string) MyState {
 	}
 
 	myState := MyState{state[number], getTransactions(db, number)}
-
+    log.Println(myState)
 	return myState
 }
 
@@ -192,11 +192,10 @@ func getTransactions(sb *sql.DB, number string) []Transaction {
 		var transaction Transaction
 		row.Scan(&transaction.TransactionID, &transaction.TransactionTime, &transaction.From, &transaction.To, &transaction.ToName, &transaction.FromName, &transaction.Amount ,&transaction.isGenerated)
 		transactions = append(transactions, transaction)
-    	log.Println(transaction.TransactionID, transaction.TransactionTime, transaction.From, transaction.To, transaction.ToName, transaction.FromName, transaction.Amount, transaction.isGenerated)
 
 	}
 
-	log.Println(transactions)
+
 
 	return transactions
 }
