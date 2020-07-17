@@ -170,6 +170,8 @@ func getState(db *sql.DB) map[string]int {
 
 	}
 
+	log.Println(state)
+
 	return state
 
 }
