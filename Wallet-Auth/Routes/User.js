@@ -22,10 +22,15 @@ app.post("/addUser", (req, res) => {
     return;
   }
 
-  Otp.findOne({ number: user.number })
+  Otp.findOne({ $or: [{ number: user.number }, { email: user.email }] })
     .exec()
     .then((otpDoc) => {
       if (otpDoc && otpDoc.verified) {
+        if (doc) {
+          res.json([{ message: "User already exist" }]);
+          return;
+        }
+
         Users.findOne({ number: user.number })
           .exec()
           .then((doc) => {
