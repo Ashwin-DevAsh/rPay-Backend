@@ -39,7 +39,7 @@ func contains(s []string, e string) bool {
     return false
 }
 
-func wake(){
+func wake(db *sql.DB){
 	var fcmTokens []string
 	row, err := db.Query("select fcmToken from info where isonline=false")
 	if err!=nil{
@@ -81,7 +81,7 @@ func main() {
 			s.Join(data["number"])
 			s.Join("all")
 			updateOnline(db, data["number"], s.ID(), data["fcmToken"], true)
-	    	wake()
+	    	wake(db)
 		}
 		s.Emit("doUpdate")
 	})
