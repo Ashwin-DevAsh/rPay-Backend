@@ -39,7 +39,7 @@ func contains(s []string, e string) bool {
 
 func wake(db *sql.DB){
 	var fcmTokens []string
-	row, err := db.Query("select fcmToken from info where isonline=$1",[false])
+	row, err := db.Query("select fcmToken from info where isonline=$1",false)
 	if err!=nil{
 		log.Println(err)
 	}
