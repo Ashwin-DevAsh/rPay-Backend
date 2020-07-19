@@ -22,18 +22,17 @@ app.post("/addUser", (req, res) => {
     return;
   }
 
-  Otp.findOne({ $or: [{ number: user.number }, { email: user.email }] })
+  Otp.findOne({ number: user.number })
     .exec()
     .then((otpDoc) => {
       if (otpDoc && otpDoc.verified) {
-        if (doc) {
-          res.json([{ message: "User already exist" }]);
-          return;
-        }
-
-        Users.findOne({ number: user.number })
+        Users.findOne({ $or: [{ number: user.number }, { email: user.email }] })
           .exec()
           .then((doc) => {
+            if (doc) {
+              res.json([{ message: "User already exist" }]);
+              return;
+            }
             postgres.query(
               "delete from info where id=$1;",
               [user.number],
@@ -102,7 +101,6 @@ app.post("/addUser", (req, res) => {
       }
     })
     .catch((err) => {
-      console.log(err);
       res.json([{ message: "error" }]);
     });
 });
