@@ -81,7 +81,6 @@ func main() {
 			s.Join(data["number"])
 			s.Join("all")
 			updateOnline(db, data["number"], s.ID(), data["fcmToken"], true)
-	    	wake(db)
 		}
 		s.Emit("doUpdate")
 	})
