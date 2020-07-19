@@ -40,14 +40,14 @@ func contains(s []string, e string) bool {
 }
 
 func wake(){
-	var fcmTokens:[]string
+	var fcmTokens []string
 	row, err := db.Query("select fcmToken from info where isonline=false")
 	if err!=nil{
 		log.Println(err)
 	}
 
 	for row.Next(){
-		 var fcmToken:string
+		 var fcmToken string
 		 row.Scan(&fcmToken)
 		 fcmTokens = append(fcmTokens,fcmToken)
 	}
