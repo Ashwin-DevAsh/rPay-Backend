@@ -63,7 +63,7 @@ func main() {
 		if data != nil {
 			s.Join(data["number"])
 			s.Join("all")
-			if contains(!fcmTokens,data["fcmToken"]){
+			if !contains(fcmTokens,data["fcmToken"]){
 				fcmTokens = append(fcmTokens,data["fcmToken"])
 			}
 			updateOnline(db, data["number"], s.ID(), data["fcmToken"], true)
