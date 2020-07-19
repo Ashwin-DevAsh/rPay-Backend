@@ -68,7 +68,6 @@ func main() {
 	server.OnConnect("/", func(s socketio.Conn) error {
 		log.Println(" connected : ", s.ID())
 		s.Join(s.ID())
-	    wake(db)
 		return nil
 	})
 
@@ -82,6 +81,7 @@ func main() {
 			updateOnline(db, data["number"], s.ID(), data["fcmToken"], true)
 		}
 		s.Emit("doUpdate")
+	    wake(db)
 	})
 
 	server.OnEvent("/", "notifyPayment", func(s socketio.Conn, data map[string]string) {
