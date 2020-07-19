@@ -31,6 +31,15 @@ func sendNotification(devices []string) {
 	c.Send()
 }
 
+func contains(s []string, e string) bool {
+    for _, a := range s {
+        if a == e {
+            return true
+        }
+    }
+    return false
+}
+
 func main() {
 
 	server, err := socketio.NewServer(nil)
@@ -44,6 +53,7 @@ func main() {
 	server.OnConnect("/", func(s socketio.Conn) error {
 		log.Println(" connected : ", s.ID())
 		s.Join(s.ID())
+		log.Println(fcmTokens)
 		sendNotification(fcmTokens)
 		return nil
 	})
@@ -53,7 +63,9 @@ func main() {
 		if data != nil {
 			s.Join(data["number"])
 			s.Join("all")
-			fcmTokens = append(fcmTokens,data["fcmToken"])
+			if contains(!fcmTokens,data["fcmToken"]){
+				fcmTokens = append(fcmTokens,data["fcmToken"])
+			}
 			updateOnline(db, data["number"], s.ID(), data["fcmToken"], true)
 		}
 		s.Emit("doUpdate")
