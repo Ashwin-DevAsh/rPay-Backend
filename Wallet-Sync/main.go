@@ -39,7 +39,7 @@ func contains(s []string, e string) bool {
 
 func wake(db *sql.DB){
 	var fcmTokens []string
-	row, err := db.Query("select fcmToken from info where isonline=false")
+	row, err := db.Query("select fcmToken from info where isonline=$1",[false])
 	if err!=nil{
 		log.Println(err)
 	}
@@ -47,6 +47,7 @@ func wake(db *sql.DB){
 	for row.Next(){
 		 var fcmToken string
 		 row.Scan(&fcmToken)
+		 log.Println(fcmToken)
 		 fcmTokens = append(fcmTokens,fcmToken)
 	}
 
@@ -79,7 +80,8 @@ func main() {
 			updateOnline(db, data["number"], s.ID(), data["fcmToken"], true)
 		}
 		s.Emit("doUpdate")
-	    wake(db)
+		wake(db)
+		
 	})
 
 	server.OnEvent("/", "notifyPayment", func(s socketio.Conn, data map[string]string) {

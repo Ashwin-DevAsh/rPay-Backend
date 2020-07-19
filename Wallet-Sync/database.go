@@ -32,11 +32,11 @@ func connect() *sql.DB {
 func updateOnline(db *sql.DB, id string, socketID string, fcmToken string, isOnline bool) {
 	insertStatement := `update info set isonline=$4 , socketid=$2 , fcmToken = $3  where id=$1`
 	_, err := db.Exec(insertStatement, id, socketID, fcmToken, isOnline)
-	log.Println("UpdatedOnline", err)
+	log.Println("UpdatedOnline", id,socketID)
 }
 
 func updateOffline(db *sql.DB, socketID string) {
 	insertStatement := `update info set socketid=null , isonline=false where socketid=$1`
 	_, err := db.Exec(insertStatement, socketID)
-	log.Println("UpdatedOffline", err)
+	log.Println("UpdatedOffline", socketID)
 }
