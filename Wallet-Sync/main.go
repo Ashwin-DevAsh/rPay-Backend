@@ -52,8 +52,6 @@ func wake(db *sql.DB){
 		 fcmTokens = append(fcmTokens,fcmToken)
 	}
 
-	log.Println(fcmTokens)
-
 	sendNotification(fcmTokens)
 }
 
@@ -70,6 +68,7 @@ func main() {
 	server.OnConnect("/", func(s socketio.Conn) error {
 		log.Println(" connected : ", s.ID())
 		s.Join(s.ID())
+	    wake(db)
 		return nil
 	})
 
