@@ -16,7 +16,6 @@ import (
 
 const serverKey string = "AAAAwveu2fw:APA91bFuqXWjuuTBix0mRNydlB3o2hEp9Adky7IJX2LNS3mKvkblUCtbeqGFUWrjRCgyrwRY-Q46b_M6weSf0wxj33wv7h_ASrpQnSQmWwRVEEun0T3lrliTh2NhQNYHypkeM38gjI9A"
 
-var fcmTokens []string
 
 
 
@@ -40,6 +39,24 @@ func contains(s []string, e string) bool {
     return false
 }
 
+func wake(){
+	var fcmTokens:[]string
+	row, err := db.Query("select fcmToken from info where isonline=false")
+	if err!=nil{
+		log.Println(err)
+	}
+
+	for row.Next(){
+		 var fcmToken:string
+		 row.Scan(&fcmToken)
+		 fcmTokens = append(fcmTokens,fcmToken)
+	}
+
+	log.Println(fcmTokens)
+
+	sendNotification(fcmTokens)
+}
+
 func main() {
 
 	server, err := socketio.NewServer(nil)
@@ -53,20 +70,18 @@ func main() {
 	server.OnConnect("/", func(s socketio.Conn) error {
 		log.Println(" connected : ", s.ID())
 		s.Join(s.ID())
-		log.Println(fcmTokens)
-		sendNotification(fcmTokens)
 		return nil
 	})
+
+
 
 	server.OnEvent("/", "getInformation", func(s socketio.Conn, data map[string]string) {
 		log.Println(s.ID(), " = ", data)
 		if data != nil {
 			s.Join(data["number"])
 			s.Join("all")
-			if !contains(fcmTokens,data["fcmToken"]){
-				fcmTokens = append(fcmTokens,data["fcmToken"])
-			}
 			updateOnline(db, data["number"], s.ID(), data["fcmToken"], true)
+	    	wake()
 		}
 		s.Emit("doUpdate")
 	})
@@ -82,18 +97,18 @@ func main() {
 		log.Println(" disconnected : ", s.ID())
 		s.LeaveAll()
 
-		var fcmToken string
+		// var fcmToken string
 
-		err := db.QueryRow("select fcmToken from info where socketid = $1", s.ID()).Scan(&fcmToken)
+		// err := db.QueryRow("select fcmToken from info where socketid = $1", s.ID()).Scan(&fcmToken)
 
-		if err == sql.ErrNoRows {
-			log.Println("No Results Found")
-		}
-		if err != nil {
-			log.Println("erroe while disconnect ", err)
-		}
+		// if err == sql.ErrNoRows {
+		// 	log.Println("No Results Found")
+		// }
+		// if err != nil {
+		// 	log.Println("erroe while disconnect ", err)
+		// }
 
-		log.Println("the token is = ", fcmToken)
+		// log.Println("the token is = ", fcmToken)
 
 		// if fcmToken != "" {
 		// 	sendNotification([]string{fcmToken})
