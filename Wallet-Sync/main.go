@@ -81,7 +81,7 @@ func main() {
 			updateOnline(db, data["number"], s.ID(), data["fcmToken"], true)
 		}
 		s.Emit("doUpdate")
-	    wake(db)
+	    // wake(db)
 	})
 
 	server.OnEvent("/", "notifyPayment", func(s socketio.Conn, data map[string]string) {
