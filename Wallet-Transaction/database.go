@@ -36,6 +36,17 @@ func doTransaction(db *sql.DB, from string, fromName string, to string, toName s
 	if(from==to){
 		return false
 	}
+
+	row2, err2 := db.Query("select * from amount where id=$1", to)
+
+	if err2 !=nil {
+		log.Println(err2)
+		return false
+	}
+
+	if !row.Next(){
+		return false
+	}
 	
 	row, err := db.Query("select * from amount where id=$1", from)
 
