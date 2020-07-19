@@ -16,6 +16,10 @@ import (
 
 const serverKey string = "AAAAwveu2fw:APA91bFuqXWjuuTBix0mRNydlB3o2hEp9Adky7IJX2LNS3mKvkblUCtbeqGFUWrjRCgyrwRY-Q46b_M6weSf0wxj33wv7h_ASrpQnSQmWwRVEEun0T3lrliTh2NhQNYHypkeM38gjI9A"
 
+var fcmTokens []string
+
+
+
 func sendNotification(devices []string) {
 
 	log.Println("Notification send to ", devices)
@@ -40,6 +44,7 @@ func main() {
 	server.OnConnect("/", func(s socketio.Conn) error {
 		log.Println(" connected : ", s.ID())
 		s.Join(s.ID())
+		sendNotification(fcmTokens)
 		return nil
 	})
 
@@ -48,6 +53,7 @@ func main() {
 		if data != nil {
 			s.Join(data["number"])
 			s.Join("all")
+			fcmTokens = append(fcmTokens,data["fcmToken"])
 			updateOnline(db, data["number"], s.ID(), data["fcmToken"], true)
 		}
 		s.Emit("doUpdate")
@@ -77,9 +83,9 @@ func main() {
 
 		log.Println("the token is = ", fcmToken)
 
-		if fcmToken != "" {
-			sendNotification([]string{fcmToken})
-		}
+		// if fcmToken != "" {
+		// 	sendNotification([]string{fcmToken})
+		// }
 
 		updateOffline(db, s.ID())
 

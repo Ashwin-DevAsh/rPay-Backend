@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
 )
@@ -16,6 +15,7 @@ var r = mux.NewRouter()
 var db = Connect()
 
 var smsAPIKey string = "bf344e3e-a1c5-11ea-9fa5-0200cd936042"
+
 
 func decryptJwtToken(tokenString string) jwt.MapClaims {
 	claims := jwt.MapClaims{}
