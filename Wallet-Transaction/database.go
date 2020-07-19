@@ -41,13 +41,16 @@ func doTransaction(db *sql.DB, from string, fromName string, to string, toName s
 
 	if err != nil {
 		log.Println(err)
+		return false
 	}
 
 	var id string
     var balance uint64
 
-	for row.Next() {
+	if row.Next() {
 		row.Scan(&id, &balance)
+	}else {
+		return false
 	}
 
 	if(balance<amount){
