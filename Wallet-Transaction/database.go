@@ -44,7 +44,7 @@ func doTransaction(db *sql.DB, from string, fromName string, to string, toName s
 		return false
 	}
 
-	if !row.Next(){
+	if !row2.Next(){
 		return false
 	}
 	
