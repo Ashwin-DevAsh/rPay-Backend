@@ -29,6 +29,7 @@ app.post("/addUser", (req, res) => {
         Users.findOne({ $or: [{ number: user.number }, { email: user.email }] })
           .exec()
           .then((doc) => {
+            console.log(doc);
             if (doc) {
               res.json([{ message: "User already exist" }]);
               return;
