@@ -20,8 +20,6 @@ const serverKey string = "AAAAwveu2fw:APA91bFuqXWjuuTBix0mRNydlB3o2hEp9Adky7IJX2
 
 
 func sendNotification(devices []string) {
-
-	log.Println("Notification send to ", devices)
 	c := fcm.NewFcmClient(serverKey)
 	c.AppendDevices(devices)
 	c.NewFcmRegIdsMsg(devices, map[string]string{
@@ -81,7 +79,7 @@ func main() {
 			updateOnline(db, data["number"], s.ID(), data["fcmToken"], true)
 		}
 		s.Emit("doUpdate")
-	    // wake(db)
+	    wake(db)
 	})
 
 	server.OnEvent("/", "notifyPayment", func(s socketio.Conn, data map[string]string) {
