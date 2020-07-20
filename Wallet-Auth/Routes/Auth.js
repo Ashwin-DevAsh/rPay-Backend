@@ -4,7 +4,8 @@ const https = require("https");
 const User = require("../Schemas/users");
 const jwt = require("jsonwebtoken");
 const api_key_otp = "6bcb8fa0-ca41-11ea-9fa5-0200cd936042";
-
+var api = require("./api.js");
+var smsMessage = new api.SmsMessage();
 //change database
 
 app.get("/getOtp", (req, res) => {
@@ -14,11 +15,23 @@ app.get("/getOtp", (req, res) => {
     Otp.deleteMany({ number })
       .exec()
       .then(() => {
-        https
-          .get(
-            `https://2factor.in/API/V1/${api_key_otp}/SMS/%2B${number}/${otpNumber}`
-          )
-          .on("finish", () => {
+        smsMessage.from = "Rpay";
+        smsMessage.to = `+${number}`;
+        smsMessage.body = `${otpNumber}`;
+
+        var smsApi = new api.SMSApi(
+          "ashwin.r.2018.cse@rajalakshmi.edu.in",
+          "49EB7110-46BA-6A73-9DDE-15C7B2F9C9F0"
+        );
+
+        var smsCollection = new api.SmsMessageCollection();
+
+        smsCollection.messages = [smsMessage];
+
+        smsApi
+          .smsSendPost(smsCollection)
+          .then(function (response) {
+            console.log(response.body);
             const otpObject = new Otp({
               number,
               otp: otpNumber,
@@ -27,9 +40,27 @@ app.get("/getOtp", (req, res) => {
             otpObject.save();
             res.json([{ message: "done" }]);
           })
-          .on("error", () => {
+          .catch(function (err) {
+            console.error(err.body);
             res.json([{ message: "failed" }]);
           });
+
+        // https
+        //   .get(
+        //     `https://2factor.in/API/V1/${api_key_otp}/SMS/%2B${number}/${otpNumber}`
+        //   )
+        //   .on("finish", () => {
+        //     const otpObject = new Otp({
+        //       number,
+        //       otp: otpNumber,
+        //       verified: false,
+        //     });
+        //     otpObject.save();
+        //     res.json([{ message: "done" }]);
+        //   })
+        //   .on("error", () => {
+        //     res.json([{ message: "failed" }]);
+        //   });
       })
       .catch((err) => {
         res.json([{ message: "failed" }]);
