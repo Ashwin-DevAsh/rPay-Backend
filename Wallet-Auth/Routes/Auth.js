@@ -4,7 +4,7 @@ const https = require("https");
 const User = require("../Schemas/users");
 const jwt = require("jsonwebtoken");
 const api_key_otp = "6bcb8fa0-ca41-11ea-9fa5-0200cd936042";
-var api = require("api.js");
+var api = require("../node_modules/clicksend/api.js");
 var smsMessage = new api.SmsMessage();
 //change database
 

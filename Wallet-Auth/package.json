@@ -9,8 +9,8 @@
   "author": "DevAsh",
   "license": "ISC",
   "dependencies": {
-    "api.js": "0.0.5",
     "body-parser": "^1.19.0",
+    "clicksend": "^5.0.37",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "install": "^0.13.0",
