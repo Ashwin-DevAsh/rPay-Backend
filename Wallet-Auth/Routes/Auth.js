@@ -3,7 +3,7 @@ const Otp = require("../Schemas/otp");
 const https = require("https");
 const User = require("../Schemas/users");
 const jwt = require("jsonwebtoken");
-const api_key_otp = "a04d885e-c801-11ea-9fa5-0200cd936042";
+const api_key_otp = "6bcb8fa0-ca41-11ea-9fa5-0200cd936042";
 
 //change database
 
