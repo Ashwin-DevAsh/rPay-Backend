@@ -1,6 +1,6 @@
 FROM node:alpine
 
-copy ./package.json .
+COPY ./package.json .
 
 RUN npm install
 
