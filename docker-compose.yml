@@ -17,7 +17,7 @@ services:
     ports:
       - 8000:8000
   wallet-admin:
-    build: Wallet-admin
+    build: Wallet-Admin
     depends_on: [auth-database, status-database]
     ports:
       - 4500:4500
