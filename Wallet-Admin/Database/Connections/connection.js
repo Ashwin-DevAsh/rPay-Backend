@@ -8,8 +8,8 @@ mongoose
   .then(() => {
     console.log("suc");
   })
-  .catch(() => {
-    console.log("Fail");
+  .catch((err) => {
+    console.log("Fail", err);
   });
 
 module.exports = mongoose;
