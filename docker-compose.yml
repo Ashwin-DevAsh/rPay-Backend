@@ -11,16 +11,17 @@ services:
     ports:
       - 5432:5432
 
-  wallet-auth:
-    build: Wallet-Auth
-    depends_on: [auth-database, status-database]
-    ports:
-      - 8000:8000
   wallet-admin:
     build: Wallet-Admin
     depends_on: [auth-database, status-database]
     ports:
       - 4500:4500
+
+  wallet-auth:
+    build: Wallet-Auth
+    depends_on: [auth-database, status-database]
+    ports:
+      - 8000:8000
 
   wallet-sync:
     build: Wallet-Sync
