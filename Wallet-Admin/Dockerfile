@@ -8,4 +8,4 @@ COPY . .
 
 EXPOSE 4500
 
-RUN node server.js
+CMD node server.js
