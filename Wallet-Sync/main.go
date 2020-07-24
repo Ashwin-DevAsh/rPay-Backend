@@ -102,6 +102,7 @@ func main() {
 
 	go server.Serve()
 	defer server.Close()
+	defer db.Close()
 
 	http.Handle("/socket.io/", server)
 	log.Println("Serving at localhost:7000...")
