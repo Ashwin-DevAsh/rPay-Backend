@@ -13,3 +13,5 @@ app.get("/getTransactions/:count", (req, res) => {
     })
     .catch((e) => console.error(e.stack));
 });
+
+module.exports = app;
