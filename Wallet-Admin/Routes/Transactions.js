@@ -2,8 +2,8 @@ const app = require("express").Router();
 const jwt = require("jsonwebtoken");
 const postgres = require("../Database/Connections/pgConnections");
 
-app.get("/getTransactions/:count", (req, res) => {
-  var count = req.params.count;
+app.get("/getTransactions", (req, res) => {
+  //   var count = req.params.count;
   console.log(count);
 
   postgres
