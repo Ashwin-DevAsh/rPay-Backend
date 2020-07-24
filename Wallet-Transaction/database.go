@@ -104,6 +104,17 @@ func doTransaction(db *sql.DB, from string, fromName string, to string, toName s
 }
 
 func addMoney(db *sql.DB, from string, fromName string, to string, toName string, amount uint64) bool {
+	row2, err2 := db.Query("select * from amount where id=$1", to)
+
+	if err2 !=nil {
+		log.Println(err2)
+		return false
+	}
+
+	if !row2.Next(){
+		return false
+	}
+	
 	tx, err := db.Begin()
     if err != nil {
         return false

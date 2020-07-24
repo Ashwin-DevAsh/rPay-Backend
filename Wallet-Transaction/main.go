@@ -292,5 +292,7 @@ func main() {
 
 	handelRequest()
 
+	defer db.Close()
+
 	log.Fatal(http.ListenAndServe(":10000", r))
 }
