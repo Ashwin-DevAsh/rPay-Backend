@@ -7,16 +7,26 @@ app.get("/getTransactions", (req, res) => {
   //   console.log(count);
   console.log("getting Transaction");
 
-  postgres
-    .query("select * from transactions")
-    .then((datas) => {
-      console.log(datas.rows[0]);
-      res.send(datas);
-    })
-    .catch((e) => {
-      console.error(e.stack);
-      res.send(e);
-    });
+  var token = req.get("token");
+
+  jwt.verify(token, process.env.PRIVATE_KEY, function (err, decoded) {
+    if (err) {
+      res.send({ message: "error", err });
+    } else {
+      if (decoded.name) {
+        postgres
+          .query("select * from transactions")
+          .then((datas) => {
+            console.log(datas.rows[0]);
+            res.send(datas);
+          })
+          .catch((e) => {
+            console.error(e.stack);
+            res.send(e);
+          });
+      }
+    }
+  });
 });
 
 module.exports = app;
