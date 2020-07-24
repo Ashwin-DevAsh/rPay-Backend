@@ -4,7 +4,8 @@ const postgres = require("../Database/Connections/pgConnections");
 
 app.get("/getTransactions", (req, res) => {
   //   var count = req.params.count;
-  console.log(count);
+  //   console.log(count);
+  console.log("getting Transaction");
 
   postgres
     .query("select * from transactions")
