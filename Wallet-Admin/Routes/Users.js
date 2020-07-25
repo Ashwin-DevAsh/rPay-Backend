@@ -5,7 +5,7 @@ const Users = require("../Database/Schema/Users");
 
 app.get("/getUsers", (req, res) => {
   console.log("Getting Users");
-  Users.findOne({})
+  Users.find({})
     .exec()
     .then((doc) => {
       res.send(doc);
