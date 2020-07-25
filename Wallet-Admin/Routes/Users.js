@@ -14,3 +14,5 @@ app.get("/getUsers", (req, res) => {
       res.send({ err: e });
     });
 });
+
+module.exports = app;
