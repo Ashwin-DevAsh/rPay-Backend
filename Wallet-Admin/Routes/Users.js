@@ -4,6 +4,7 @@ const postgres = require("../Database/Connections/pgConnections");
 const Users = require("../Database/Schema/Users");
 
 app.get("/getUsers", (req, res) => {
+  console.log("Getting Users");
   Users.findOne({})
     .exec()
     .then((doc) => {
