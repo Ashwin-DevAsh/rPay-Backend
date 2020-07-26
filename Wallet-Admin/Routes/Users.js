@@ -27,8 +27,8 @@ app.get("/getMyTransactions/:number", (req, res) => {
   var token = req.get("token");
   console.log("Getting Users");
 
-  var number = req.param.number;
-  if (!req.param.number) {
+  var number = req.params.number;
+  if (!req.params.number) {
     res.send({ message: "err" });
   }
 
