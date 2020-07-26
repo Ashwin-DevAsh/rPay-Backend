@@ -38,10 +38,9 @@ app.get("/getMyTransactions/:number", (req, res) => {
     } else {
       if (decoded.name) {
         postgres
-          .query(
-            `select * from transactions where fromid=${number} or toid=${number}`,
-            [number]
-          )
+          .query(`select * from transactions where fromid=$1 or toid=$1`, [
+            number,
+          ])
           .then((datas) => {
             console.log(datas.rows[0]);
             res.send(datas);
