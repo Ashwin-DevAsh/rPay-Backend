@@ -23,4 +23,35 @@ app.get("/getUsers", (req, res) => {
   });
 });
 
+app.get("/getMyTransactions/:number", (req, res) => {
+  var token = req.get("token");
+  console.log("Getting Users");
+
+  var number = req.param.number;
+  if (!req.param.number) {
+    res.send({ message: "err" });
+  }
+
+  jwt.verify(token, process.env.PRIVATE_KEY, function (err, decoded) {
+    if (err) {
+      res.send({ message: "error", err });
+    } else {
+      if (decoded.name) {
+        postgres
+          .query("select * from transactions where fromid=$1 or toid=$1", [
+            number,
+          ])
+          .then((datas) => {
+            console.log(datas.rows[0]);
+            res.send(datas);
+          })
+          .catch((e) => {
+            console.error(e.stack);
+            res.send(e);
+          });
+      }
+    }
+  });
+});
+
 module.exports = app;
