@@ -42,8 +42,16 @@ app.get("/getMyTransactions/:number", (req, res) => {
             number,
           ])
           .then((datas) => {
-            console.log(datas.rows[0]);
-            res.send(datas);
+            postgres
+              .query(`select balance from amount where id=$1`, [number])
+              .then((myBalance) => {
+                console.log(datas.rows[0]);
+                res.send({ ...datas, balance: myBalance.rows[0].balance });
+              })
+              .catch((e) => {
+                console.error(e.stack);
+                res.send(e);
+              });
           })
           .catch((e) => {
             console.error(e.stack);
