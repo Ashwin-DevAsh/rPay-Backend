@@ -212,7 +212,7 @@ function generatedStatsQuery(day) {
 
 module.exports = app;
 
-// query from conver timestring to date
+// query from conver timestring to dates
 // select to_date(Split_part(transactiontime,' ' ,1),'MM-DD-YYYY') from transactions;
 // select to_date(Split_part(transactiontime,' ' ,1),'MM-DD-YYYY') as date,sum(amount) as amount from transactions group by date
 // select to_date(Split_part(transactiontime,' ' ,1),'MM-DD-YYYY') as date,sum(amount) as amount from transactions where isgenerated=true group by date
