@@ -10,10 +10,12 @@ app.get("/getTransactionStats/:days", (req, res) => {
     res.send({ message: "error" });
     return;
   }
+  var days = 7;
   try {
-    var days = Number.parseInt(req.params.days);
+    days = Number.parseInt(req.params.days);
   } catch (e) {
     res.send({ message: "error", e });
+    return;
   }
 
   jwt.verify(token, process.env.PRIVATE_KEY, function (err, decoded) {
