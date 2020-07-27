@@ -10,7 +10,7 @@ app.get("/getTransactionStats/:days", (req, res) => {
     res.send({ message: "error" });
     return;
   }
-  var days = Number.parseInt(req.params.days);
+  var days = req.params.days;
 
   jwt.verify(token, process.env.PRIVATE_KEY, function (err, decoded) {
     if (err) {
@@ -58,7 +58,7 @@ function transactionStatsQuery() {
             from
                  transactions 
             where 
-                  to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY') >= current_date - $2 group by date order by date;`;
+                  to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY') >= current_date - interval $2 day group by date order by date;`;
 }
 
 module.exports = app;
