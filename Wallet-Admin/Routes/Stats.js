@@ -10,14 +10,18 @@ app.get("/getTransactionStats/:days", (req, res) => {
     res.send({ message: "error" });
     return;
   }
-  var days = req.params.days;
+  try {
+    var days = Number.parseInt(req.params.days);
+  } catch (e) {
+    res.send({ message: "error", e });
+  }
 
   jwt.verify(token, process.env.PRIVATE_KEY, function (err, decoded) {
     if (err) {
       res.send({ message: "error", err });
     } else {
       postgres
-        .query(transactionStatsQuery(), ["day", days])
+        .query(transactionStatsQuery(days), ["day"])
         .then((day) => {
           postgres
             .query(transactionStatsQuery(), ["week", days])
@@ -50,7 +54,7 @@ app.get("/getTransactionStats/:days", (req, res) => {
   });
 });
 
-function transactionStatsQuery() {
+function transactionStatsQuery(day) {
   return `select 
                  min(to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY')) ,
                  date_part($1 , to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY')::date) as date,
@@ -58,7 +62,7 @@ function transactionStatsQuery() {
             from
                  transactions 
             where 
-                  to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY') >= current_date - interval $2 day group by date order by date;`;
+                  to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY') >= current_date - ${day} group by date order by date;`;
 }
 
 module.exports = app;
