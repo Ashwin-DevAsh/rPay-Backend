@@ -167,7 +167,7 @@ function transactionStatsQuery(day) {
                  min(to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY')) as fromDate ,
                  max(to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY')) as toDate ,
                  date_part($1 , to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY')::date) as n,
-                 sum(amount) as amount
+                 sum(amount) as total
             from
                  transactions 
             where 
@@ -183,7 +183,7 @@ function noTransactionStatsQuery(day) {
                  min(to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY')) as fromDate ,
                  max(to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY')) as toDate ,
                  date_part($1 , to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY')::date) as n,
-                 count(amount) as transactionsCount
+                 count(amount) as total
             from
                  transactions 
             where 
@@ -199,7 +199,7 @@ function generatedStatsQuery(day) {
                  min(to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY')) as fromDate ,
                  max(to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY')) as toDate ,
                  date_part($1 , to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY')::date) as n,
-                 sum(amount) as amount
+                 sum(amount) as total
             from
                  transactions 
             where 
