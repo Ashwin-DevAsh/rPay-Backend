@@ -56,12 +56,81 @@ app.get("/getTransactionStats/:days", (req, res) => {
   });
 });
 
+app.get("/getNoTransactionStats/:days", (req, res) => {
+  var token = req.get("token");
+
+  if (!req.params.days) {
+    res.send({ message: "error" });
+    return;
+  }
+  var days = 7;
+  try {
+    days = Number.parseInt(req.params.days) || 7;
+  } catch (e) {
+    res.send({ message: "error", e });
+    return;
+  }
+
+  jwt.verify(token, process.env.PRIVATE_KEY, function (err, decoded) {
+    if (err) {
+      res.send({ message: "error", err });
+    } else {
+      postgres
+        .query(noTransactionStatsQuery(days), ["day"])
+        .then((day) => {
+          postgres
+            .query(noTransactionStatsQuery(days), ["week"])
+            .then((week) => {
+              postgres
+                .query(noTransactionStatsQuery(days), ["month"])
+                .then((month) => {
+                  console.log(month.rows[0]);
+                  res.send({
+                    day,
+                    week,
+                    month,
+                  });
+                })
+                .catch((e) => {
+                  console.error(e.stack);
+                  res.send(e);
+                });
+            })
+            .catch((e) => {
+              console.error(e.stack);
+              res.send(e);
+            });
+        })
+        .catch((e) => {
+          console.error(e.stack);
+          res.send(e);
+        });
+    }
+  });
+});
+
 function transactionStatsQuery(day) {
   return `select 
                  min(to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY')) as fromDate ,
                  max(to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY')) as toDate ,
                  date_part($1 , to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY')::date) as n,
                  sum(amount) as amount
+            from
+                 transactions 
+            where 
+                  to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY') >= current_date - ${day}
+            group by 
+                  n
+            order by
+                  n;`;
+}
+
+function noTransactionStatsQuery(day) {
+  return `select 
+                 min(to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY')) as fromDate ,
+                 max(to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY')) as toDate ,
+                 date_part($1 , to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY')::date) as n,
+                 count(amount) as transactionsCount
             from
                  transactions 
             where 
