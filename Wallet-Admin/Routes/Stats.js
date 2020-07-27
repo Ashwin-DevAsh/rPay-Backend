@@ -6,11 +6,11 @@ const Users = require("../Database/Schema/Users");
 app.get("/getTransactionStats/:days", (req, res) => {
   var token = req.get("token");
 
-  var days = req.params.days;
   if (!req.params.days) {
     res.send({ message: "error" });
     return;
   }
+  var days = req.params.days.toInt();
 
   jwt.verify(token, process.env.PRIVATE_KEY, function (err, decoded) {
     if (err) {
