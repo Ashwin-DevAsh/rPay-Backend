@@ -12,7 +12,7 @@ app.get("/getTransactionStats/:days", (req, res) => {
   }
   var days = 7;
   try {
-    days = Number.parseInt(req.params.days);
+    days = Number.parseInt(req.params.days) || 7;
   } catch (e) {
     res.send({ message: "error", e });
     return;
@@ -26,10 +26,10 @@ app.get("/getTransactionStats/:days", (req, res) => {
         .query(transactionStatsQuery(days), ["day"])
         .then((day) => {
           postgres
-            .query(transactionStatsQuery(), ["week", days])
+            .query(transactionStatsQuery(days), ["week"])
             .then((week) => {
               postgres
-                .query(transactionStatsQuery(), ["month", days])
+                .query(transactionStatsQuery(days), ["month"])
                 .then((month) => {
                   console.log(month.rows[0]);
                   res.send({
