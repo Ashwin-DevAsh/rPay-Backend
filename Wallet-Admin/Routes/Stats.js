@@ -58,8 +58,9 @@ app.get("/getTransactionStats/:days", (req, res) => {
 
 function transactionStatsQuery(day) {
   return `select 
-                 min(to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY')) ,
-                 date_part($1 , to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY')::date) as date,
+                 min(to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY')) as fromDate ,
+                 min(to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY')) as toDate ,
+                 date_part($1 , to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY')::date) as n,
                  sum(amount) as amount
             from
                  transactions 
