@@ -109,6 +109,59 @@ app.get("/getNoTransactionStats/:days", (req, res) => {
   });
 });
 
+app.get("/getGeneratedStats/:days", (req, res) => {
+  var token = req.get("token");
+
+  if (!req.params.days) {
+    res.send({ message: "error" });
+    return;
+  }
+  var days = 7;
+  try {
+    days = Number.parseInt(req.params.days) || 7;
+  } catch (e) {
+    res.send({ message: "error", e });
+    return;
+  }
+
+  jwt.verify(token, process.env.PRIVATE_KEY, function (err, decoded) {
+    if (err) {
+      res.send({ message: "error", err });
+    } else {
+      postgres
+        .query(generatedStatsQuery(days), ["day"])
+        .then((day) => {
+          postgres
+            .query(generatedStatsQuery(days), ["week"])
+            .then((week) => {
+              postgres
+                .query(generatedStatsQuery(days), ["month"])
+                .then((month) => {
+                  console.log(month.rows[0]);
+                  res.send({
+                    day,
+                    week,
+                    month,
+                  });
+                })
+                .catch((e) => {
+                  console.error(e.stack);
+                  res.send(e);
+                });
+            })
+            .catch((e) => {
+              console.error(e.stack);
+              res.send(e);
+            });
+        })
+        .catch((e) => {
+          console.error(e.stack);
+          res.send(e);
+        });
+    }
+  });
+});
+
 function transactionStatsQuery(day) {
   return `select 
                  min(to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY')) as fromDate ,
@@ -135,6 +188,22 @@ function noTransactionStatsQuery(day) {
                  transactions 
             where 
                   to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY') >= current_date - ${day}
+            group by 
+                  n
+            order by
+                  n;`;
+}
+
+function generatedStatsQuery(day) {
+  return `select 
+                 min(to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY')) as fromDate ,
+                 max(to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY')) as toDate ,
+                 date_part($1 , to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY')::date) as n,
+                 sum(amount) as amount
+            from
+                 transactions 
+            where 
+                 isgenerated=true and to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY') >= current_date - ${day}
             group by 
                   n
             order by
