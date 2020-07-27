@@ -1,9 +1,8 @@
 require("dotenv").config(".env");
 const express = require("express");
-const mongodb = require("./Database/Connections/connection");
-const Merchant = require("./Database/Schema/Merchant");
 const Admin = require("./Database/Schema/Admin");
 const Users = require("./Routes/Users");
+const Stats = require("./Routes/Stats");
 const bcrypt = require("bcrypt");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -66,6 +65,7 @@ app.get("/", (req, res) => {
 app.use(adminRoute);
 app.use(transactions);
 app.use(Users);
+app.use(Stats);
 
 app.listen(PORT, () => {
   console.log("Listining on ", PORT);
