@@ -67,7 +67,7 @@ function transactionStatsQuery(day) {
             where 
                   to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY') >= current_date - ${day}
             group by 
-                  date
+                  n
             order by
                   n;`;
 }
