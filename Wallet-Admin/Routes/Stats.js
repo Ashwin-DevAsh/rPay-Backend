@@ -65,7 +65,11 @@ function transactionStatsQuery(day) {
             from
                  transactions 
             where 
-                  to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY') >= current_date - ${day} group by date order by date;`;
+                  to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY') >= current_date - ${day}
+            group by 
+                  date
+            order by
+                  n;`;
 }
 
 module.exports = app;
