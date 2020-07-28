@@ -56,7 +56,7 @@ app.post("/addUser", (req, res) => {
                                 number: user.number,
                                 email: user.email,
                                 password: user.password,
-                                qrcode: jwt.sign(
+                                qrCode: jwt.sign(
                                   {
                                     name: user.name,
                                     id: `rpay@${user.number}`,
