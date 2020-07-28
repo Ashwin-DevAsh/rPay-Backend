@@ -153,6 +153,7 @@ type Transaction struct {
 	Amount          interface{}
 	FromName        interface{}
 	IsGenerated  	interface{}
+	IsWithdraw      interface{}
 }
 
 func getMyState(db *sql.DB, id string) MyState {
@@ -217,7 +218,9 @@ func getTransactions(sb *sql.DB, number string) []Transaction {
 
 	for row.Next() {
 		var transaction Transaction
-		row.Scan(&transaction.TransactionID, &transaction.TransactionTime, &transaction.From, &transaction.To, &transaction.ToName, &transaction.FromName, &transaction.Amount ,&transaction.IsGenerated)
+		row.Scan(&transaction.TransactionID, &transaction.TransactionTime, &transaction.From, 
+				 &transaction.To, &transaction.ToName, &transaction.FromName, &transaction.Amount ,
+				 &transaction.IsGenerated,&transaction.IsWithdraw)
 		transactions = append(transactions, transaction)
 
 	}
@@ -227,11 +230,11 @@ func getTransactions(sb *sql.DB, number string) []Transaction {
 	return transactions
 }
 
-func getTransactionsBetweenObjects(sb *sql.DB, number1 string, number2 string) []Transaction {
+func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []Transaction {
 
 	transactions := []Transaction{}
 
-	row, err := db.Query("select * from transactions where (fromid = $1 or fromid = $2) and (toid = $1 or toid = $2)", number1, number2)
+	row, err := db.Query("select * from transactions where (fromid = $1 or fromid = $2) and (toid = $1 or toid = $2)", id1, id2)
 
 	if err != nil {
 		log.Println(err)
@@ -239,7 +242,8 @@ func getTransactionsBetweenObjects(sb *sql.DB, number1 string, number2 string) [
 
 	for row.Next() {
 		var transaction Transaction
-		row.Scan(&transaction.TransactionID, &transaction.TransactionTime, &transaction.From, &transaction.To, &transaction.ToName, &transaction.FromName, &transaction.Amount, &transaction.IsGenerated)
+		row.Scan(&transaction.TransactionID, &transaction.TransactionTime, &transaction.From, 
+			&transaction.To, &transaction.ToName, &transaction.FromName, &transaction.Amount, &transaction.IsGenerated,&transaction.IsWithdraw)
 		transactions = append(transactions, transaction)
 
 	}
