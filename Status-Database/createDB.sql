@@ -16,12 +16,17 @@ create table transactions
 (
     transactionID bigserial,
     transactionTime varchar,
+
     fromID varchar,
     toID varchar,
+
     toName varchar,
     fromName varchar,
+
     amount bigint,
-    isGenerated boolean
+    
+    isGenerated boolean,
+    isWithdraw boolean
 );
 -- create table logs(currentCheckPoint bigserial,logType varchar,transactionID int,userId varchar);
 
