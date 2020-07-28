@@ -13,7 +13,7 @@ var UsersSchema = new Schema({
     upiID: String,
   },
   storeName: String,
-  status: "Pending",
+  status: String,
 });
 
 module.exports = mongoose.model("Merchants", UsersSchema);

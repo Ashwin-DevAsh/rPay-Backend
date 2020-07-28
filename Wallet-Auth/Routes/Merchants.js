@@ -74,6 +74,7 @@ app.post("/addMerchant", (req, res) => {
                                       upiID: merchant.upiID,
                                     },
                                     storeName: merchant.storeName,
+                                    status: "Pending",
                                   });
                                   jwt.sign(
                                     {
