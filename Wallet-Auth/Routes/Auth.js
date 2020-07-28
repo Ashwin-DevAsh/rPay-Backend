@@ -2,6 +2,7 @@ const app = require("express").Router();
 const Otp = require("../Schemas/otp");
 const https = require("https");
 const User = require("../Schemas/users");
+const Merchant = require("../Schemas/Merchants");
 const jwt = require("jsonwebtoken");
 const api_key_otp = "6bcb8fa0-ca41-11ea-9fa5-0200cd936042";
 var api = require("../node_modules/clicksend/api.js");
@@ -13,57 +14,11 @@ app.get("/getOtp", (req, res) => sendOtp(req, res, "uPxbwGuwMaB"));
 app.get("/getOtpMerchant", (req, res) => sendOtp(req, res, "RGhR1jQhc7+"));
 
 app.post("/setOtp", (req, res) => {
-  var otpNumber = req.body["otpNumber"];
-  var number = req.body["number"];
-  if (otpNumber && number) {
-    Otp.findOne({ number })
-      .exec()
-      .then((result) => {
-        console.log(result);
-        if (result.otp == otpNumber) {
-          Otp.findOneAndUpdate({ number }, { verified: true }, (err, doc) => {
-            if (err) {
-              res.json([{ message: "error" }]);
-            } else {
-              User.findOne({ number })
-                .exec()
-                .then((doc) => {
-                  if (doc) {
-                    jwt.sign(
-                      {
-                        name: doc.name,
-                        number: doc.number,
-                        email: doc.email,
-                      },
-                      process.env.PRIVATE_KEY,
-                      (err, token) => {
-                        if (err) {
-                          res.json([{ message: err }]);
-                        } else {
-                          res.json([{ message: "verified", user: doc, token }]);
-                          Otp.deleteMany({ number }).exec();
-                        }
-                      }
-                    );
-                  } else {
-                    res.json([{ message: "verified", user: null }]);
-                  }
-                })
-                .catch((err) => {
-                  res.json([{ message: "err" }]);
-                });
-            }
-          });
-        } else {
-          res.json([{ message: "not matching" }]);
-        }
-      })
-      .catch((err) => {
-        res.json([{ message: "error" }]);
-      });
-  } else {
-    res.json([{ message: "elements not found" }]);
-  }
+  setOtp(req, res, User);
+});
+
+app.post("/setOtpMerchant", (req, res) => {
+  setOtp(req, res, Merchant);
 });
 
 app.delete("/deleteOtp", (req, res) => {
@@ -81,6 +36,65 @@ app.delete("/deleteOtp", (req, res) => {
     res.json([{ message: "missing parameter" }]);
   }
 });
+
+var setOtp = (req, res, object) => {
+  (req, res) => {
+    var otpNumber = req.body["otpNumber"];
+    var number = req.body["number"];
+    if (otpNumber && number) {
+      Otp.findOne({ number })
+        .exec()
+        .then((result) => {
+          console.log(result);
+          if (result.otp == otpNumber) {
+            Otp.findOneAndUpdate({ number }, { verified: true }, (err, doc) => {
+              if (err) {
+                res.json([{ message: "error" }]);
+              } else {
+                object
+                  .findOne({ number })
+                  .exec()
+                  .then((doc) => {
+                    if (doc) {
+                      jwt.sign(
+                        {
+                          name: doc.name,
+                          number: doc.number,
+                          email: doc.email,
+                        },
+                        process.env.PRIVATE_KEY,
+                        (err, token) => {
+                          if (err) {
+                            res.json([{ message: err }]);
+                          } else {
+                            res.json([
+                              { message: "verified", user: doc, token },
+                            ]);
+                            Otp.deleteMany({ number }).exec();
+                          }
+                        }
+                      );
+                    } else {
+                      res.json([{ message: "verified", user: null }]);
+                    }
+                  })
+                  .catch((err) => {
+                    res.json([{ message: "err" }]);
+                  });
+              }
+            });
+          } else {
+            res.json([{ message: "not matching" }]);
+          }
+        })
+        .catch((err) => {
+          res.json([{ message: "error" }]);
+        });
+    } else {
+      res.json([{ message: "elements not found" }]);
+    }
+  };
+};
 
 var sendOtp = (req, res, appId) => {
   var number = req.query["number"];

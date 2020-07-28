@@ -15,8 +15,6 @@ app.post("/addMerchant", (req, res) => {
     !merchant.number ||
     !merchant.password ||
     !merchant.fcmToken ||
-    !merchant.accountNumber ||
-    !merchant.ifsc ||
     !merchant.storeName
   ) {
     res.status(200).send([{ message: "error" }]);
