@@ -155,11 +155,11 @@ type Transaction struct {
 	IsGenerated  	interface{}
 }
 
-func getMyState(db *sql.DB, number string) MyState {
+func getMyState(db *sql.DB, id string) MyState {
 
 	state := map[string]int{}
 
-	row, err := db.Query("select * from amount where id=$1", number)
+	row, err := db.Query("select * from amount where id=$1", id)
 
 	if err != nil {
 		log.Println(err)
@@ -174,7 +174,7 @@ func getMyState(db *sql.DB, number string) MyState {
 
 
 
-	myState := MyState{state[number], getTransactions(db, number)}
+	myState := MyState{state[id], getTransactions(db, id)}
     log.Println(myState)
 	return myState
 }

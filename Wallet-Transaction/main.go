@@ -212,15 +212,15 @@ func handelRequest() {
 
 			response.Header().Set("Content-type", "application/json")
 
-			number := request.URL.Query().Get("number")
+			id := request.URL.Query().Get("id")
 
-			log.Println(number)
+			log.Println(id)
 
 			jwtToken := request.Header.Get("jwtToken")
 			header := decryptJwtToken(jwtToken)
 
 			if header != nil {
-				userJSON, err := json.Marshal(getMyState(db, number))
+				userJSON, err := json.Marshal(getMyState(db, id))
 
 				if err != nil {
 					log.Println(err)
