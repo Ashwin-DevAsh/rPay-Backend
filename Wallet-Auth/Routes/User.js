@@ -194,7 +194,7 @@ app.post("/changePassword", (req, res) => {
         return;
       }
 
-      Users.findOne({ number: data.id })
+      Users.findOne({ id: data.id })
         .exec()
         .then((docs) => {
           console.log("data = ", docs);
@@ -205,7 +205,7 @@ app.post("/changePassword", (req, res) => {
 
           if (docs.password == data.oldPassword) {
             Users.findOneAndUpdate(
-              { number: data.id },
+              { id: data.id },
               { password: data.newPassword },
               (err, doc) => {
                 if (err) {
