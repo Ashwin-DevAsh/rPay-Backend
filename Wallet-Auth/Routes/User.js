@@ -36,7 +36,7 @@ app.post("/addUser", (req, res) => {
             }
             postgres.query(
               "delete from info where id=$1;",
-              [user.number],
+              [`rpay@${user.number}`],
               (err, result) => {
                 postgres.query(
                   "insert into info values($1,$2,null,null)",
@@ -45,8 +45,8 @@ app.post("/addUser", (req, res) => {
                     if (!err) {
                       postgres.query(
                         "insert into amount(id,balance) values($1,0)",
-                        [user.number],
-                        (err, result) => {
+                        [`rpay@${user.number}`],
+                        async (err, result) => {
                           if (!err) {
                             if (doc) {
                               res.json([{ message: "User already exist" }]);
@@ -56,6 +56,15 @@ app.post("/addUser", (req, res) => {
                                 number: user.number,
                                 email: user.email,
                                 password: user.password,
+                                qrcode: jwt.sign(
+                                  {
+                                    name: user.name,
+                                    id: `rpay@${user.number}`,
+                                    number: user.number,
+                                  },
+                                  process.env.QRKEY
+                                ),
+                                id: `rpay@${user.number}`,
                               });
                               jwt.sign(
                                 {
@@ -153,7 +162,7 @@ app.post("/getUsersWithContacts", (req, res) => {
 });
 
 app.get("/getUsers", (req, res) => {
-  Users.find({}, ["name", "number", "email", "imageURL"])
+  Users.find({}, ["name", "number", "email", "imageURL", "id"])
     .exec()
     .then((doc) => {
       console.log(doc);

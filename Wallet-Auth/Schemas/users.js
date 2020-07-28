@@ -7,6 +7,8 @@ var UsersSchema = new Schema({
   email: String,
   password: String,
   imageURL: String,
+  id: String,
+  qrCode: String,
 });
 
 module.exports = mongoose.model("Users", UsersSchema);
