@@ -147,3 +147,5 @@ app.get("/getMerchants", (req, res) => {
       res.send(e);
     });
 });
+
+module.exports = app;

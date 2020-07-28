@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const authEndPoint = require("./Routes/Auth");
 const userEndPoint = require("./Routes/User");
+const merchantEndPoint = require("./Routes/Merchants");
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.get("/", (req, res) => {
 
 app.use(userEndPoint);
 app.use(authEndPoint);
+app.use(merchantEndPoint);
 
 app.listen(8000, () => {
   console.log("connecte at port 8000");
