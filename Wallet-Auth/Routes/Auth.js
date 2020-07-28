@@ -1,5 +1,6 @@
 const app = require("express").Router();
 const Otp = require("../Schemas/otp");
+const MerchantOtp = require("../Schemas/MerchantsOtp");
 const https = require("https");
 const User = require("../Schemas/users");
 const Merchant = require("../Schemas/Merchants");
@@ -9,45 +10,33 @@ var api = require("../node_modules/clicksend/api.js");
 var smsMessage = new api.SmsMessage();
 //change database
 
-app.get("/getOtp", (req, res) => sendOtp(req, res, "uPxbwGuwMaB"));
+app.get("/getOtp", (req, res) => sendOtp(req, res, Otp, "uPxbwGuwMaB"));
 
-app.get("/getOtpMerchant", (req, res) => sendOtp(req, res, "RGhR1jQhc7+"));
+app.get("/getOtpMerchant", (req, res) =>
+  sendOtp(req, res, MerchantOtp, "RGhR1jQhc7+")
+);
 
 app.post("/setOtp", (req, res) => {
-  setOtp(req, res, User);
+  setOtp(req, res, Otp, User);
 });
 
 app.post("/setOtpMerchant", (req, res) => {
-  setOtp(req, res, Merchant);
+  setOtp(req, res, MerchantOtp, Merchant);
 });
 
-app.delete("/deleteOtp", (req, res) => {
-  var number = req.query["number"];
-  if (number) {
-    Otp.deleteMany({ number })
+var setOtp = (req, res, OtpObject, object) => {
+  var otpNumber = req.body["otpNumber"];
+  var number = req.body["number"];
+  if (otpNumber && number) {
+    OtpObject.findOne({ number })
       .exec()
       .then((result) => {
-        res.json([{ message: "done" }]);
-      })
-      .catch((err) => {
-        res.json([{ message: "error" }]);
-      });
-  } else {
-    res.json([{ message: "missing parameter" }]);
-  }
-});
-
-var setOtp = (req, res, object) => {
-  (req, res) => {
-    var otpNumber = req.body["otpNumber"];
-    var number = req.body["number"];
-    if (otpNumber && number) {
-      Otp.findOne({ number })
-        .exec()
-        .then((result) => {
-          console.log(result);
-          if (result.otp == otpNumber) {
-            Otp.findOneAndUpdate({ number }, { verified: true }, (err, doc) => {
+        console.log(result);
+        if (result.otp == otpNumber) {
+          OtpObject.findOneAndUpdate(
+            { number },
+            { verified: true },
+            (err, doc) => {
               if (err) {
                 res.json([{ message: "error" }]);
               } else {
@@ -70,7 +59,7 @@ var setOtp = (req, res, object) => {
                             res.json([
                               { message: "verified", user: doc, token },
                             ]);
-                            Otp.deleteMany({ number }).exec();
+                            OtpObject.deleteMany({ number }).exec();
                           }
                         }
                       );
@@ -82,25 +71,25 @@ var setOtp = (req, res, object) => {
                     res.json([{ message: "err" }]);
                   });
               }
-            });
-          } else {
-            res.json([{ message: "not matching" }]);
-          }
-        })
-        .catch((err) => {
-          res.json([{ message: "error" }]);
-        });
-    } else {
-      res.json([{ message: "elements not found" }]);
-    }
-  };
+            }
+          );
+        } else {
+          res.json([{ message: "not matching" }]);
+        }
+      })
+      .catch((err) => {
+        res.json([{ message: "error" }]);
+      });
+  } else {
+    res.json([{ message: "elements not found" }]);
+  }
 };
 
-var sendOtp = (req, res, appId) => {
+var sendOtp = (req, res, OtpObject, appId) => {
   var number = req.query["number"];
   var otpNumber = Math.floor(1000 + Math.random() * 9000);
   if (number) {
-    Otp.deleteMany({ number })
+    OtpObject.deleteMany({ number })
       .exec()
       .then(() => {
         smsMessage.from = "Rpay";
@@ -120,7 +109,7 @@ var sendOtp = (req, res, appId) => {
           .smsSendPost(smsCollection)
           .then(function (response) {
             console.log(response.body);
-            const otpObject = new Otp({
+            const otpObject = new OtpObject({
               number,
               otp: otpNumber,
               verified: false,
