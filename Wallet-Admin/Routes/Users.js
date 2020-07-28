@@ -23,12 +23,12 @@ app.get("/getUsers", (req, res) => {
   });
 });
 
-app.get("/getMyTransactions/:number", (req, res) => {
+app.get("/getMyTransactions/:id", (req, res) => {
   var token = req.get("token");
   console.log("Getting Users");
 
-  var number = req.params.number;
-  if (!req.params.number) {
+  var id = req.params.id;
+  if (!req.params.id) {
     res.send({ message: "err" });
   }
 
@@ -38,12 +38,10 @@ app.get("/getMyTransactions/:number", (req, res) => {
     } else {
       if (decoded.name) {
         postgres
-          .query(`select * from transactions where fromid=$1 or toid=$1`, [
-            number,
-          ])
+          .query(`select * from transactions where fromid=$1 or toid=$1`, [id])
           .then((datas) => {
             postgres
-              .query(`select balance from amount where id=$1`, [number])
+              .query(`select balance from amount where id=$1`, [id])
               .then((myBalance) => {
                 console.log(datas.rows[0]);
                 res.send({ ...datas, balance: myBalance.rows[0].balance });

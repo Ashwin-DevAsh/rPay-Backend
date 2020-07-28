@@ -117,12 +117,12 @@ app.post("/addUser", (req, res) => {
 
 app.post("/updateFcmToken", (req, res) => {
   var object = req.body;
-  if (!object.number || !object.fcmToken) {
+  if (!object.id || !object.fcmToken) {
     res.json([{ message: "missing parameter" }]);
   } else {
     postgres.query(
       "update info set fcmToken=$2 where id=$1",
-      [object.number, object.fcmToken],
+      [object.id, object.fcmToken],
       (err, result) => {
         if (err) {
           res.json([{ message: "error" }]);
