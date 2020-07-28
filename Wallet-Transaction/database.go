@@ -90,7 +90,7 @@ func doTransaction(db *sql.DB, from string, fromName string, to string, toName s
 	dt := time.Now()
 
 	_, errTrans :=
-		tx.Exec("insert into transactions(transactionTime,fromID,toID,toName,amount,fromName,isGenerated,iswithdraw) values($1,$2,$3,$4,$5,$6,$7)",
+		tx.Exec("insert into transactions(transactionTime,fromID,toID,toName,amount,fromName,isGenerated,iswithdraw) values($1,$2,$3,$4,$5,$6,$7,$8)",
 			dt.Format("01-02-2006 15:04:05"), from, to, toName, amount, fromName,false,false)
 
 	if errTrans != nil {
@@ -126,7 +126,7 @@ func addMoney(db *sql.DB, from string, fromName string, to string, toName string
 	}
 	dt := time.Now()
 	_, errTrans :=
-		tx.Exec("insert into transactions(transactionTime,fromID,toID,toName,amount,fromName,isGenerated,iswithdraw) values($1,$2,$3,$4,$5,$6,$7)",
+		tx.Exec("insert into transactions(transactionTime,fromID,toID,toName,amount,fromName,isGenerated,iswithdraw) values($1,$2,$3,$4,$5,$6,$7,$8)",
 			dt.Format("01-02-2006 15:04:05"), from, to, toName, amount, fromName,true,false)
 
 	if errTrans != nil {
