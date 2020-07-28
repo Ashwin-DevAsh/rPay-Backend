@@ -35,7 +35,7 @@ func updateOnline(db *sql.DB, id string, socketID string, fcmToken string, isOnl
 	if err!=nil{
 		log.Println(err)
 	}
-	log.Println("UpdatedOnline", id,socketID)
+	log.Println("UpdatedOnline","id=", id,"socket id = ",socketID)
 }
 
 func updateOffline(db *sql.DB, socketID string) {
