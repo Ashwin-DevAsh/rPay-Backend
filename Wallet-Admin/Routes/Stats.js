@@ -30,6 +30,8 @@ function doProcess(req, res, queryFunction) {
     return;
   }
 
+  console.log(days);
+
   jwt.verify(token, process.env.PRIVATE_KEY, async function (err, decoded) {
     if (err) {
       res.send({ message: "error", err });
