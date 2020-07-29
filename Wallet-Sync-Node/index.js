@@ -17,11 +17,11 @@ io.on("connection", (client) => {
       }
     });
     console.log(id, token);
-    updateOnline(id, client.socketID, token, true);
+    updateOnline(id, client.id, token, true);
   });
 
   client.on("disconnect", () => {
-    updateOffline(db, client.socketID);
+    updateOffline(client.id);
   });
 });
 
