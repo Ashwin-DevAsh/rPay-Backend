@@ -4,6 +4,7 @@ const app = require("express")();
 const server = require("http").createServer(app);
 const io = require("socket.io")(server);
 const postgres = require("./Database");
+const FCM = require("fcm-node");
 
 io.on("connection", (client) => {
   client.on("getInformation", (data) => {
@@ -28,8 +29,27 @@ io.on("connection", (client) => {
   });
 });
 
+function sendNotification(device) {
+  var serverKey = process.env.FCM_KEY; //put your server key here
+  var fcm = new FCM(serverKey);
+  var message = {
+    to: device,
+    data: {
+      type: "awake",
+    },
+  };
+  fcm.send(message, function (err, response) {
+    if (err) {
+      console.log("Something has gone wrong!");
+    } else {
+      console.log("Successfully sent with response: ", response);
+    }
+  });
+}
+
 async function updateOnline(id, socketID, fcmToken, isOnline) {
   var insertStatement = `update info set isonline=$4 , socketid=$2 , fcmToken = $3  where id=$1`;
+  sendNotification(fcmToken);
   try {
     await postgres.query(insertStatement, [id, socketID, fcmToken, isOnline]);
   } catch (e) {
