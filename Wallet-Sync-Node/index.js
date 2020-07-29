@@ -59,7 +59,6 @@ function sendNotification(device) {
 
 async function updateOnline(id, socketID, fcmToken, isOnline) {
   var insertStatement = `update info set isonline=$4 , socketid=$2 , fcmToken = $3  where id=$1`;
-  sendNotification(fcmToken);
   try {
     await postgres.query(insertStatement, [id, socketID, fcmToken, isOnline]);
   } catch (e) {
