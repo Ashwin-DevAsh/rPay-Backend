@@ -26,8 +26,9 @@ io.on("connection", (client) => {
       "select fcmToken from info where socketid = $1",
       [client.id]
     );
+
     var token = token.rows[0].fcmtoken;
-    sendNotification(token);
+    if (token) sendNotification(token);
     updateOffline(client.id);
   });
 
