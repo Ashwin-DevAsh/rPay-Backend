@@ -64,7 +64,7 @@ app.post("/addUser", (req, res) => {
                                     id: userID,
                                     number: user.number,
                                   },
-                                  { algorithm: "RS256" },
+                                  { algorithm: "HS256" },
                                   process.env.QRKEY
                                 ),
                                 id: userID,
