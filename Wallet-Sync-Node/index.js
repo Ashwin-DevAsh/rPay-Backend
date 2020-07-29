@@ -16,19 +16,18 @@ io.on("connection", (client) => {
       }
     });
     console.log(id, token);
+    client.emit("doUpdate");
     updateOnline(id, client.id, token, true);
   });
 
   client.on("disconnect", async () => {
+    console.log("Disconnected = ", client.id);
     var token = await postgres.query(
       "select fcmToken from info where socketid = $1",
       [client.id]
     );
-
     var token = token.rows[0].fcmtoken;
-
     sendNotification(token);
-
     updateOffline(client.id);
   });
 
