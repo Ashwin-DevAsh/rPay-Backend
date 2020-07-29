@@ -21,67 +21,94 @@ app.post("/addUser", async (req, res) => {
     res.status(200).send([{ message: "error" }]);
     return;
   }
-
-  try {
-    var userID = `rpay@${user.number}`;
-    var otpDoc = await Otp.findOne({ number: user.number }).exec();
-
-    if (!otpDoc || !!otpDoc.verified) {
-      res.json([{ message: "number not verified" }]);
-      return;
-    }
-
-    console.log(otpDoc);
-
-    var doc = await Users.findOne({
-      $or: [{ number: user.number }, { email: user.email }],
-    }).exec();
-
-    if (doc) {
-      res.json([{ message: "User already exist" }]);
-      return;
-    }
-
-    await postgres.query("delete from info where id=$1;", [userID]);
-    await postgres.query("insert into info values($1,$2,null,null)", [
-      userID,
-      user.fcmToken,
-    ]);
-    await postgres.query("insert into amount(id,balance) values($1,0)", [
-      userID,
-    ]);
-
-    let userObject = new Users({
-      name: user.name,
-      number: user.number,
-      email: user.email,
-      password: user.password,
-      qrCode: user.qrCode,
-      id: userID,
+  var userID = `rpay@${user.number}`;
+  Otp.findOne({ number: user.number })
+    .exec()
+    .then((otpDoc) => {
+      if (otpDoc && otpDoc.verified) {
+        Users.findOne({
+          $or: [{ number: user.number }, { email: user.email }],
+        })
+          .exec()
+          .then((doc) => {
+            console.log(doc);
+            if (doc) {
+              res.json([{ message: "User already exist" }]);
+              return;
+            }
+            postgres.query(
+              "delete from info where id=$1;",
+              [userID],
+              (err, result) => {
+                postgres.query(
+                  "insert into info values($1,$2,null,null)",
+                  [userID, user.fcmToken],
+                  (err, result) => {
+                    if (!err) {
+                      postgres.query(
+                        "insert into amount(id,balance) values($1,0)",
+                        [userID],
+                        async (err, result) => {
+                          if (!err) {
+                            if (doc) {
+                              res.json([{ message: "User already exist" }]);
+                            } else {
+                              let userObject = new Users({
+                                name: user.name,
+                                number: user.number,
+                                email: user.email,
+                                password: user.password,
+                                qrCode: user.qrCode,
+                                id: userID,
+                              });
+                              jwt.sign(
+                                {
+                                  name: user.name,
+                                  id: userID,
+                                  number: user.number,
+                                  email: user.email,
+                                },
+                                process.env.PRIVATE_KEY,
+                                (err, token) => {
+                                  if (err) {
+                                    res.json([{ message: err.getName() }]);
+                                  } else {
+                                    userObject
+                                      .save()
+                                      .then((result) => {
+                                        console.log(token);
+                                        res.json([{ message: "done", token }]);
+                                      })
+                                      .catch((err) => {
+                                        res.json([{ message: "failed" }]);
+                                      });
+                                  }
+                                }
+                              );
+                            }
+                          } else {
+                            res.json([{ message: err }]);
+                          }
+                        }
+                      );
+                    } else {
+                      res.json([{ message: err }]);
+                    }
+                  }
+                );
+              }
+            );
+          })
+          .catch(() => {
+            res.json([{ message: "failed" }]);
+          });
+      } else {
+        res.json([{ message: "number not verified" }]);
+      }
+    })
+    .catch((err) => {
+      res.json([{ message: "error" }]);
     });
-
-    var token = await jwt.sign(
-      {
-        name: user.name,
-        id: userID,
-        number: user.number,
-        email: user.email,
-      },
-      process.env.PRIVATE_KEY
-    );
-    userObject
-      .save()
-      .then((result) => {
-        console.log(token);
-        res.json([{ message: "done", token }]);
-      })
-      .catch((err) => {
-        res.json([{ message: "failed" }]);
-      });
-  } catch (e) {
-    console.log(e);
-    res.json([{ message: "failed", err: e }]);
-  }
 });
 
 app.post("/updateFcmToken", (req, res) => {
