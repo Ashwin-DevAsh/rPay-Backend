@@ -23,11 +23,17 @@ services:
     ports:
       - 4500:4500
 
-  wallet-sync:
-    build: Wallet-Sync
+  wallet-sync-node:
+    build: Wallet-Sync-Node
     depends_on: [status-database]
     ports:
       - 7000:7000
+
+  # wallet-sync:
+  #   build: Wallet-Sync
+  #   depends_on: [status-database]
+  # ports:
+  #   - 7000:7000
 
   wallet-transaction:
     build: Wallet-Transaction
