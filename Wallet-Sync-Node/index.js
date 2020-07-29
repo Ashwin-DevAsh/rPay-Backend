@@ -23,7 +23,7 @@ io.on("connection", (client) => {
   });
 
   client.on("notifyPayment", (data) => {
-    log.Println(data);
+    console.log(data);
     io.to(data["to"]).emit("receivedPayment");
   });
 });
