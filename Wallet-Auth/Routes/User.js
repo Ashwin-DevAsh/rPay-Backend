@@ -40,7 +40,7 @@ app.post("/addUser", (req, res) => {
               (err, result) => {
                 postgres.query(
                   "insert into info values($1,$2,null,null)",
-                  [user.number, user.fcmToken],
+                  [`rpay@${user.number}`, user.fcmToken],
                   (err, result) => {
                     if (!err) {
                       postgres.query(

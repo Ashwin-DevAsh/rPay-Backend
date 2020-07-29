@@ -12,4 +12,8 @@ mongoose
     console.log("Fail", err);
   });
 
+mongoose.connection.on("disconnected", function () {
+  console.log("Mongoose default connection is disconnected");
+});
+
 module.exports = mongoose;
