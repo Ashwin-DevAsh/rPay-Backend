@@ -40,11 +40,11 @@ function doProcess(req, res, queryFunction) {
         var day = await postgres.query(queryFunction(days), ["day"]);
         var week = await postgres.query(queryFunction(days), ["week"]);
         var month = await postgres.query(queryFunction(days), ["month"]);
-        // if (days == 1) {
-        var hour = await postgres.query(queryFunction(days), ["hour"]);
-        // } else {
-        //   var hour = day;
-        // }
+        if (days == 1) {
+          var hour = await postgres.query(queryFunction(days), ["hour"]);
+        } else {
+          var hour = day;
+        }
         console.log(hour.rows);
         res.send({
           day,
@@ -64,7 +64,7 @@ function transactionStatsQuery(day) {
   return `select 
                  min(to_timestamp(transactiontime, 'MM-DD-YYYY hh:mi:ss')) as fromDate ,
                  max(to_timestamp(transactiontime, 'MM-DD-YYYY hh:mi:ss')) as toDate ,
-                 date_part($1 , to_timestamp(transactiontime, 'MM-DD-YYYY hh:mi:ss')::date) as n,
+                 date_trunc($1 , to_timestamp(transactiontime, 'MM-DD-YYYY hh:mi:ss')::date) as n,
                  sum(amount) as total
             from
                  transactions 
@@ -80,7 +80,7 @@ function noTransactionStatsQuery(day) {
   return `select 
                  min(to_timestamp(transactiontime, 'MM-DD-YYYY hh:mi:ss')) as fromDate ,
                  max(to_timestamp(transactiontime, 'MM-DD-YYYY hh:mi:ss')) as toDate ,
-                 date_part($1 , to_timestamp(transactiontime, 'MM-DD-YYYY hh:mi:ss')::date) as n,
+                 date_trunc($1 , to_timestamp(transactiontime, 'MM-DD-YYYY hh:mi:ss')::date) as n,
                  count(amount) as total
             from
                  transactions 
@@ -96,7 +96,7 @@ function generatedStatsQuery(day) {
   return `select 
                  min(to_timestamp(transactiontime, 'MM-DD-YYYY hh:mi:ss')) as fromDate ,
                  max(to_timestamp(transactiontime, 'MM-DD-YYYY hh:mi:ss')) as toDate ,
-                 date_part($1 , to_timestamp(transactiontime, 'MM-DD-YYYY hh:mi:ss')::date) as n,
+                 date_trunc($1 , to_timestamp(transactiontime, 'MM-DD-YYYY hh:mi:ss')::date) as n,
                  sum(amount) as total
             from
                  transactions 
