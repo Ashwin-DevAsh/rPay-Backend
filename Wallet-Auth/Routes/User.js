@@ -31,6 +31,8 @@ app.post("/addUser", async (req, res) => {
       return;
     }
 
+    console.log(otpDoc);
+
     var doc = await Users.findOne({
       $or: [{ number: user.number }, { email: user.email }],
     }).exec();
@@ -77,6 +79,7 @@ app.post("/addUser", async (req, res) => {
         res.json([{ message: "failed" }]);
       });
   } catch (e) {
+    console.log(e);
     res.json([{ message: "failed", err: e }]);
   }
 });
