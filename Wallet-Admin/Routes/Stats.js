@@ -60,14 +60,14 @@ function doProcess(req, res, queryFunction) {
 
 function transactionStatsQuery(day) {
   return `select 
-                 min(to_timestamp(transactiontime, 'MM-DD-YYYY HH24:Mi:SS')) as fromDate ,
-                 max(to_timestamp(transactiontime, 'MM-DD-YYYY HH24:Mi:SS')) as toDate ,
-                 date_part($1 , to_timestamp(transactiontime, 'MM-DD-YYYY HH24:Mi:SS')::timestamp) as n,
+                 min(to_timestamp(transactiontime, 'MM-DD-YYYY HH24:MI:SS')) as fromDate ,
+                 max(to_timestamp(transactiontime, 'MM-DD-YYYY HH24:MI:SS')) as toDate ,
+                 date_part($1 , to_timestamp(transactiontime, 'MM-DD-YYYY HH24:MI:SS')::timestamp) as n,
                  sum(amount) as total
             from
                  transactions 
             where 
-                  to_timestamp(transactiontime, 'MM-DD-YYYY HH24:Mi:SS') >= current_date - ${day}
+                  to_timestamp(transactiontime, 'MM-DD-YYYY HH24:MI:SS') >= current_date - ${day}
             group by 
                   n
             order by
@@ -76,14 +76,14 @@ function transactionStatsQuery(day) {
 
 function noTransactionStatsQuery(day) {
   return `select 
-                 min(to_timestamp(transactiontime, 'MM-DD-YYYY HH24:Mi:SS')) as fromDate ,
-                 max(to_timestamp(transactiontime, 'MM-DD-YYYY HH24:Mi:SS')) as toDate ,
-                 date_part($1 , to_timestamp(transactiontime, 'MM-DD-YYYY HH24:Mi:SS')::timestamp) as n,
+                 min(to_timestamp(transactiontime, 'MM-DD-YYYY HH24:MI:SS')) as fromDate ,
+                 max(to_timestamp(transactiontime, 'MM-DD-YYYY HH24:MI:SS')) as toDate ,
+                 date_part($1 , to_timestamp(transactiontime, 'MM-DD-YYYY HH24:MI:SS')::timestamp) as n,
                  count(amount) as total
             from
                  transactions 
             where 
-                  to_timestamp(transactiontime, 'MM-DD-YYYY HH24:Mi:SS') >= current_date - ${day}
+                  to_timestamp(transactiontime, 'MM-DD-YYYY HH24:MI:SS') >= current_date - ${day}
             group by 
                   n
             order by
@@ -92,14 +92,14 @@ function noTransactionStatsQuery(day) {
 
 function generatedStatsQuery(day) {
   return `select 
-                 min(to_timestamp(transactiontime, 'MM-DD-YYYY HH24:Mi:SS')) as fromDate ,
-                 max(to_timestamp(transactiontime, 'MM-DD-YYYY HH24:Mi:SS')) as toDate ,
-                 date_part($1 , to_timestamp(transactiontime, 'MM-DD-YYYY HH24:Mi:SS')::timestamp) as n,
+                 min(to_timestamp(transactiontime, 'MM-DD-YYYY HH24:MI:SS')) as fromDate ,
+                 max(to_timestamp(transactiontime, 'MM-DD-YYYY HH24:MI:SS')) as toDate ,
+                 date_part($1 , to_timestamp(transactiontime, 'MM-DD-YYYY HH24:MI:SS')::timestamp) as n,
                  sum(amount) as total
             from
                  transactions 
             where 
-                 isgenerated=true and to_timestamp(transactiontime, 'MM-DD-YYYY HH24:Mi:SS') >= current_date - ${day}
+                 isgenerated=true and to_timestamp(transactiontime, 'MM-DD-YYYY HH24:MI:SS') >= current_date - ${day}
             group by 
                   n
             order by
