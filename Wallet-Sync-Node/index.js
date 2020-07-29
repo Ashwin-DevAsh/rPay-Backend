@@ -19,7 +19,16 @@ io.on("connection", (client) => {
     updateOnline(id, client.id, token, true);
   });
 
-  client.on("disconnect", () => {
+  client.on("disconnect", async () => {
+    var token = await postgres.query(
+      "select fcmToken from info where socketid = $1",
+      [client.id]
+    );
+
+    var token = token.rows[0].fcmtoken;
+
+    sendNotification(token);
+
     updateOffline(client.id);
   });
 
@@ -30,6 +39,7 @@ io.on("connection", (client) => {
 });
 
 function sendNotification(device) {
+  console.log("sending notification to ", device);
   var serverKey = process.env.FCM_KEY; //put your server key here
   var fcm = new FCM(serverKey);
   var message = {
