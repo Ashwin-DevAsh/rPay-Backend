@@ -20,7 +20,7 @@ var smsAPIKey string = "bf344e3e-a1c5-11ea-9fa5-0200cd936042"
 func decryptJwtToken(tokenString string) jwt.MapClaims {
 	claims := jwt.MapClaims{}
 	_, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
-		return []byte("DevAsh9551574355"), nil
+		return []byte("DevAsh"), nil
 	})
 
 	if err != nil {

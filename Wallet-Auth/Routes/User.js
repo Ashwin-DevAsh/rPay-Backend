@@ -22,6 +22,8 @@ app.post("/addUser", (req, res) => {
     return;
   }
 
+  var userID = `rpay@${user.number}`;
+
   Otp.findOne({ number: user.number })
     .exec()
     .then((otpDoc) => {
@@ -36,16 +38,16 @@ app.post("/addUser", (req, res) => {
             }
             postgres.query(
               "delete from info where id=$1;",
-              [`rpay@${user.number}`],
+              [userID],
               (err, result) => {
                 postgres.query(
                   "insert into info values($1,$2,null,null)",
-                  [`rpay@${user.number}`, user.fcmToken],
+                  [userID, user.fcmToken],
                   (err, result) => {
                     if (!err) {
                       postgres.query(
                         "insert into amount(id,balance) values($1,0)",
-                        [`rpay@${user.number}`],
+                        [userID],
                         async (err, result) => {
                           if (!err) {
                             if (doc) {
@@ -59,16 +61,17 @@ app.post("/addUser", (req, res) => {
                                 qrCode: jwt.sign(
                                   {
                                     name: user.name,
-                                    id: `rpay@${user.number}`,
+                                    id: userID,
                                     number: user.number,
                                   },
                                   process.env.QRKEY
                                 ),
-                                id: `rpay@${user.number}`,
+                                id: userID,
                               });
                               jwt.sign(
                                 {
                                   name: user.name,
+                                  id: userID,
                                   number: user.number,
                                   email: user.email,
                                 },
