@@ -164,14 +164,14 @@ app.get("/getGeneratedStats/:days", (req, res) => {
 
 function transactionStatsQuery(day) {
   return `select 
-                 min(to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY')) as fromDate ,
-                 max(to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY')) as toDate ,
-                 date_part($1 , to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY')::date) as n,
+                 min(to_timestamp(transactiontime, 'MM-DD-YYYY hh:mi:ss')) as fromDate ,
+                 max(to_timestamp(transactiontime, 'MM-DD-YYYY hh:mi:ss')) as toDate ,
+                 date_part($1 , to_timestamp(transactiontime, 'MM-DD-YYYY hh:mi:ss')::date) as n,
                  sum(amount) as total
             from
                  transactions 
             where 
-                  to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY') >= current_date - ${day}
+                  to_timestamp(transactiontime, 'MM-DD-YYYY hh:mi:ss') >= current_date - ${day}
             group by 
                   n
             order by
@@ -180,14 +180,14 @@ function transactionStatsQuery(day) {
 
 function noTransactionStatsQuery(day) {
   return `select 
-                 min(to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY')) as fromDate ,
-                 max(to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY')) as toDate ,
-                 date_part($1 , to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY')::date) as n,
+                 min(to_timestamp(transactiontime, 'MM-DD-YYYY hh:mi:ss')) as fromDate ,
+                 max(to_timestamp(transactiontime, 'MM-DD-YYYY hh:mi:ss')) as toDate ,
+                 date_part($1 , to_timestamp(transactiontime, 'MM-DD-YYYY hh:mi:ss')::date) as n,
                  count(amount) as total
             from
                  transactions 
             where 
-                  to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY') >= current_date - ${day}
+                  to_timestamp(transactiontime, 'MM-DD-YYYY hh:mi:ss') >= current_date - ${day}
             group by 
                   n
             order by
@@ -196,14 +196,14 @@ function noTransactionStatsQuery(day) {
 
 function generatedStatsQuery(day) {
   return `select 
-                 min(to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY')) as fromDate ,
-                 max(to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY')) as toDate ,
-                 date_part($1 , to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY')::date) as n,
+                 min(to_timestamp(transactiontime, 'MM-DD-YYYY hh:mi:ss')) as fromDate ,
+                 max(to_timestamp(transactiontime, 'MM-DD-YYYY hh:mi:ss')) as toDate ,
+                 date_part($1 , to_timestamp(transactiontime, 'MM-DD-YYYY hh:mi:ss')::date) as n,
                  sum(amount) as total
             from
                  transactions 
             where 
-                 isgenerated=true and to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY') >= current_date - ${day}
+                 isgenerated=true and to_timestamp(transactiontime, 'MM-DD-YYYY hh:mi:ss') >= current_date - ${day}
             group by 
                   n
             order by
@@ -224,5 +224,5 @@ module.exports = app;
 //>= current_date - 10 group by date order by date) as temp
 //;
 
-// select min(date), date_part('month', date:: date) as time, sum(amount) from(select to_date(Split_part(transactiontime, ' ', 1), 'MM-DD-YYYY') as date, sum(amount) as amount from transactions where to_date(Split_part(transactiont
+// select min(date), date_part('month', date:: date) as time, sum(amount) from(select to_timestamp(transactiontime, 'MM-DD-YYYY hh:mi:ss') as date, sum(amount) as amount from transactions where to_date(Split_part(transactiont
 // ime, ' ', 1), 'MM-DD-YYYY') >= current_date - 10 group by date order by date) as temp group by time;
