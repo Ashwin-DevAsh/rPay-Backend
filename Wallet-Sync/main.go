@@ -76,7 +76,7 @@ func main() {
 	})
 
 	server.OnDisconnect("/", func(s socketio.Conn, reason string) {
-		log.Println(" disconnected : ", s.ID())
+		log.Println(" disconnected : ", s.ID(),reason)
 		s.LeaveAll()
 
 		var fcmToken string
