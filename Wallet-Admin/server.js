@@ -31,9 +31,9 @@ Admin.findOne({ number: "919551574355" })
           return;
         }
         let adminObject = new Admin({
-          name: "DevAsh",
+          name: "Root",
           number: "919551574355",
-          email: "2017ashwin@gmail.com",
+          email: "rootAdmin@rpay.com",
           password: hash,
           imageURL: "12345678",
           accessTo: ["*"],
