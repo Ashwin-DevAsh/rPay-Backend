@@ -40,11 +40,11 @@ function doProcess(req, res, queryFunction) {
         var day = await postgres.query(queryFunction(days), ["day"]);
         var week = await postgres.query(queryFunction(days), ["week"]);
         var month = await postgres.query(queryFunction(days), ["month"]);
-        if (days == 1) {
-          var hour = await postgres.query(queryFunction(days), ["hour"]);
-        } else {
-          var hour = day;
-        }
+        // if (days == 1) {
+        var hour = await postgres.query(queryFunction(days), ["hour"]);
+        // } else {
+        //   var hour = day;
+        // }
         console.log(hour.rows);
         res.send({
           day,
