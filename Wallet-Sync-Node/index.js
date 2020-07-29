@@ -6,8 +6,6 @@ const io = require("socket.io")(server);
 const postgres = require("./Database");
 
 io.on("connection", (client) => {
-  console.log("connected ", client.socketID);
-
   client.on("getInformation", (data) => {
     var id = data["id"];
     var token = data["fcmToken"];
@@ -22,6 +20,11 @@ io.on("connection", (client) => {
 
   client.on("disconnect", () => {
     updateOffline(client.id);
+  });
+
+  client.on("notifyPayment", (data) => {
+    log.Println(data);
+    io.to(data["to"]).emit("receivedPayment");
   });
 });
 
