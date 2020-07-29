@@ -4,112 +4,18 @@ const postgres = require("../Database/Connections/pgConnections");
 const Users = require("../Database/Schema/Users");
 
 app.get("/getTransactionStats/:days", (req, res) => {
-  var token = req.get("token");
-
-  if (!req.params.days) {
-    res.send({ message: "error" });
-    return;
-  }
-  var days = 7;
-  try {
-    days = Number.parseInt(req.params.days) || 7;
-  } catch (e) {
-    res.send({ message: "error", e });
-    return;
-  }
-
-  jwt.verify(token, process.env.PRIVATE_KEY, function (err, decoded) {
-    if (err) {
-      res.send({ message: "error", err });
-    } else {
-      postgres
-        .query(transactionStatsQuery(days), ["day"])
-        .then((day) => {
-          postgres
-            .query(transactionStatsQuery(days), ["week"])
-            .then((week) => {
-              postgres
-                .query(transactionStatsQuery(days), ["month"])
-                .then((month) => {
-                  console.log(month.rows[0]);
-                  res.send({
-                    day,
-                    week,
-                    month,
-                  });
-                })
-                .catch((e) => {
-                  console.error(e.stack);
-                  res.send(e);
-                });
-            })
-            .catch((e) => {
-              console.error(e.stack);
-              res.send(e);
-            });
-        })
-        .catch((e) => {
-          console.error(e.stack);
-          res.send(e);
-        });
-    }
-  });
+  doProcess(req, res, transactionStatsQuery);
 });
 
 app.get("/getNoTransactionStats/:days", (req, res) => {
-  var token = req.get("token");
-
-  if (!req.params.days) {
-    res.send({ message: "error" });
-    return;
-  }
-  var days = 7;
-  try {
-    days = Number.parseInt(req.params.days) || 7;
-  } catch (e) {
-    res.send({ message: "error", e });
-    return;
-  }
-
-  jwt.verify(token, process.env.PRIVATE_KEY, function (err, decoded) {
-    if (err) {
-      res.send({ message: "error", err });
-    } else {
-      postgres
-        .query(noTransactionStatsQuery(days), ["day"])
-        .then((day) => {
-          postgres
-            .query(noTransactionStatsQuery(days), ["week"])
-            .then((week) => {
-              postgres
-                .query(noTransactionStatsQuery(days), ["month"])
-                .then((month) => {
-                  console.log(month.rows[0]);
-                  res.send({
-                    day,
-                    week,
-                    month,
-                  });
-                })
-                .catch((e) => {
-                  console.error(e.stack);
-                  res.send(e);
-                });
-            })
-            .catch((e) => {
-              console.error(e.stack);
-              res.send(e);
-            });
-        })
-        .catch((e) => {
-          console.error(e.stack);
-          res.send(e);
-        });
-    }
-  });
+  doProcess(req, res, noTransactionStatsQuery);
 });
 
 app.get("/getGeneratedStats/:days", (req, res) => {
+  doProcess(req, res, generatedStatsQuery);
+});
+
+function doProcess(req, res, queryFunction) {
   var token = req.get("token");
 
   if (!req.params.days) {
@@ -129,13 +35,13 @@ app.get("/getGeneratedStats/:days", (req, res) => {
       res.send({ message: "error", err });
     } else {
       postgres
-        .query(generatedStatsQuery(days), ["day"])
+        .query(queryFunction(days), ["day"])
         .then((day) => {
           postgres
-            .query(generatedStatsQuery(days), ["week"])
+            .query(queryFunction(days), ["week"])
             .then((week) => {
               postgres
-                .query(generatedStatsQuery(days), ["month"])
+                .query(queryFunction(days), ["month"])
                 .then((month) => {
                   console.log(month.rows[0]);
                   res.send({
@@ -160,7 +66,7 @@ app.get("/getGeneratedStats/:days", (req, res) => {
         });
     }
   });
-});
+}
 
 function transactionStatsQuery(day) {
   return `select 
