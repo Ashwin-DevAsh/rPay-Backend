@@ -16,7 +16,8 @@ app.post("/addUser", (req, res) => {
     !user.email ||
     !user.number ||
     !user.password ||
-    !user.fcmToken
+    !user.fcmToken ||
+    !user.qrCode
   ) {
     res.status(200).send([{ message: "error" }]);
     return;
@@ -58,15 +59,7 @@ app.post("/addUser", (req, res) => {
                                 number: user.number,
                                 email: user.email,
                                 password: user.password,
-                                qrCode: jwt.sign(
-                                  {
-                                    name: user.name,
-                                    id: userID,
-                                    number: user.number,
-                                  },
-                                  { algorithm: "HS256" },
-                                  process.env.QRKEY
-                                ),
+                                qrCode: user.qrCode,
                                 id: userID,
                               });
                               jwt.sign(
