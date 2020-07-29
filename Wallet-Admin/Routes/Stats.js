@@ -45,7 +45,7 @@ function doProcess(req, res, queryFunction) {
         } else {
           var hour = day;
         }
-        console.log(day, week, month, hour);
+        console.log(hour.rows);
         res.send({
           day,
           week,
