@@ -30,40 +30,23 @@ function doProcess(req, res, queryFunction) {
     return;
   }
 
-  jwt.verify(token, process.env.PRIVATE_KEY, function (err, decoded) {
+  jwt.verify(token, process.env.PRIVATE_KEY, async function (err, decoded) {
     if (err) {
       res.send({ message: "error", err });
     } else {
-      postgres
-        .query(queryFunction(days), ["day"])
-        .then((day) => {
-          postgres
-            .query(queryFunction(days), ["week"])
-            .then((week) => {
-              postgres
-                .query(queryFunction(days), ["month"])
-                .then((month) => {
-                  console.log(month.rows[0]);
-                  res.send({
-                    day,
-                    week,
-                    month,
-                  });
-                })
-                .catch((e) => {
-                  console.error(e.stack);
-                  res.send(e);
-                });
-            })
-            .catch((e) => {
-              console.error(e.stack);
-              res.send(e);
-            });
-        })
-        .catch((e) => {
-          console.error(e.stack);
-          res.send(e);
+      try {
+        var day = await postgres.query(queryFunction(days), ["day"]);
+        var week = await postgres.query(queryFunction(days), ["week"]);
+        var month = await postgres.query(queryFunction(days), ["month"]);
+        res.send({
+          day,
+          week,
+          month,
         });
+      } catch (e) {
+        console.error(e.stack);
+        res.send(e);
+      }
     }
   });
 }
