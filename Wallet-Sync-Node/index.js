@@ -11,17 +11,17 @@ io.on("connection", (client) => {
   client.on("getInformation", (data) => {
     var id = data["id"];
     var token = data["fcmToken"];
-    client.join(id,(err)=>{
-        if(err){
-            console.log(err)
-        }
-    })
+    client.join(id, (err) => {
+      if (err) {
+        console.log(err);
+      }
+    });
     console.log(id, token);
     updateOnline(id, client.socketID, token, true);
   });
 
   client.on("disconnect", () => {
-      updateOffline(db, client.socketID);
+    updateOffline(db, client.socketID);
   });
 });
 
@@ -34,16 +34,14 @@ async function updateOnline(id, socketID, fcmToken, isOnline) {
   }
 }
 
-function updateOffline(socketID) {
-    insertStatement = `update info set socketid=null , isonline=false where socketid=$1`
-    try{
-	  await postgres.query(insertStatement, [socketID])
-    }catch(e){
-        console.log(e)
-    }
-		
+async function updateOffline(socketID) {
+  insertStatement = `update info set socketid=null , isonline=false where socketid=$1`;
+  try {
+    await postgres.query(insertStatement, [socketID]);
+  } catch (e) {
+    console.log(e);
+  }
 }
-
 
 server.listen(7000, () => {
   console.log("Listing at 7000");
