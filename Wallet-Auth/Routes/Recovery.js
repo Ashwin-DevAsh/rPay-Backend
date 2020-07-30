@@ -7,6 +7,53 @@ app.get("/getRecoveryOtp", (req, res) => sendOtp(req, res, Otp));
 
 app.post("/setRecoveryOtp", (req, res) => setOtp(req, res, Otp));
 
+app.post("/changeForgetPassword", (req, res) => {
+  jwt.verify(req.get("token"), process.env.PRIVATE_KEY, function (
+    err,
+    decoded
+  ) {
+    if (err) {
+      console.log(err);
+      res.status(200).send({ message: "error" });
+      return;
+    } else {
+      console.log("Changing password...");
+      var data = req.body;
+      console.log(data);
+      if (!data.id || !data.newPassword || !data.emaiID) {
+        res.status(200).send({ message: "error" });
+        return;
+      }
+
+      Otp.findOne({ emailID: data.emaiID })
+        .exec()
+        .then((otpDoc) => {
+          if (otpDoc && otpDoc.verified) {
+            Otp.deleteMany({
+              emaiID: data.emaiID,
+            }).exec();
+            Users.findOneAndUpdate(
+              { id: data.id },
+              { password: data.newPassword },
+              (err, doc) => {
+                if (err) {
+                  console.log(err);
+                  res.status(200).send({ message: "error" });
+                  return;
+                } else {
+                  res.status(200).send({ message: "done" });
+                  return;
+                }
+              }
+            );
+          } else {
+            res.status(200).send({ message: "otp not verified" });
+          }
+        });
+    }
+  });
+});
+
 var sendOtp = (req, res, OtpObject) => {
   console.log("getting recovery otp");
   var emailID = req.query["emailID"];
