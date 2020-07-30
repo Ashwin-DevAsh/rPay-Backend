@@ -56,7 +56,7 @@ var sendOtp = (req, res, OtpObject) => {
                 res.json([{ message: "done" }]);
               })
               .catch(function (err) {
-                console.log(err);
+                console.log("sms error = ", err);
                 res.json([
                   { message: "failed", err, text: "Unable to send sms" },
                 ]);
