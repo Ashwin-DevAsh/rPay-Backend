@@ -4,6 +4,7 @@ const authEndPoint = require("./Routes/Auth");
 const userEndPoint = require("./Routes/User");
 const merchantEndPoint = require("./Routes/Merchants");
 const mongoose = require("./Database/mongodb");
+const RecoveryOtp = require("./Schemas/RecoveryOtp");
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.get("/", (req, res) => {
 app.use(userEndPoint);
 app.use(authEndPoint);
 app.use(merchantEndPoint);
+app.use(RecoveryOtp);
 
 app.listen(8000, () => {
   console.log("connecte at port 8000");

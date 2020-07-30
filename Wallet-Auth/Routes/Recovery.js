@@ -60,3 +60,5 @@ var sendOtp = async (req, res, OtpObject) => {
     res.json([{ message: "failed" }]);
   }
 };
+
+module.exports = app;
