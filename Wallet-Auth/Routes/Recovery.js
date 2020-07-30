@@ -56,11 +56,11 @@ var sendOtp = (req, res, OtpObject) => {
           })
           .catch(function (err) {
             console.log(err);
-            res.json([{ message: "failed", err }]);
+            res.json([{ message: "failed", err, text: "Unable to send sms" }]);
           });
       })
       .catch((e) => {
-        res.json([{ message: "failed", err: e }]);
+        res.json([{ message: "failed", err: e, text: "delete otp err" }]);
       });
   } else {
     res.json([{ message: "failed" }]);
