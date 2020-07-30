@@ -26,7 +26,7 @@ app.post("/newPassword", (req, res) => {
         return;
       }
 
-      Otp.findOne({ emailID: data.emaiID })
+      Otp.findOne({ emailID: data.emailID })
         .exec()
         .then((otpDoc) => {
           console.log(otpDoc);
