@@ -145,7 +145,7 @@ var setOtp = (req, res, OtpObject) => {
             console.log(result);
             if (result.otp == otpNumber) {
               OtpObject.findOneAndUpdate(
-                { emaiID: emailID },
+                { emailID },
                 { verified: true },
                 (err, doc) => {
                   console.log(doc, err);
