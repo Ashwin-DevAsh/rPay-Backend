@@ -15,7 +15,7 @@ var sendOtp = (req, res, OtpObject) => {
   var emailID = req.query["emailID"];
   var otpNumber = Math.floor(1000 + Math.random() * 9000);
   if (emailID) {
-    OtpObject.deleteMany({ emailID })
+    OtpObject.deleteMany({ emailID: emailID })
       .exec()
       .then(() => {
         smsMessage.from = "Rpay";
