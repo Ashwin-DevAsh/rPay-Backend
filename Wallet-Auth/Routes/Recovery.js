@@ -1,6 +1,7 @@
 const app = require("express").Router();
 const Otp = require("../Schemas/RecoveryOtp");
 var api = require("../node_modules/clicksend/api.js");
+const jwt = require("jsonwebtoken");
 
 app.get("/getRecoveryOtp", (req, res) => sendOtp(req, res, Otp));
 var sendOtp = (req, res, OtpObject) => {
