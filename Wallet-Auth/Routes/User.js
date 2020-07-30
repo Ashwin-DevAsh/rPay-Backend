@@ -25,6 +25,7 @@ app.post("/addUser", async (req, res) => {
   Otp.findOne({ number: user.number })
     .exec()
     .then((otpDoc) => {
+      console.log(otpDoc);
       if (otpDoc && otpDoc.verified) {
         Users.findOne({
           $or: [{ number: user.number }, { email: user.email }],
