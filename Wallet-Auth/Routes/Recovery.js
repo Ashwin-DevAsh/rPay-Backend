@@ -36,6 +36,7 @@ app.post("/newPassword", (req, res) => {
               { id: data.id },
               { password: data.newPassword },
               (err, doc) => {
+                console.log(doc);
                 if (err) {
                   console.log(err);
                   res.status(200).send({ message: "error" });
