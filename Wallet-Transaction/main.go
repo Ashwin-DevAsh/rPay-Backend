@@ -73,12 +73,13 @@ func handelRequest() {
 				return
 			}
 
-				var transactionData struct {
+			var transactionData struct {
 				From     string
 				To       string
 				Amount   string
 				ToName   string
 				FromName string
+                TransactionHash string
 			}
 
 			err := json.NewDecoder(request.Body).Decode(&transactionData)
@@ -88,7 +89,7 @@ func handelRequest() {
 				return
 			}
 
-			println(transactionData.From, transactionData.To, transactionData.Amount)
+			println(transactionData.From, transactionData.To, transactionData.Amount,transactionData.TransactionHash)
 
 			amount, _ := strconv.ParseUint(transactionData.Amount, 10, 64)
 
