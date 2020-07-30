@@ -144,20 +144,15 @@ var setOtp = (req, res, OtpObject) => {
           .then((result) => {
             console.log(result);
             if (result.otp == otpNumber) {
-              OtpObject.findOneAndUpdate(
-                { emailID },
-                { verified: true },
-                { upsert: true },
-                (err, doc) => {
-                  console.log(doc, err);
-                  if (err) {
-                    res.json([{ message: "error" }]);
-                  } else {
-                    console.log("Verified....");
-                    res.json([{ message: "done" }]);
-                  }
-                }
-              );
+              OtpObject.findOneAndUpdate({ emailID }, { verified: true })
+                .exec()
+                .then(() => {
+                  console.log("Verified....");
+                  res.json([{ message: "done" }]);
+                })
+                .catch((err) => {
+                  res.json([{ message: "error" }]);
+                });
             } else {
               console.log("Not matching....");
               res.json([{ message: "not matching" }]);
