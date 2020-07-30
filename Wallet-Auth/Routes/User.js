@@ -52,6 +52,7 @@ app.post("/addUser", async (req, res) => {
                           if (!err) {
                             if (doc) {
                               res.json([{ message: "User already exist" }]);
+                              Otp.deleteMany({ number: user.number }).exec();
                             } else {
                               let userObject = new Users({
                                 name: user.name,
@@ -83,6 +84,9 @@ app.post("/addUser", async (req, res) => {
                                         res.json([{ message: "failed" }]);
                                       });
                                   }
+                                  Otp.deleteMany({
+                                    number: user.number,
+                                  }).exec();
                                 }
                               );
                             }
