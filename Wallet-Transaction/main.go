@@ -28,9 +28,6 @@ func decryptJwtToken(tokenString string) jwt.MapClaims {
 		return nil
 
 	}
-	for key, val := range claims {
-		log.Println(key, " -> ", val)
-	}
 	return claims
 
 }
@@ -73,13 +70,12 @@ func handelRequest() {
 				return
 			}
 
-			var transactionData struct {
+				var transactionData struct {
 				From     string
 				To       string
 				Amount   string
 				ToName   string
 				FromName string
-             
 			}
 
 			err := json.NewDecoder(request.Body).Decode(&transactionData)
@@ -88,8 +84,6 @@ func handelRequest() {
 				log.Printf("verbose error info: %#v", err)
 				return
 			}
-
-			log.Println(transactionData.From, transactionData.To, transactionData.Amount)
 
 			amount, _ := strconv.ParseUint(transactionData.Amount, 10, 64)
 
@@ -145,7 +139,6 @@ func handelRequest() {
 				Amount   string
 				ToName   string
 				FromName string
-				TransactionHash string
 			}
 
 			err := json.NewDecoder(request.Body).Decode(&transactionData)
@@ -155,12 +148,8 @@ func handelRequest() {
 				return
 			}
 
-
 			amount, _ := strconv.ParseUint(transactionData.Amount, 10, 64)
 
-			transactionHash := decryptJwtToken(transactionData.TransactionHash)
-			log.Println( "Transaction Hash = ",transactionHash)
-			
 			if doTransaction(db, transactionData.From, transactionData.FromName, transactionData.To, transactionData.ToName, amount) {
 				userJSON, err := json.Marshal(map[string]string{
 					"message": "done",
@@ -244,6 +233,8 @@ func handelRequest() {
 
 			number := request.URL.Query().Get("number")
 
+			log.Println(number)
+
 			jwtToken := request.Header.Get("jwtToken")
 			header := decryptJwtToken(jwtToken)
 
@@ -268,6 +259,7 @@ func handelRequest() {
 			number1 := request.URL.Query().Get("id1")
 			number2 := request.URL.Query().Get("id2")
 
+			log.Println(number1, number2)
 
 			jwtToken := request.Header.Get("jwtToken")
 			header := decryptJwtToken(jwtToken)
@@ -288,6 +280,8 @@ func handelRequest() {
 }
 
 func main() {
+
+	log.Println(db)
 
 	handelRequest()
 
