@@ -22,7 +22,7 @@ app.post("/newPassword", (req, res) => {
       var data = req.body;
       console.log(data);
       if (!data.id || !data.newPassword || !data.emaiID) {
-        res.status(200).send({ message: "error" });
+        res.status(200).send({ message: "error", err: "Invalid credientials" });
         return;
       }
 
