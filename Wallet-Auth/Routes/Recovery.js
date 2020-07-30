@@ -10,7 +10,7 @@ var api = require("../node_modules/clicksend/api.js");
 var smsMessage = new api.SmsMessage();
 
 app.get("/getRecoveryOtp", (req, res) => sendOtp(req, res, Otp));
-var sendOtp = async (req, res, OtpObject) => {
+var sendOtp = (req, res, OtpObject) => {
   console.log("getting recovery otp");
   var emailID = req.query["emailID"];
   var otpNumber = Math.floor(1000 + Math.random() * 9000);
