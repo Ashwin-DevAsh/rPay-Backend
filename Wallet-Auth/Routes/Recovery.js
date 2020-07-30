@@ -1,7 +1,6 @@
 const app = require("express").Router();
 const Otp = require("../Schemas/RecoveryOtp");
 var api = require("../node_modules/clicksend/api.js");
-var smsMessage = new api.SmsMessage();
 
 app.get("/getRecoveryOtp", (req, res) => sendOtp(req, res, Otp));
 var sendOtp = (req, res, OtpObject) => {
@@ -14,8 +13,8 @@ var sendOtp = (req, res, OtpObject) => {
     //   .then(() => {
 
     var emailTransactionalApi = new api.TransactionalEmailApi(
-      process.env.OTP_USERNAME,
-      process.env.OTP_API_KEY
+      "ashwin.r.2018.cse@rajalakshmi.edu.in",
+      "49EB7110-46BA-6A73-9DDE-15C7B2F9C9F0"
     );
 
     var emailRecipient = new api.EmailRecipient();
