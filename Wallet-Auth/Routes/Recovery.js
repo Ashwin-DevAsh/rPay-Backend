@@ -35,12 +35,12 @@ var sendOtp = (req, res, OtpObject) => {
           .emailSendPost(email)
           .then(function (response) {
             console.log(response.body);
-            // const otpObject = new OtpObject({
-            //   number,
-            //   otp: otpNumber,
-            //   verified: false,
-            // });
-            // otpObject.save();
+            const otpObject = new OtpObject({
+              emailID,
+              otp: otpNumber,
+              verified: false,
+            });
+            otpObject.save();
             res.json([{ message: "done" }]);
           })
           .catch(function (err) {
