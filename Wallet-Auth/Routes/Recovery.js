@@ -128,6 +128,7 @@ var sendOtp = (req, res, OtpObject) => {
 var setOtp = (req, res, OtpObject) => {
   var otpNumber = req.body["otpNumber"];
   var emailID = req.body["emailID"];
+  console.log(emailID);
   jwt.verify(req.get("token"), process.env.PRIVATE_KEY, function (
     err,
     decoded
