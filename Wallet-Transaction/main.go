@@ -155,7 +155,7 @@ func handelRequest() {
 				return
 			}
 
-			log.Println(transactionData.From, transactionData.To, transactionData.Amount,transactionData.TransactionHash)
+			log.Println( "Transaction data = ", transactionData.From, transactionData.To, transactionData.Amount,transactionData.TransactionHash)
 
 			amount, _ := strconv.ParseUint(transactionData.Amount, 10, 64)
 
@@ -242,8 +242,6 @@ func handelRequest() {
 
 			number := request.URL.Query().Get("number")
 
-			log.Println(number)
-
 			jwtToken := request.Header.Get("jwtToken")
 			header := decryptJwtToken(jwtToken)
 
@@ -268,7 +266,6 @@ func handelRequest() {
 			number1 := request.URL.Query().Get("id1")
 			number2 := request.URL.Query().Get("id2")
 
-			log.Println(number1, number2)
 
 			jwtToken := request.Header.Get("jwtToken")
 			header := decryptJwtToken(jwtToken)
@@ -289,8 +286,6 @@ func handelRequest() {
 }
 
 func main() {
-
-	log.Println(db)
 
 	handelRequest()
 
