@@ -83,11 +83,11 @@ var sendOtp = (req, res, OtpObject) => {
 
             var emailRecipient = new api.EmailRecipient();
             emailRecipient.email = emailID;
-            emailRecipient.name = "Rpay";
+            emailRecipient.name = "r pay";
 
             var emailFrom = new api.EmailFrom();
-            emailFrom.emailAddressId = 11297;
-            emailFrom.name = "Rpay";
+            emailFrom.emailAddressId = 11301;
+            emailFrom.name = "r pay";
 
             var email = new api.Email();
 
