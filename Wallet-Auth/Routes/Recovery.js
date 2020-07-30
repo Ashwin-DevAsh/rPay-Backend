@@ -14,7 +14,7 @@ var sendOtp = (req, res, OtpObject) => {
     decoded
   ) {
     if (err) {
-      console.log(err);
+      console.log("jwt error = ", err);
       res.status(200).send({ message: "error" });
       return;
     } else {
