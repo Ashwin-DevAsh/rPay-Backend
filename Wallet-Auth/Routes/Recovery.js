@@ -56,11 +56,11 @@ var sendOtp = (req, res, OtpObject) => {
           })
           .catch(function (err) {
             console.log(err);
-            res.json([{ message: "failed" }]);
+            res.json([{ message: "failed", err }]);
           });
       })
       .catch((e) => {
-        res.json([{ message: "failed" }]);
+        res.json([{ message: "failed", err: e }]);
       });
   } else {
     res.json([{ message: "failed" }]);
