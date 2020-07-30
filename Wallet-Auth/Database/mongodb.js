@@ -4,7 +4,7 @@ mongoose
   .connect("mongodb://auth-database/", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useFindAndModify: false,
+    useFindAndModify: true,
   })
   .then(() => {
     console.log("suc");
