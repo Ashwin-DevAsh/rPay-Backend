@@ -79,7 +79,7 @@ func handelRequest() {
 				Amount   string
 				ToName   string
 				FromName string
-                TransactionHash string
+             
 			}
 
 			err := json.NewDecoder(request.Body).Decode(&transactionData)
@@ -89,7 +89,7 @@ func handelRequest() {
 				return
 			}
 
-			log.Println(transactionData.From, transactionData.To, transactionData.Amount,transactionData.TransactionHash)
+			log.Println(transactionData.From, transactionData.To, transactionData.Amount)
 
 			amount, _ := strconv.ParseUint(transactionData.Amount, 10, 64)
 
@@ -145,6 +145,7 @@ func handelRequest() {
 				Amount   string
 				ToName   string
 				FromName string
+				TransactionHash string
 			}
 
 			err := json.NewDecoder(request.Body).Decode(&transactionData)
@@ -154,7 +155,7 @@ func handelRequest() {
 				return
 			}
 
-			println(transactionData.From, transactionData.To, transactionData.Amount)
+			println(transactionData.From, transactionData.To, transactionData.Amount,transactionData.TransactionHash)
 
 			amount, _ := strconv.ParseUint(transactionData.Amount, 10, 64)
 

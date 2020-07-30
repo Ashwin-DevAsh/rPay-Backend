@@ -176,7 +176,6 @@ func getMyState(db *sql.DB, id string) MyState {
 
 
 	myState := MyState{state[id], getTransactions(db, id)}
-    log.Println(myState)
 	return myState
 }
 
@@ -205,8 +204,6 @@ func getState(db *sql.DB) map[string]int {
 }
 
 func getTransactions(sb *sql.DB, number string) []Transaction {
-
-	log.Println("getting data of ", number)
 
 	transactions := []Transaction{}
 
