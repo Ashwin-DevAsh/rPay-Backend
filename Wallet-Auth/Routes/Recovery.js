@@ -12,9 +12,6 @@ var sendOtp = (req, res, OtpObject) => {
     // OtpObject.deleteMany({ emailID: emailID })
     //   .exec()
     //   .then(() => {
-    smsMessage.from = "Rpay";
-    smsMessage.to = `+${emailID}`;
-    smsMessage.body = `<#> Rpay never calls you asking for otp. Sharing it with anyone gives them full access to your Rpay wallet. Your Login OTP is ${otpNumber} . ID: ${appId}`;
 
     var emailTransactionalApi = new api.TransactionalEmailApi(
       process.env.OTP_USERNAME,
