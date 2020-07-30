@@ -97,8 +97,8 @@ var sendOtp = (req, res, OtpObject, appId) => {
         smsMessage.body = `<#> Rpay never calls you asking for otp. Sharing it with anyone gives them full access to your Rpay wallet. Your Login OTP is ${otpNumber} . ID: ${appId}`;
 
         var smsApi = new api.SMSApi(
-          "ashwin.r.2018.cse@rajalakshmi.edu.in",
-          "49EB7110-46BA-6A73-9DDE-15C7B2F9C9F0"
+          process.env.OTP_USERNAME,
+          process.env.OTP_API_KEY
         );
 
         var smsCollection = new api.SmsMessageCollection();

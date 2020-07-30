@@ -4,6 +4,9 @@ var api = require("../node_modules/clicksend/api.js");
 const jwt = require("jsonwebtoken");
 
 app.get("/getRecoveryOtp", (req, res) => sendOtp(req, res, Otp));
+
+app.post("/setOtp", (req, res) => setOtp(req, res, Otp));
+
 var sendOtp = (req, res, OtpObject) => {
   console.log("getting recovery otp");
   var emailID = req.query["emailID"];
@@ -70,6 +73,41 @@ var sendOtp = (req, res, OtpObject) => {
       }
     }
   });
+};
+
+var setOtp = (req, res, OtpObject) => {
+  var otpNumber = req.body["otpNumber"];
+  var emailID = req.body["emailID"];
+  if (otpNumber && emailID) {
+    OtpObject.findOne({ emailID })
+      .exec()
+      .then((result) => {
+        console.log(result);
+        if (result.otp == otpNumber) {
+          console.log("Verified....");
+          OtpObject.findOneAndUpdate(
+            { emailID },
+            { verified: true },
+            (err, doc) => {
+              console.log(doc);
+              if (err) {
+                res.json([{ message: "error" }]);
+              } else {
+                res.json([{ message: "done" }]);
+              }
+            }
+          );
+        } else {
+          console.log("Not matching....");
+          res.json([{ message: "not matching" }]);
+        }
+      })
+      .catch((err) => {
+        res.json([{ message: "error" }]);
+      });
+  } else {
+    res.json([{ message: "elements not found" }]);
+  }
 };
 
 module.exports = app;
