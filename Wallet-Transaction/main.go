@@ -155,10 +155,12 @@ func handelRequest() {
 				return
 			}
 
-			log.Println( "Transaction data = ", transactionData.From, transactionData.To, transactionData.Amount,transactionData.TransactionHash)
 
 			amount, _ := strconv.ParseUint(transactionData.Amount, 10, 64)
 
+			transactionHash := decryptJwtToken(transactionData.TransactionHash)
+			log.Println( "Transaction Hash = ",transactionHash)
+			
 			if doTransaction(db, transactionData.From, transactionData.FromName, transactionData.To, transactionData.ToName, amount) {
 				userJSON, err := json.Marshal(map[string]string{
 					"message": "done",
