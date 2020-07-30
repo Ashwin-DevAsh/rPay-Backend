@@ -29,6 +29,7 @@ app.post("/newPassword", (req, res) => {
       Otp.findOne({ emailID: data.emaiID })
         .exec()
         .then((otpDoc) => {
+          console.log(otpDoc);
           if (otpDoc && otpDoc.verified) {
             Otp.deleteMany({
               emaiID: data.emaiID,
