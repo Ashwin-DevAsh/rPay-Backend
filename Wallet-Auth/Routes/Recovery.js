@@ -7,7 +7,7 @@ app.get("/getRecoveryOtp", (req, res) => sendOtp(req, res, Otp));
 
 app.post("/setRecoveryOtp", (req, res) => setOtp(req, res, Otp));
 
-app.post("/changeForgetPassword", (req, res) => {
+app.post("/newPassword", (req, res) => {
   jwt.verify(req.get("token"), process.env.PRIVATE_KEY, function (
     err,
     decoded
