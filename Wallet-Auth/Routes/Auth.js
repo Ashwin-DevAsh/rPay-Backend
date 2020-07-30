@@ -32,11 +32,13 @@ var setOtp = (req, res, OtpObject, object) => {
       .exec()
       .then((result) => {
         console.log(result);
+
         if (result.otp == otpNumber) {
           OtpObject.findOneAndUpdate(
             { number },
             { verified: true },
             (err, doc) => {
+              console.log(doc);
               if (err) {
                 res.json([{ message: "error" }]);
               } else {
