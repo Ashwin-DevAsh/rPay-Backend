@@ -118,7 +118,7 @@ app.post("/addMerchant", (req, res) => {
 
 app.get("/getMerchants", (req, res) => {
   console.log("getting merchants");
-  Merchants.find({}, [
+  Users.find({}, [
     "name",
     "number",
     "email",
