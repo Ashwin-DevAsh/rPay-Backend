@@ -13,7 +13,7 @@ var smsMessage = new api.SmsMessage();
 app.get("/getOtp", (req, res) => sendOtp(req, res, Otp, "uPxbwGuwMaB"));
 
 app.get("/getOtpMerchant", (req, res) =>
-  sendOtp(req, res, MerchantOtp, "RGhR1jQhc7+")
+  sendOtp(req, res, MerchantOtp, "i8Ua2mzmif/")
 );
 
 app.post("/setOtp", (req, res) => {
