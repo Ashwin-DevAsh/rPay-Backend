@@ -63,6 +63,7 @@ app.post("/addMerchant", (req, res) => {
                                 id: userID,
                                 storeName: user.storeName,
                                 status: "pending",
+                                imageURL: null,
                               });
                               jwt.sign(
                                 {
