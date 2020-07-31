@@ -46,6 +46,7 @@ var setOtp = (req, res, OtpObject, object, id = "rpay@") => {
                   .findOne({ id: id + number })
                   .exec()
                   .then((doc) => {
+                    console.log(doc);
                     if (doc) {
                       jwt.sign(
                         {
