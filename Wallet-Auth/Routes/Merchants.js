@@ -1,90 +1,81 @@
 const app = require("express").Router();
-const Merchants = require("../Schemas/Merchants");
-const Otp = require("../Schemas/otp");
+const Users = require("../Schemas/Merchants");
+const Otp = require("../Schemas/MerchantsOtp");
 const jwt = require("jsonwebtoken");
 const postgres = require("../Database/postgresql");
 
 app.post("/addMerchant", (req, res) => {
-  var merchant = req.body;
-  console.log(merchant);
+  var user = req.body;
+  console.log(user);
 
   if (
-    !merchant.name ||
-    !merchant.email ||
-    !merchant.number ||
-    !merchant.password ||
-    !merchant.fcmToken ||
-    !merchant.storeName
+    !user.name ||
+    !user.email ||
+    !user.number ||
+    !user.password ||
+    !user.fcmToken ||
+    !user.storeName
   ) {
     res.status(200).send([{ message: "error" }]);
     return;
   }
 
-  Otp.findOne({ number: merchant.number })
+  var userID = `rbusiness@${user.number}`;
+  Otp.findOne({ number: user.number })
     .exec()
     .then((otpDoc) => {
+      console.log(otpDoc);
       if (otpDoc && otpDoc.verified) {
-        Merchants.findOne({
-          $or: [{ number: merchant.number }, { email: merchant.email }],
+        Users.findOne({
+          $or: [{ number: user.number }, { email: user.email }],
         })
           .exec()
           .then((doc) => {
             console.log(doc);
             if (doc) {
-              res.json([{ message: "merchant already exist" }]);
+              res.json([{ message: "User already exist" }]);
               return;
             }
             postgres.query(
               "delete from info where id=$1;",
-              [merchant.number],
+              [userID],
               (err, result) => {
                 postgres.query(
                   "insert into info values($1,$2,null,null)",
-                  [merchant.number, merchant.fcmToken],
+                  [userID, user.fcmToken],
                   (err, result) => {
                     if (!err) {
                       postgres.query(
                         "insert into amount(id,balance) values($1,0)",
-                        [merchant.number],
-                        (err, result) => {
+                        [userID],
+                        async (err, result) => {
                           if (!err) {
                             if (doc) {
-                              res.json([{ message: "merchant already exist" }]);
+                              res.json([{ message: "User already exist" }]);
+                              Otp.deleteMany({ number: user.number }).exec();
                             } else {
-                              let merchantObject = new Merchants({
-                                name: merchant.name,
-                                number: merchant.number,
-                                email: merchant.email,
-                                password: merchant.password,
-                                accountInfo: {
-                                  accountNumber: merchant.accountNumber,
-                                  Ifsc: merchant.ifsc,
-                                  upiID: merchant.upiID,
-                                },
-                                id: `@rbusiness${user.number}`,
-                                qrcode: jwt.sign(
-                                  {
-                                    name: user.name,
-                                    id: `@rbusiness${user.number}`,
-                                    number: user.number,
-                                  },
-                                  process.env.QRKEY
-                                ),
-                                storeName: merchant.storeName,
-                                status: "Pending",
+                              let userObject = new Users({
+                                name: user.name,
+                                number: user.number,
+                                email: user.email,
+                                password: user.password,
+                                qrCode: user.qrCode,
+                                id: userID,
+                                storeName: user.storeName,
                               });
                               jwt.sign(
                                 {
-                                  name: merchant.name,
-                                  number: merchant.number,
-                                  email: merchant.email,
+                                  name: user.name,
+                                  id: userID,
+                                  number: user.number,
+                                  email: user.email,
                                 },
                                 process.env.PRIVATE_KEY,
                                 (err, token) => {
                                   if (err) {
                                     res.json([{ message: err.getName() }]);
                                   } else {
-                                    merchantObject
+                                    userObject
                                       .save()
                                       .then((result) => {
                                         console.log(token);
@@ -94,6 +85,9 @@ app.post("/addMerchant", (req, res) => {
                                         res.json([{ message: "failed" }]);
                                       });
                                   }
+                                  Otp.deleteMany({
+                                    number: user.number,
+                                  }).exec();
                                 }
                               );
                             }
