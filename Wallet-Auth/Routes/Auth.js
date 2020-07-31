@@ -21,10 +21,10 @@ app.post("/setOtp", (req, res) => {
 });
 
 app.post("/setOtpMerchant", (req, res) => {
-  setOtp(req, res, MerchantOtp, Merchant);
+  setOtp(req, res, MerchantOtp, Merchant, "rbusiness@");
 });
 
-var setOtp = (req, res, OtpObject, object) => {
+var setOtp = (req, res, OtpObject, object, id = "rpay@") => {
   var otpNumber = req.body["otpNumber"];
   var number = req.body["number"];
   if (otpNumber && number) {
@@ -43,7 +43,7 @@ var setOtp = (req, res, OtpObject, object) => {
                 res.json([{ message: "error" }]);
               } else {
                 object
-                  .findOne({ number })
+                  .findOne({ id: id + number })
                   .exec()
                   .then((doc) => {
                     if (doc) {
