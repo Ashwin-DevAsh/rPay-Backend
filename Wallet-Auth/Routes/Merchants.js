@@ -62,6 +62,7 @@ app.post("/addMerchant", (req, res) => {
                                 qrCode: user.qrCode,
                                 id: userID,
                                 storeName: user.storeName,
+                                status: "pending",
                               });
                               jwt.sign(
                                 {
