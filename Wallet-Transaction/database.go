@@ -154,6 +154,8 @@ type Transaction struct {
 	FromName        interface{}
 	IsGenerated  	interface{}
 	IsWithdraw      interface{}
+	TimeStamp       interface{}
+
 }
 
 func getMyState(db *sql.DB, id string) MyState {
@@ -207,7 +209,7 @@ func getTransactions(sb *sql.DB, number string) []Transaction {
 
 	transactions := []Transaction{}
 
-	row, err := db.Query("select * from transactions where fromid = $1 or toid = $1", number)
+	row, err := db.Query("select *,to_timestamp(transactionTime) as TimeStamp from transactions where fromid = $1 or toid = $1", number)
 
 	if err != nil {
 		log.Println(err)
@@ -217,7 +219,7 @@ func getTransactions(sb *sql.DB, number string) []Transaction {
 		var transaction Transaction
 		row.Scan(&transaction.TransactionID, &transaction.TransactionTime, &transaction.From, 
 				 &transaction.To, &transaction.ToName, &transaction.FromName, &transaction.Amount ,
-				 &transaction.IsGenerated,&transaction.IsWithdraw)
+				 &transaction.IsGenerated,&transaction.IsWithdraw,&transaction.TimeStamp)
 		transactions = append(transactions, transaction)
 
 	}
