@@ -5,6 +5,7 @@ const Users = require("../Schemas/users");
 const Otp = require("../Schemas/otp");
 const jwt = require("jsonwebtoken");
 const postgres = require("../Database/postgresql");
+const path = require("path");
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
