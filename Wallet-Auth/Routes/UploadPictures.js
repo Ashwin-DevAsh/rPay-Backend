@@ -13,7 +13,7 @@ aws.config.update({
 var upload = multer({
   storage: multerS3({
     s3: new aws.S3(),
-
+    acl: "public-read",
     bucket: "rec-wallet-profile-pictures",
 
     key: function (req, file, cb) {
