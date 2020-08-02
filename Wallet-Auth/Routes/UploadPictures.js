@@ -32,7 +32,7 @@ app.post("/addProfilePicture/:id", (req, res) => {
     } else if (!req.file) {
       res.send({ message: "error", err: "Invalid file" });
     } else {
-      res.send({ message: "done", result });
+      res.send({ message: "done", result: result, path: this.path });
     }
   });
 });
