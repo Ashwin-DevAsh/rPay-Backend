@@ -1,4 +1,3 @@
-require("dotenv").config(".env");
 const app = require("express").Router();
 const Users = require("../Schemas/users");
 const Otp = require("../Schemas/otp");
