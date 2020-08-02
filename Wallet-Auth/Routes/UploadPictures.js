@@ -3,6 +3,8 @@ const multerS3 = require("multer-s3");
 const multer = require("multer");
 const path = require("path");
 const app = require("express").Router();
+const merchant = require("../Schemas/Merchants");
+const users = require("../Schemas/users");
 
 aws.config.update({
   secretAccessKey: process.env.AWSSecretKey,
@@ -15,12 +17,14 @@ var upload = multer({
     s3: new aws.S3(),
     acl: "public-read",
     bucket: "rec-wallet-profile-pictures",
-
     key: function (req, file, cb) {
       var extension = file.originalname.split(".")[
         file.originalname.split(".").length - 1
       ];
-      cb(null, req.params.id + "." + extension);
+      var id = req.params.id;
+      var imageName = id + "." + extension;
+      updateDatabase(id, imageName);
+      cb(null, imageName);
     },
   }),
 }).single("profilePicture");
@@ -40,5 +44,28 @@ app.post("/addProfilePicture/:id", (req, res) => {
     }
   });
 });
+
+function updateDatabase(id, imageName) {
+  imageURL =
+    "https://rec-wallet-profile-pictures.s3.us-east-2.amazonaws.com/" +
+    imageName;
+  if (id.includes("rpay")) {
+    users.findOneAndUpdate({ id }, { imageURL }, (err, doc) => {
+      if (err) {
+        console.log("failed");
+      } else {
+        console.log(doc);
+      }
+    });
+  } else {
+    merchant.findOneAndUpdate({ id }, { imageURL }, (err, doc) => {
+      if (err) {
+        console.log("failed");
+      } else {
+        console.log(doc);
+      }
+    });
+  }
+}
 
 module.exports = app;
