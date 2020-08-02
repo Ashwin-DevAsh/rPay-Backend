@@ -16,7 +16,8 @@ var upload = multer({
     bucket: "rec-wallet-profile-pictures",
     key: function (req, file, cb) {
       console.log(file);
-      cb(null, file.originalname);
+      var extension = file.originalname.split(".")[-1];
+      cb(null, req.body.id + extension);
     },
   }),
 }).single("avatar");
