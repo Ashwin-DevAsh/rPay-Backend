@@ -1,4 +1,7 @@
+require("dotenv").config("../../.env");
+
 const express = require("express");
+
 const bodyParser = require("body-parser");
 const authEndPoint = require("./Routes/Auth");
 const userEndPoint = require("./Routes/User");
@@ -22,8 +25,8 @@ app.use(merchantEndPoint);
 app.use(recovery);
 app.use(uploadPictures);
 
+console.log(process.env.Secret_Access_Key, process.env.Access_Key);
+
 app.listen(8000, () => {
   console.log("connecte at port 8000");
 });
-
-console.log(process.env.Secret_Access_Key, process.env.Access_Key);
