@@ -20,20 +20,19 @@ var upload = multer({
       var extension = file.originalname.split(".")[
         file.originalname.split(".").length - 1
       ];
-      console.log(extension);
       cb(null, req.params.id + "." + extension);
     },
   }),
 }).single("profilePicture");
 
 app.post("/addProfilePicture/:id", (req, res) => {
-  upload(req, res, (err) => {
+  upload(req, res, (err, result) => {
     if (err) {
       res.send({ message: "error", err });
     } else if (!req.file) {
       res.send({ message: "error", err: "Invalid file" });
     } else {
-      res.send({ message: "done" });
+      res.send({ message: "done", result });
     }
   });
 });
