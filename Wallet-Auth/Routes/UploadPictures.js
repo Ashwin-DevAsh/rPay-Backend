@@ -30,16 +30,27 @@ var upload = multer({
 }).single("profilePicture");
 
 app.post("/addProfilePicture/:id", (req, res) => {
-  upload(req, res, (err, result) => {
+  jwt.verify(req.get("token"), process.env.PRIVATE_KEY, function (
+    err,
+    decoded
+  ) {
     if (err) {
-      res.send({ message: "error", err });
-    } else if (!req.file) {
-      res.send({ message: "error", err: "Invalid file" });
+      console.log("jwt error = ", err);
+      res.status(200).send({ message: "error", err });
+      return;
     } else {
-      res.send({
-        message: "done",
-        result: result,
-        path: "path = " + this.path,
+      upload(req, res, (err, result) => {
+        if (err) {
+          res.send({ message: "error", err });
+        } else if (!req.file) {
+          res.send({ message: "error", err: "Invalid file" });
+        } else {
+          res.send({
+            message: "done",
+            result: result,
+            path: "path = " + this.path,
+          });
+        }
       });
     }
   });
