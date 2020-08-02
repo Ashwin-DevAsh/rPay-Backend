@@ -6,6 +6,8 @@ const Otp = require("../Schemas/otp");
 const jwt = require("jsonwebtoken");
 const postgres = require("../Database/postgresql");
 const path = require("path");
+const aws = require('aws-sdk'),
+const multerS3 = require('multer-s3');
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -16,6 +18,13 @@ var storage = multer.diskStorage({
   },
 });
 const uplode = multer({ storage: storage }).single("avatar");
+
+aws.config.update({
+    secretAccessKey: process.env.AWSSecretKey,
+    accessKeyId: process.env.AWSAccessKeyId,
+    region: 'us-east-2'
+});
+
 
 app.post("/addUser", async (req, res) => {
   var user = req.body;
