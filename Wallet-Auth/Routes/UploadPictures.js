@@ -21,7 +21,7 @@ var upload = multer({
         file.originalname.split(".").length - 1
       ];
       console.log(extension);
-      cb(null, "req.params.id" + "." + extension);
+      cb(null, req.params.id + "." + extension);
     },
   }),
 }).single("profilePicture");
