@@ -23,7 +23,7 @@ var upload = multer({
       cb(null, req.params.id + "." + extension);
     },
   }),
-}).array("profilePicture", 1);
+}).single("profilePicture");
 
 app.post("/addProfilePicture/:id", (req, res) => {
   upload(req, res, (err) => {
