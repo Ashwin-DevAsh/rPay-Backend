@@ -8,7 +8,7 @@ const postgres = require("../Database/postgresql");
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "../../public/uploads");
+    cb(null, (__dirname, "/uploads/"));
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname);
