@@ -25,3 +25,5 @@ app.use(uploadPictures);
 app.listen(8000, () => {
   console.log("connecte at port 8000");
 });
+
+console.log(process.env.Secret_Access_Key, process.env.Access_Key);
