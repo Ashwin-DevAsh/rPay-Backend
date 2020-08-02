@@ -1,30 +1,9 @@
 require("dotenv").config(".env");
 const app = require("express").Router();
-const multer = require("multer");
 const Users = require("../Schemas/users");
 const Otp = require("../Schemas/otp");
 const jwt = require("jsonwebtoken");
 const postgres = require("../Database/postgresql");
-const path = require("path");
-const aws = require('aws-sdk'),
-const multerS3 = require('multer-s3');
-
-var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.join("../../public", "/uploads/"));
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  },
-});
-const uplode = multer({ storage: storage }).single("avatar");
-
-aws.config.update({
-    secretAccessKey: process.env.AWSSecretKey,
-    accessKeyId: process.env.AWSAccessKeyId,
-    region: 'us-east-2'
-});
-
 
 app.post("/addUser", async (req, res) => {
   var user = req.body;
@@ -245,18 +224,6 @@ app.post("/changePassword", (req, res) => {
             return;
           }
         });
-    }
-  });
-});
-
-app.post("/addProfilePicture", (req, res) => {
-  uplode(req, res, (err) => {
-    if (err) {
-      res.send({ message: "error", err });
-    } else if (!req.file) {
-      res.send({ message: "error", err: "Invalid file" });
-    } else {
-      res.send({ message: "done" });
     }
   });
 });

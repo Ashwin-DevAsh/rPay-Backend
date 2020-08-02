@@ -19,7 +19,7 @@ var upload = multer({
             cb(null, file.originalname);
         }
     })
-});
+}).single('avatar');
 
 app.post("/addProfilePicture", (req, res) => {
   upload(req, res, (err) => {
