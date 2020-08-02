@@ -20,12 +20,12 @@ var upload = multer({
         file.originalname.split(".").length - 1
       ];
       console.log(extension);
-      cb(null, req.body.id + extension);
+      cb(null, req.params.id + "." + extension);
     },
   }),
-}).single("avatar");
+}).array("profilePicture", 1);
 
-app.post("/addProfilePicture", (req, res) => {
+app.post("/addProfilePicture/:id", (req, res) => {
   upload(req, res, (err) => {
     if (err) {
       res.send({ message: "error", err });
