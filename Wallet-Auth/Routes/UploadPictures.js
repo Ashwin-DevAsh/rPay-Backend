@@ -7,8 +7,8 @@ const merchant = require("../Schemas/Merchants");
 const users = require("../Schemas/users");
 
 aws.config.update({
-  secretAccessKey: process.env.AWS_SecretKey,
-  accessKeyId: process.env.AWS_AccessKeyId,
+  secretAccessKey: process.env.Secret_Access_Key,
+  accessKeyId: process.env.Access_Key,
   region: "us-east-2",
 });
 
