@@ -11,7 +11,7 @@ aws.config.update({
 
 var upload = multer({
   storage: multerS3({
-    s3: new aws.s3(),
+    s3: new aws.S3(),
     bucket: "rec-wallet-profile-pictures",
     key: function (req, file, cb) {
       console.log(file);
