@@ -7,8 +7,8 @@ const merchant = require("../Schemas/Merchants");
 const users = require("../Schemas/users");
 
 aws.config.update({
-  secretAccessKey: "nfnEUocoQB6h/T0lnsac27z2d3o1/szfiiOrTP2i",
-  accessKeyId: "AKIAJGCORHRJWR3I4MKQ",
+  secretAccessKey: "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",
+  accessKeyId: "AKIAXOQRXVIA2QSAREGZ",
   region: "us-east-2",
 });
 
@@ -41,6 +41,7 @@ app.post("/addProfilePicture/:id", (req, res) => {
     } else {
       upload(req, res, (err, result) => {
         if (err) {
+          console.log(err);
           res.send({ message: "error", err });
         } else if (!req.file) {
           res.send({ message: "error", err: "Invalid file" });
