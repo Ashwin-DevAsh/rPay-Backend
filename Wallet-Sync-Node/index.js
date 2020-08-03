@@ -5,6 +5,7 @@ const server = require("http").createServer(app);
 const io = require("socket.io")(server);
 const postgres = require("./Database");
 const FCM = require("fcm-node");
+const { send } = require("process");
 
 io.on("connection", (client) => {
   client.on("getInformation", (data) => {
@@ -36,6 +37,10 @@ io.on("connection", (client) => {
     console.log(data);
     io.to(data["to"]).emit("receivedPayment");
   });
+
+  client.on("updateProfilePicture", (data) => {
+    sendNotificationToAll(data.id);
+  });
 });
 
 function sendNotification(device) {
@@ -46,6 +51,26 @@ function sendNotification(device) {
     to: device,
     data: {
       type: "awake",
+    },
+  };
+  fcm.send(message, function (err, response) {
+    if (err) {
+      console.log("Something has gone wrong!");
+    } else {
+      console.log("Successfully sent with response: ", response);
+    }
+  });
+}
+
+function sendNotificationToAll(id) {
+  console.log("sending notification to all");
+  var serverKey = process.env.FCM_KEY; //put your server key here
+  var fcm = new FCM(serverKey);
+  var message = {
+    condition: "!('anytopicyoudontwanttouse' in topics)",
+    data: {
+      type: "updateProfilePicture",
+      id: id,
     },
   };
   fcm.send(message, function (err, response) {
