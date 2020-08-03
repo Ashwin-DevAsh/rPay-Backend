@@ -69,8 +69,7 @@ function sendNotificationToAll(id) {
   var message = {
     condition: "!('anytopicyoudontwanttouse' in topics)",
     data: {
-      type: "updateProfilePicture",
-      id: id,
+      type: `updateProfilePicture,${id}`,
     },
   };
   fcm.send(message, function (err, response) {
