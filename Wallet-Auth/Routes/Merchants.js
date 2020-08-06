@@ -75,7 +75,7 @@ app.post("/addMerchant", (req, res) => {
                                 process.env.PRIVATE_KEY,
                                 (err, token) => {
                                   if (err) {
-                                    res.json([{ message: err.getName() }]);
+                                    res.json([{ message: err }]);
                                   } else {
                                     userObject
                                       .save()
