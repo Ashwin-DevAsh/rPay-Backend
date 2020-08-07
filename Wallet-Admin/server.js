@@ -3,6 +3,7 @@ const express = require("express");
 const Admin = require("./Database/Schema/Admin");
 const Users = require("./Routes/Users");
 const Stats = require("./Routes/Stats");
+const Merchants = require("./Routes/Merchants");
 const bcrypt = require("bcrypt");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -64,6 +65,7 @@ app.get("/", (req, res) => {
 
 app.use(adminRoute);
 app.use(transactions);
+app.use(Merchants);
 app.use(Users);
 app.use(Stats);
 
