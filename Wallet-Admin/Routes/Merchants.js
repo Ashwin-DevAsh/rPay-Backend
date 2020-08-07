@@ -25,4 +25,21 @@ app.get("/getMerchants", (req, res) => {
     });
 });
 
+app.post("/updateMerchantStatus", (req, res) => {
+  var id = req.body.id;
+  var status = req.body.status;
+  if (!id || !status) {
+    res.send({ message: "error" });
+    return;
+  }
+  Users.findOneAndUpdate({ id }, { status })
+    .exec()
+    .then((doc) => {
+      res.send({ message: "done" });
+    })
+    .catch((e) => {
+      res.send({ message: "error", e });
+    });
+});
+
 module.exports = app;
