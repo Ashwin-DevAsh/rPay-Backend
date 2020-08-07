@@ -1,14 +1,26 @@
 const app = require("express").Router();
 const Otp = require("../Schemas/RecoveryOtp");
+const OtpMerchant = require("../Schemas/RecoveryOtpMerchant");
 var api = require("../node_modules/clicksend/api.js");
 const jwt = require("jsonwebtoken");
 const Users = require("../Schemas/users");
+const Merchants = require("../Schemas/Merchants");
 
 app.get("/getRecoveryOtp", (req, res) => sendOtp(req, res, Otp));
 
+app.get("/getRecoveryOtpMerchant", (req, res) =>
+  sendOtp(req, res, OtpMerchant)
+);
+
 app.post("/setRecoveryOtp", (req, res) => setOtp(req, res, Otp));
+app.post("/setRecoveryOtpMerchant", (req, res) =>
+  setOtp(req, res, OtpMerchant)
+);
 
 app.post("/newPassword", (req, res) => newPassword(req, res, Otp, Users));
+app.post("/newPasswordMerchant", (req, res) =>
+  newPassword(req, res, Otp, Merchants)
+);
 
 var newPassword = (req, res, Otp, Users) => {
   jwt.verify(req.get("token"), process.env.PRIVATE_KEY, function (
