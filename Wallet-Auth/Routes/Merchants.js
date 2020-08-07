@@ -143,4 +143,26 @@ app.get("/getMerchants", (req, res) => {
     });
 });
 
+app.get("/getMerchant", (req, res) => {
+  if (req.query.id) {
+    Users.find({ id: req.query.id }, [
+      "name",
+      "number",
+      "email",
+      "id",
+      "qrCode",
+      "imageURL",
+      "accountInfo",
+      "storeName",
+      "status",
+    ]).then((doc) => {
+      console.log(doc);
+      res.status(200).send(doc);
+    });
+  } else {
+    console.log(err);
+    res.json({ message: "failed" });
+  }
+});
+
 module.exports = app;
