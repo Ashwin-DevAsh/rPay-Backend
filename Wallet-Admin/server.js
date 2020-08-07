@@ -8,6 +8,7 @@ const bcrypt = require("bcrypt");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const transactions = require("./Routes/Transactions");
+const nodesAndBlocks = require("./Routes/nodesAndBlocks");
 
 var corsOptions = {
   origin: "*",
@@ -68,6 +69,7 @@ app.use(transactions);
 app.use(Merchants);
 app.use(Users);
 app.use(Stats);
+app.use(nodesAndBlocks);
 
 app.listen(PORT, () => {
   console.log("Listining on ", PORT);
