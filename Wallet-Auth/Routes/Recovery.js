@@ -19,7 +19,7 @@ app.post("/setRecoveryOtpMerchant", (req, res) =>
 
 app.post("/newPassword", (req, res) => newPassword(req, res, Otp, Users));
 app.post("/newPasswordMerchant", (req, res) =>
-  newPassword(req, res, Otp, Merchants)
+  newPassword(req, res, OtpMerchant, Merchants)
 );
 
 var newPassword = (req, res, Otp, Users) => {
