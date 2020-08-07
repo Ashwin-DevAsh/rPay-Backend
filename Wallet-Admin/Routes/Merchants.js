@@ -28,6 +28,7 @@ app.get("/getMerchants", (req, res) => {
 app.post("/updateMerchantStatus", (req, res) => {
   var id = req.body.id;
   var status = req.body.status;
+  console.log(id, status);
   if (!id || !status) {
     res.send({ message: "error" });
     return;
