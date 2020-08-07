@@ -8,7 +8,9 @@ app.get("/getRecoveryOtp", (req, res) => sendOtp(req, res, Otp));
 
 app.post("/setRecoveryOtp", (req, res) => setOtp(req, res, Otp));
 
-app.post("/newPassword", (req, res) => {
+app.post("/newPassword", (req, res) => newPassword(req, res, Otp, Users));
+
+var newPassword = (req, res, Otp, Users) => {
   jwt.verify(req.get("token"), process.env.PRIVATE_KEY, function (
     err,
     decoded
@@ -55,7 +57,7 @@ app.post("/newPassword", (req, res) => {
         });
     }
   });
-});
+};
 
 var sendOtp = (req, res, OtpObject) => {
   console.log("getting recovery otp");
