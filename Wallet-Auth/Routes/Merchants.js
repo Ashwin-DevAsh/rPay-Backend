@@ -145,7 +145,7 @@ app.get("/getMerchants", (req, res) => {
 
 app.get("/getMerchant", (req, res) => {
   if (req.query.id) {
-    Users.find({ id: req.query.id }, [
+    Users.findOne({ id: req.query.id }, [
       "name",
       "number",
       "email",
