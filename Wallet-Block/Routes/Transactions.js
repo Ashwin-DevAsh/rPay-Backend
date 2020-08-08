@@ -8,4 +8,16 @@ app.post("/addTransactionBlock", (req, res) => {
   res.send({ message: "done" });
 });
 
+app.post("/addMoneyBlock", (req, res) => {
+  console.log("Adding money block....");
+  console.log(req.body);
+  res.send({ message: "done" });
+});
+
+app.post("/addUserBlock", (req, res) => {
+  console.log("Adding user block....");
+  console.log(req.body);
+  res.send({ message: "done" });
+});
+
 module.exports = app;

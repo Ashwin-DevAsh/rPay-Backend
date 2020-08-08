@@ -173,8 +173,39 @@ func addMoney(db *sql.DB, from string, fromName string, to string, toName string
 		tx.Rollback()
 		return false
 	}
-	tx.Commit()
-	return true
+
+	jsonBodyData := map[string]interface{}{
+		"id":to,
+		"amount":amount,
+	}
+	
+	jsonBody, _ := json.Marshal(jsonBodyData)
+
+	resp, err := http.Post("http://wallet-block:9000/addMoneyBlock/","application/json",bytes.NewBuffer(jsonBody))
+
+
+	if err!=nil {
+		tx.Rollback()
+		return false
+	}
+
+	defer resp.Body.Close()
+
+	var respResult  map[string]interface{}
+	json.NewDecoder(resp.Body).Decode(&respResult)
+
+	if err!=nil{
+		tx.Rollback()
+		return false
+	}
+
+	if respResult["message"]=="done"{
+       	tx.Commit()
+	   return true 
+	}else {
+		tx.Rollback()
+		return false
+	}
 }
 
 // MyState ...
