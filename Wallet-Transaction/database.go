@@ -101,13 +101,13 @@ func doTransaction(db *sql.DB, from string, fromName string, to string, toName s
 	}
 
 	jsonBodyData := map[string]string{
-		
+		"demo":"demo"
 	}
 	jsonBody, _ := json.Marshal(jsonBodyData)
 
 	resp, err := http.Post("http://wallet-block:9000/addTransactionBlock/")
 
-	log.Println(resp,err)
+	log.Println(jsonBody,resp,err)
 
 	tx.Commit()
 
