@@ -63,9 +63,20 @@ app.post("/addUser", async (req, res) => {
         process.env.PRIVATE_KEY
       );
 
-      await userObject.save();
+      var blockResult = await axios.post(
+        "http://wallet-block:9000/addUserBlock",
+        {
+          id: userID,
+          initialAmount: 0,
+        }
+      );
 
-      res.json([{ message: "done", token }]);
+      if ((blockResult.data["message"] = "done")) {
+        await userObject.save();
+        res.json([{ message: "done", token }]);
+      } else {
+        res.json([{ message: "failed" }]);
+      }
     }
   } catch {
     res.json([{ message: "failed" }]);
