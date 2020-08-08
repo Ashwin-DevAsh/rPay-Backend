@@ -11,6 +11,11 @@ services:
     ports:
       - 5432:5432
 
+  wallet-cache:
+    image: redis
+    ports:
+      - 6379:6379
+
   wallet-auth:
     build: Wallet-Auth
     depends_on: [auth-database, status-database]
@@ -28,12 +33,6 @@ services:
     depends_on: [status-database]
     ports:
       - 7000:7000
-
-  # wallet-sync:
-  #   build: Wallet-Sync
-  #   depends_on: [status-database]
-  # ports:
-  #   - 7000:7000
 
   wallet-transaction:
     build: Wallet-Transaction
