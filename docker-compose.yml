@@ -17,7 +17,7 @@ services:
       - 6379:6379
 
   wallet-block:
-    build: Wallet-block
+    build: Wallet-Block
     depends_on: [wallet-cache, auth-database, status-database]
     ports:
       - 9000:9000
