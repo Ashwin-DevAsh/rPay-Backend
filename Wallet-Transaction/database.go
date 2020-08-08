@@ -102,8 +102,8 @@ func doTransaction(db *sql.DB, from string, fromName string, to string, toName s
 		return false
 	}
 
-	jsonBodyData := map[string]string{
-		"senderBalance": balance,
+	jsonBodyData := map[string]interface{}{
+		"senderBalance":  balance,
 		"fromID":from,
 		"toID":to,
 		"amount":amount,
