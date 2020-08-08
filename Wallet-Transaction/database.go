@@ -124,7 +124,7 @@ func doTransaction(db *sql.DB, from string, fromName string, to string, toName s
 	resData,err := ioutil.ReadAll(resp.Body)
 
 	var respResult  map[string]interface{}
-	json.NewDecoder(resp.Body).Decode(&respResult)
+	json.NewDecoder(resData).Decode(&respResult)
 
 	if err!=nil{
 		tx.Rollback()
