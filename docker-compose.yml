@@ -16,6 +16,12 @@ services:
     ports:
       - 6379:6379
 
+  wallet-block:
+    build: Wallet-block
+    depends_on: [wallet-cache, auth-database, status-database]
+    ports:
+      - 9000:9000
+
   wallet-auth:
     build: Wallet-Auth
     depends_on: [auth-database, status-database]
