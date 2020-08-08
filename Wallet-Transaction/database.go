@@ -106,7 +106,7 @@ func doTransaction(db *sql.DB, from string, fromName string, to string, toName s
 		"senderBalance": balance,
 		"fromID":from,
 		"toID":to,
-		"amount":amount
+		"amount":amount,
 	}
 	jsonBody, _ := json.Marshal(jsonBodyData)
 
