@@ -101,7 +101,7 @@ func doTransaction(db *sql.DB, from string, fromName string, to string, toName s
 	}
 
 	jsonBodyData := map[string]string{
-		"demo":"demo"
+		"demo": "demo",
 	}
 	jsonBody, _ := json.Marshal(jsonBodyData)
 
