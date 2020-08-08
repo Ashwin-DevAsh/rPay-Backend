@@ -112,18 +112,23 @@ func doTransaction(db *sql.DB, from string, fromName string, to string, toName s
 
 	resp, err := http.Post("http://wallet-block:9000/addTransactionBlock/","application/json",bytes.NewBuffer(jsonBody))
 
-	log.Println(resp)
 
 	if err!=nil{
 		tx.Rollback()
 		return false
 	}
 
-	log.Println(jsonBody,resp,err)
+	
+	if resp["message"]=="done"{
+       	tx.Commit()
+	   return true 
+	}else {
+		tx.Rollback()
+		return false
+	}
 
-	tx.Commit()
 
-	return true
+
 }
 
 func addMoney(db *sql.DB, from string, fromName string, to string, toName string, amount uint64) bool {
