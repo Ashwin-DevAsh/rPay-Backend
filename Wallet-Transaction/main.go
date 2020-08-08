@@ -26,7 +26,6 @@ func decryptJwtToken(tokenString string) jwt.MapClaims {
 	if err != nil {
 		log.Println(err)
 		return nil
-
 	}
 	return claims
 

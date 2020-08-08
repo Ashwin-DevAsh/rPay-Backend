@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 	"time"
-
+	"net/http"
 	_ "github.com/lib/pq"
 )
 
@@ -99,6 +99,15 @@ func doTransaction(db *sql.DB, from string, fromName string, to string, toName s
 		tx.Rollback()
 		return false
 	}
+
+	jsonBodyData := map[string]string{
+		
+	}
+	jsonBody, _ := json.Marshal(jsonBodyData)
+
+	resp, err := http.Post("http://wallet-block:9000/addTransactionBlock/")
+
+	log.Println(resp,err)
 
 	tx.Commit()
 
