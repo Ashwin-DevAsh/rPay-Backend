@@ -81,7 +81,8 @@ app.post("/addMerchant", async (req, res) => {
         res.json([{ message: "failed" }]);
       }
     }
-  } catch {
+  } catch (e) {
+    console.log(e);
     res.json([{ message: "failed" }]);
   }
 });
