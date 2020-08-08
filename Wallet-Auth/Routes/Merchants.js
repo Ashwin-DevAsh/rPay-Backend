@@ -3,6 +3,7 @@ const Users = require("../Schemas/Merchants");
 const Otp = require("../Schemas/MerchantsOtp");
 const jwt = require("jsonwebtoken");
 const postgres = require("../Database/postgresql");
+const axios = require("axios");
 
 app.post("/addMerchant", async (req, res) => {
   var user = req.body;
