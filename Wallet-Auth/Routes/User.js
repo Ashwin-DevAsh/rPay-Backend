@@ -21,7 +21,13 @@ app.post("/addUser", async (req, res) => {
   }
   var userID = `rpay@${user.number}`;
 
-  var otp = await Otp.findOne({ number: user.number }).exec();
+  try {
+    var otp = await Otp.findOne({ number: user.number }).exec();
+    if (!otp && otp.verified) {
+      console.log("Verified");
+    }
+  } catch {}
+
   console.log(otp);
 
   Otp.findOne({ number: user.number })
