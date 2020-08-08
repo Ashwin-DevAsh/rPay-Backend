@@ -6,6 +6,8 @@ import (
 	"log"
 	"time"
 	"net/http"
+	"encoding/json"
+    "bytes"
 	_ "github.com/lib/pq"
 )
 
@@ -105,7 +107,7 @@ func doTransaction(db *sql.DB, from string, fromName string, to string, toName s
 	}
 	jsonBody, _ := json.Marshal(jsonBodyData)
 
-	resp, err := http.Post("http://wallet-block:9000/addTransactionBlock/")
+	resp, err := http.Post("http://wallet-block:9000/addTransactionBlock/","application/json",bytes.NewBuffer(jsonBody))
 
 	log.Println(jsonBody,resp,err)
 
