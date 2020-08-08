@@ -91,6 +91,7 @@ app.post("/addUser", (req, res) => {
                                             ]);
                                           })
                                           .catch((err) => {
+                                            console.log(err);
                                             res.json([
                                               { message: "failed", err },
                                             ]);
