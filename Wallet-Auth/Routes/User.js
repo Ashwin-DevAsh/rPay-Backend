@@ -84,11 +84,18 @@ app.post("/addUser", (req, res) => {
                                               initialAmount: 0,
                                             }
                                           )
-                                          .then((res) => {
+                                          .then((blockResult) => {
                                             console.log(token);
-                                            res.json([
-                                              { message: "done", token },
-                                            ]);
+                                            if (
+                                              (blockResult.data["message"] =
+                                                "done")
+                                            ) {
+                                              res.json([
+                                                { message: "done", token },
+                                              ]);
+                                            } else {
+                                              res.json([{ message: "failed" }]);
+                                            }
                                           })
                                           .catch((err) => {
                                             console.log(err);
