@@ -4,7 +4,7 @@ const Otp = require("../Schemas/MerchantsOtp");
 const jwt = require("jsonwebtoken");
 const postgres = require("../Database/postgresql");
 
-app.post("/addMerchant", (req, res) => {
+app.post("/addMerchant", async (req, res) => {
   var user = req.body;
   console.log(user);
 
@@ -22,7 +22,7 @@ app.post("/addMerchant", (req, res) => {
 
   var userID = `rbusiness@${user.number}`;
 
-    try {
+  try {
     var otp = await Otp.findOne({ number: user.number }).exec();
     if (otp && otp.verified) {
       var userDoc = await Users.findOne({
@@ -45,16 +45,16 @@ app.post("/addMerchant", (req, res) => {
       ]);
 
       let userObject = new Users({
-          name: user.name,
-          number: user.number,
-          email: user.email,
-          password: user.password,
-          qrCode: user.qrCode,
-          id: userID,
-          storeName: user.storeName,
-          status: "pending",
-          imageURL: null,
-        });
+        name: user.name,
+        number: user.number,
+        email: user.email,
+        password: user.password,
+        qrCode: user.qrCode,
+        id: userID,
+        storeName: user.storeName,
+        status: "pending",
+        imageURL: null,
+      });
 
       var token = jwt.sign(
         {
@@ -84,7 +84,6 @@ app.post("/addMerchant", (req, res) => {
   } catch {
     res.json([{ message: "failed" }]);
   }
-
 });
 
 app.get("/getMerchants", (req, res) => {
