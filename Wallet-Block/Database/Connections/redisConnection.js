@@ -1,5 +1,4 @@
 const redis = require("redis");
-const client = require("../../../Wallet-Admin/Database/Connections/pgConnections");
 
 redis.createClient({
   port: 6379,
