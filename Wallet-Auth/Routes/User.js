@@ -23,132 +23,171 @@ app.post("/addUser", async (req, res) => {
 
   try {
     var otp = await Otp.findOne({ number: user.number }).exec();
+
     if (otp && otp.verified) {
-      console.log("Verified");
+      var userDoc = await Users.findOne({
+        $or: [{ number: user.number }, { email: user.email }],
+      }).exec();
+
+      if (userDoc) {
+        res.json([{ message: "User already exist" }]);
+        return;
+      }
+
+      await postgres.query("delete from info where id=$1;", [userID]);
+      await postgres.query("delete amount info where id=$1;", [userID]);
+      await postgres.query("insert into info values($1,$2,null,null)", [
+        userID,
+        user.fcmToken,
+      ]);
+      await postgres.query("insert into amount(id,balance) values($1,0)", [
+        userID,
+      ]);
+
+      let userObject = new Users({
+        name: user.name,
+        number: user.number,
+        email: user.email,
+        password: user.password,
+        qrCode: user.qrCode,
+        id: userID,
+      });
+
+      var token = jwt.sign(
+        {
+          name: user.name,
+          id: userID,
+          number: user.number,
+          email: user.email,
+        },
+        process.env.PRIVATE_KEY
+      );
+
+      await userObject.save();
+
+      res.json([{ message: "done", token }]);
     }
   } catch {
-    console.log("error on getting otp");
+    res.json([{ message: "failed" }]);
   }
 
-  console.log("my otp = ", otp);
-
-  Otp.findOne({ number: user.number })
-    .exec()
-    .then((otpDoc) => {
-      console.log(otpDoc);
-      if (otpDoc && otpDoc.verified) {
-        Users.findOne({
-          $or: [{ number: user.number }, { email: user.email }],
-        })
-          .exec()
-          .then((doc) => {
-            console.log(doc);
-            if (doc) {
-              res.json([{ message: "User already exist" }]);
-              return;
-            }
-            postgres.query(
-              "delete from info where id=$1;",
-              [userID],
-              (err, result) => {
-                postgres.query(
-                  "insert into info values($1,$2,null,null)",
-                  [userID, user.fcmToken],
-                  (err, result) => {
-                    if (!err) {
-                      postgres.query(
-                        "insert into amount(id,balance) values($1,0)",
-                        [userID],
-                        async (err, result) => {
-                          if (!err) {
-                            if (doc) {
-                              res.json([{ message: "User already exist" }]);
-                              Otp.deleteMany({ number: user.number }).exec();
-                            } else {
-                              let userObject = new Users({
-                                name: user.name,
-                                number: user.number,
-                                email: user.email,
-                                password: user.password,
-                                qrCode: user.qrCode,
-                                id: userID,
-                              });
-                              jwt.sign(
-                                {
-                                  name: user.name,
-                                  id: userID,
-                                  number: user.number,
-                                  email: user.email,
-                                },
-                                process.env.PRIVATE_KEY,
-                                (err, token) => {
-                                  if (err) {
-                                    res.json([{ message: "error", err }]);
-                                  } else {
-                                    userObject
-                                      .save()
-                                      .then((result) => {
-                                        axios
-                                          .post(
-                                            "http://wallet-block:9000/addUserBlock",
-                                            {
-                                              id: userID,
-                                              initialAmount: 0,
-                                            }
-                                          )
-                                          .then((blockResult) => {
-                                            console.log(token);
-                                            if (
-                                              (blockResult.data["message"] =
-                                                "done")
-                                            ) {
-                                              res.json([
-                                                { message: "done", token },
-                                              ]);
-                                            } else {
-                                              res.json([{ message: "failed" }]);
-                                            }
-                                          })
-                                          .catch((err) => {
-                                            console.log(err);
-                                            res.json([
-                                              { message: "failed", err },
-                                            ]);
-                                          });
-                                      })
-                                      .catch((err) => {
-                                        res.json([{ message: "failed" }]);
-                                      });
-                                  }
-                                  Otp.deleteMany({
-                                    number: user.number,
-                                  }).exec();
-                                }
-                              );
-                            }
-                          } else {
-                            res.json([{ message: err }]);
-                          }
-                        }
-                      );
-                    } else {
-                      res.json([{ message: err }]);
-                    }
-                  }
-                );
-              }
-            );
-          })
-          .catch(() => {
-            res.json([{ message: "failed" }]);
-          });
-      } else {
-        res.json([{ message: "number not verified" }]);
-      }
-    })
-    .catch((err) => {
-      res.json([{ message: "error" }]);
-    });
+  // Otp.findOne({ number: user.number })
+  //   .exec()
+  //   .then((otpDoc) => {
+  //     console.log(otpDoc);
+  //     if (otpDoc && otpDoc.verified) {
+  //       Users.findOne({
+  //         $or: [{ number: user.number }, { email: user.email }],
+  //       })
+  //         .exec()
+  //         .then((doc) => {
+  //           console.log(doc);
+  //           if (doc) {
+  //             res.json([{ message: "User already exist" }]);
+  //             return;
+  //           }
+  //           postgres.query(
+  //             "delete from info where id=$1;",
+  //             [userID],
+  //             (err, result) => {
+  //               postgres.query(
+  //                 "insert into info values($1,$2,null,null)",
+  //                 [userID, user.fcmToken],
+  //                 (err, result) => {
+  //                   if (!err) {
+  //                     postgres.query(
+  //                       "insert into amount(id,balance) values($1,0)",
+  //                       [userID],
+  //                       async (err, result) => {
+  //                         if (!err) {
+  //                           if (doc) {
+  //                             res.json([{ message: "User already exist" }]);
+  //                             Otp.deleteMany({ number: user.number }).exec();
+  //                           } else {
+  //                             let userObject = new Users({
+  //                               name: user.name,
+  //                               number: user.number,
+  //                               email: user.email,
+  //                               password: user.password,
+  //                               qrCode: user.qrCode,
+  //                               id: userID,
+  //                             });
+  //                             jwt.sign(
+  //                               {
+  //                                 name: user.name,
+  //                                 id: userID,
+  //                                 number: user.number,
+  //                                 email: user.email,
+  //                               },
+  //                               process.env.PRIVATE_KEY,
+  //                               (err, token) => {
+  //                                 if (err) {
+  //                                   res.json([{ message: "error", err }]);
+  //                                 } else {
+  //                                   userObject
+  //                                     .save()
+  //                                     .then((result) => {
+  //                                       axios
+  //                                         .post(
+  //                                           "http://wallet-block:9000/addUserBlock",
+  //                                           {
+  //                                             id: userID,
+  //                                             initialAmount: 0,
+  //                                           }
+  //                                         )
+  //                                         .then((blockResult) => {
+  //                                           console.log(token);
+  //                                           if (
+  //                                             (blockResult.data["message"] =
+  //                                               "done")
+  //                                           ) {
+  //                                             res.json([
+  //                                               { message: "done", token },
+  //                                             ]);
+  //                                           } else {
+  //                                             res.json([{ message: "failed" }]);
+  //                                           }
+  //                                         })
+  //                                         .catch((err) => {
+  //                                           console.log(err);
+  //                                           res.json([
+  //                                             { message: "failed", err },
+  //                                           ]);
+  //                                         });
+  //                                     })
+  //                                     .catch((err) => {
+  //                                       res.json([{ message: "failed" }]);
+  //                                     });
+  //                                 }
+  //                                 Otp.deleteMany({
+  //                                   number: user.number,
+  //                                 }).exec();
+  //                               }
+  //                             );
+  //                           }
+  //                         } else {
+  //                           res.json([{ message: err }]);
+  //                         }
+  //                       }
+  //                     );
+  //                   } else {
+  //                     res.json([{ message: err }]);
+  //                   }
+  //                 }
+  //               );
+  //             }
+  //           );
+  //         })
+  //         .catch(() => {
+  //           res.json([{ message: "failed" }]);
+  //         });
+  //     } else {
+  //       res.json([{ message: "number not verified" }]);
+  //     }
+  //   })
+  //   .catch((err) => {
+  //     res.json([{ message: "error" }]);
+  //   });
 });
 
 app.post("/updateFcmToken", (req, res) => {
