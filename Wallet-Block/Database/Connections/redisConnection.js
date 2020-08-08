@@ -1,6 +1,6 @@
 const redis = require("redis");
 
-redis.createClient({
+const client = redis.createClient({
   port: 6379,
   host: "wallet-cache",
 });
