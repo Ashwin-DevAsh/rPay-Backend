@@ -23,12 +23,12 @@ app.post("/addUser", async (req, res) => {
 
   try {
     var otp = await Otp.findOne({ number: user.number }).exec();
-    if (!otp && otp.verified) {
+    if (otp && otp.verified) {
       console.log("Verified");
     }
   } catch {}
 
-  console.log(otp);
+  console.log("my otp = ", otp);
 
   Otp.findOne({ number: user.number })
     .exec()
