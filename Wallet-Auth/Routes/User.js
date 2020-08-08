@@ -26,7 +26,9 @@ app.post("/addUser", async (req, res) => {
     if (otp && otp.verified) {
       console.log("Verified");
     }
-  } catch {}
+  } catch {
+    console.log("error on getting otp");
+  }
 
   console.log("my otp = ", otp);
 
