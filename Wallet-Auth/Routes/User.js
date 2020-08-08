@@ -3,8 +3,9 @@ const Users = require("../Schemas/users");
 const Otp = require("../Schemas/otp");
 const jwt = require("jsonwebtoken");
 const postgres = require("../Database/postgresql");
+const axios = require("axios");
 
-app.post("/addUser", async (req, res) => {
+app.post("/addUser", (req, res) => {
   var user = req.body;
   console.log(user);
   if (
@@ -70,13 +71,30 @@ app.post("/addUser", async (req, res) => {
                                 process.env.PRIVATE_KEY,
                                 (err, token) => {
                                   if (err) {
-                                    res.json([{ message: err.getName() }]);
+                                    res.json([{ message: "error", err }]);
                                   } else {
                                     userObject
                                       .save()
                                       .then((result) => {
-                                        console.log(token);
-                                        res.json([{ message: "done", token }]);
+                                        axios
+                                          .post(
+                                            "http://wallet-block:9000/addUserBlock",
+                                            {
+                                              id: userID,
+                                              initialAmount: 0,
+                                            }
+                                          )
+                                          .then((res) => {
+                                            console.log(token);
+                                            res.json([
+                                              { message: "done", token },
+                                            ]);
+                                          })
+                                          .catch((err) => {
+                                            res.json([
+                                              { message: "failed", err },
+                                            ]);
+                                          });
                                       })
                                       .catch((err) => {
                                         res.json([{ message: "failed" }]);
@@ -174,7 +192,6 @@ app.get("/getUsers", (req, res) => {
 
 app.post("/changePassword", (req, res) => {
   console.log(req.get("token"));
-
   jwt.verify(req.get("token"), process.env.PRIVATE_KEY, function (
     err,
     decoded

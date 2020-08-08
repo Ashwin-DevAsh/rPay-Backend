@@ -24,7 +24,7 @@ services:
 
   wallet-auth:
     build: Wallet-Auth
-    depends_on: [auth-database, status-database]
+    depends_on: [auth-database, status-database, wallet-block]
     ports:
       - 8000:8000
 
