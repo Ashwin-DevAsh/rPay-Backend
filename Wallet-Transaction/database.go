@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"io/ioutil"
 	"time"
 	"net/http"
 	"encoding/json"
@@ -118,8 +119,20 @@ func doTransaction(db *sql.DB, from string, fromName string, to string, toName s
 		return false
 	}
 
+	defer resp.Body.Close()
+
+	resData,err = ioutil.ReadAll(resp)
+
+	var respResult  map[string]interface{}
+	json.NewDecoder(resp.Body).Decode(&respResult)
+
+	if err!=nil{
+		tx.Rollback()
+		return false
+	}
+
 	
-	if resp["message"]=="done"{
+	if respResult["message"]=="done"{
        	tx.Commit()
 	   return true 
 	}else {
