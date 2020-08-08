@@ -35,7 +35,7 @@ app.post("/addUser", async (req, res) => {
       }
 
       await postgres.query("delete from info where id=$1;", [userID]);
-      await postgres.query("delete amount info where id=$1;", [userID]);
+      await postgres.query("delete from amount where id=$1;", [userID]);
       await postgres.query("insert into info values($1,$2,null,null)", [
         userID,
         user.fcmToken,
