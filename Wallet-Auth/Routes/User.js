@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const postgres = require("../Database/postgresql");
 const axios = require("axios");
 
-app.post("/addUser", (req, res) => {
+app.post("/addUser", async (req, res) => {
   var user = req.body;
   console.log(user);
   if (
@@ -20,6 +20,10 @@ app.post("/addUser", (req, res) => {
     return;
   }
   var userID = `rpay@${user.number}`;
+
+  var otp = await Otp.findOne({ number: user.number }).exec();
+  console.log(otp);
+
   Otp.findOne({ number: user.number })
     .exec()
     .then((otpDoc) => {
