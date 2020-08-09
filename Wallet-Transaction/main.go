@@ -73,13 +73,13 @@ func handelRequest() {
 								Id string
 								Name string
 					            Number string
-								Email string
+								// Email string
 							}
 				FromMatadata struct{
 								Id string
-								Email string
 								Number string
 								Name string
+								Email string
 							}
 			}
 
