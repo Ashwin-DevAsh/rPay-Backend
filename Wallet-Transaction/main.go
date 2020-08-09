@@ -68,9 +68,17 @@ func handelRequest() {
 			}
 
 			var transactionData struct {
-				Amount   interface{}
-				ToMetadata   interface{}
-				FromMatadata interface{}
+				Amount   string
+				ToMetadata   struct{
+								Id string
+								Email string
+								Name string
+							}
+				FromMatadata  struct{
+								Id string
+								Email string
+								Name string
+							}
 			}
 
 			log.Println("addMoney....")
@@ -84,9 +92,9 @@ func handelRequest() {
 
 			amount, _ := strconv.ParseUint(transactionData.Amount, 10, 64)
 
-			log.Println(db, transactionData.FromMatadata.id, transactionData.FromMatadata.Name, transactionData.FromMatadata.id, transactionData.FromMatadata.name, amount)
+			log.Println(db, transactionData.FromMatadata.Id, transactionData.FromMatadata.Name, transactionData.FromMatadata.Id, transactionData.FromMatadata.Name, amount)
 
-			if addMoney(db, transactionData.FromMatadata.id, transactionData.FromMatadata.Name, transactionData.FromMatadata.id, transactionData.FromMatadata.name, amount) {
+			if addMoney(db, transactionData.FromMatadata.Id, transactionData.FromMatadata.Name, transactionData.FromMatadata.Id, transactionData.FromMatadata.Name, amount) {
 				userJSON, err := json.Marshal(map[string]string{
 					"message": "done",
 				})
