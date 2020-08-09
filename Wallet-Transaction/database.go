@@ -280,8 +280,7 @@ func getTransactions(sb *sql.DB, number string) []Transaction {
 
 	transactions := []Transaction{}
 
-	row, err := db.Query(`select transaction,
-								 TransactionTime,
+	row, err := db.Query(`select TransactionTime,
 								 fromid,
 								 toid,
 								 fromObject->'name',
