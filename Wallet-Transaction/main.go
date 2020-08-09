@@ -103,7 +103,7 @@ func handelRequest() {
 					log.Println(err)
 
 				} else {
-					notify(transactionData.From, transactionData.To, transactionData.FromName, transactionData.Amount,"addedMoney")
+					notify(transactionData.FromMatadata.Id,  transactionData.FromMatadata.Id , transactionData.FromMatadata.Name, transactionData.Amount,"addedMoney")
 					response.Write(userJSON)
 				}
 
