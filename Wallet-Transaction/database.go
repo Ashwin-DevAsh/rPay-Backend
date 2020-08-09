@@ -269,7 +269,7 @@ func getTransactions(sb *sql.DB, id string) []Transaction {
 	transactions := []Transaction{}
 
 	row, err := db.Query(`select TransactionTime,
-								 fromMetadata ->> 'id',
+								 fromMetadata ->> $2,
 								 toMetadata ->> 'id'
 								 fromMetadata ->> 'name',
 								 toMetadata ->> 'name',
@@ -281,7 +281,7 @@ func getTransactions(sb *sql.DB, id string) []Transaction {
 							   transactions 
 						   where 
 							    fromMetadata ->> 'id' = $1 or  toMetadata ->> 'id' = $1`,
-						   id)
+						   id,"id")
 
 	if err != nil {
 		log.Println(err)
