@@ -18,8 +18,8 @@ create table transactions
     transactionTime varchar,
     fromID varchar,
     toID varchar,
-    fromObject json,
-    toObject json,
+    fromMetadata json,
+    toMetadata json,
     amount bigint,
     isGenerated boolean,
     isWithdraw boolean
