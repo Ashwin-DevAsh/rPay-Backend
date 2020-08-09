@@ -280,7 +280,21 @@ func getTransactions(sb *sql.DB, number string) []Transaction {
 
 	transactions := []Transaction{}
 
-	row, err := db.Query("select *,to_timestamp(transactionTime , 'MM-DD-YYYY HH24:MI:SS') as TimeStamp from transactions where fromid = $1 or toid = $1", number)
+	row, err := db.Query("select transaction,
+								 TransactionTime,
+								 fromid,
+								 toid,
+								 fromObject->'name',
+								 toObject->'name',
+								 amount,
+								 isGenerated,
+								 isWithdraw,
+								 to_timestamp(transactionTime , 'MM-DD-YYYY HH24:MI:SS') as TimeStamp 
+						   from 
+							   transactions 
+						   where 
+							   fromid = $1 or toid = $1",
+						   number)
 
 	if err != nil {
 		log.Println(err)
