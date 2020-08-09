@@ -114,11 +114,8 @@ func handelRequest() {
 		}
 	})
 	r.HandleFunc("/pay", func(response http.ResponseWriter, request *http.Request) {
-
 		if request.Method == "POST" {
-
 			response.Header().Set("Content-type", "application/json")
-
 			jwtToken := request.Header.Get("jwtToken")
 			header := decryptJwtToken(jwtToken)
 
