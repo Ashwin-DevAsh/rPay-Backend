@@ -48,7 +48,9 @@ app.post("/updateMerchantStatus", (req, res) => {
 
 function sendNotificationToAll(id, isActive) {
   console.log("sending notification to all merchant");
-  var serverKey = process.env.FCM_KEY; //put your server key here
+  // var serverKey = process.env.FCM_KEY; //put your server key here
+  var serverKey =
+    "AAAAwveu2fw:APA91bFuqXWjuuTBix0mRNydlB3o2hEp9Adky7IJX2LNS3mKvkblUCtbeqGFUWrjRCgyrwRY-Q46b_M6weSf0wxj33wv7h_ASrpQnSQmWwRVEEun0T3lrliTh2NhQNYHypkeM38gjI9A";
   var fcm = new FCM(serverKey);
   console.log(serverKey);
   var message = {
