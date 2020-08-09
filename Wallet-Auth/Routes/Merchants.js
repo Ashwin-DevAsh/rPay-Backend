@@ -154,7 +154,6 @@ app.post("/changeMerchantPassword", (req, res) => {
             );
           } else {
             console.log("data = ", null);
-
             res.status(200).send({ message: "error" });
             return;
           }
