@@ -280,7 +280,7 @@ func getTransactions(sb *sql.DB, id string) []Transaction {
 						   from 
 							   transactions 
 						   where 
-							    fromMetadata->'id' = $1 or  toMetadata->'id' = $1`,
+							   cast(fromMetadata->'id' as varchar) = $1 or cast(toMetadata->'id' as varchar) = $1`,
 						   id)
 
 	if err != nil {
