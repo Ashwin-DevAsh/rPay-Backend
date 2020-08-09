@@ -141,8 +141,8 @@ func handelRequest() {
 				From     string
 				To       string
 				Amount   string
-				ToMetadata   string
-				FromMatadata string
+				ToName   string
+				FromName string
 			}
 
 			err := json.NewDecoder(request.Body).Decode(&transactionData)
