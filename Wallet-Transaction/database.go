@@ -226,7 +226,6 @@ type Transaction struct {
 	IsGenerated  	interface{}
 	IsWithdraw      interface{}
 	TimeStamp       interface{}
-
 }
 
 func getMyState(db *sql.DB, id string) MyState {

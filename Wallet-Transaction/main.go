@@ -73,8 +73,8 @@ func handelRequest() {
 				From     string
 				To       string
 				Amount   string
-				ToName   string
-				FromName string
+				ToMetadata   string
+				FromMatadata string
 			}
 
 			err := json.NewDecoder(request.Body).Decode(&transactionData)
@@ -133,8 +133,8 @@ func handelRequest() {
 				From     string
 				To       string
 				Amount   string
-				ToName   string
-				FromName string
+				ToMetadata   string
+				FromMatadata string
 			}
 
 			err := json.NewDecoder(request.Body).Decode(&transactionData)
@@ -157,7 +157,6 @@ func handelRequest() {
 				} else {
 					notify(transactionData.From, transactionData.To, transactionData.FromName, transactionData.Amount,"receivedMoney")
 					response.Write(userJSON)
-
 				}
 
 			} else {
