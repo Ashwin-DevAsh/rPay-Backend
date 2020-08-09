@@ -69,14 +69,16 @@ func handelRequest() {
 
 			var transactionData struct {
 				Amount   string
-				ToMetadata   struct{
+				ToMetadata  struct{
 								Id string
-								Email string
 								Name string
+					            Number string
+								Email string
 							}
-				FromMatadata  struct{
+				FromMatadata struct{
 								Id string
 								Email string
+								Number string
 								Name string
 							}
 			}
