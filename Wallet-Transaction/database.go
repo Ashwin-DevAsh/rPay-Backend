@@ -231,9 +231,7 @@ type Transaction struct {
 func getMyState(db *sql.DB, id string) MyState {
 
 	state := map[string]int{}
-
 	row, err := db.Query("select * from amount where id=$1", id)
-
 	if err != nil {
 		log.Println(err)
 	}
@@ -244,17 +242,12 @@ func getMyState(db *sql.DB, id string) MyState {
 		row.Scan(&id, &balance)
 		state[id] = balance
 	}
-
-
-
 	myState := MyState{state[id], getTransactions(db, id)}
 	return myState
 }
 
 func getState(db *sql.DB) map[string]int {
-
 	state := map[string]int{}
-
 	row, err := db.Query("select * from amount")
 
 	if err != nil {
@@ -266,16 +259,12 @@ func getState(db *sql.DB) map[string]int {
 		var balance int
 		row.Scan(&id, &balance)
 		state[id] = balance
-
 	}
-
-	
-
 	return state
 
 }
 
-func getTransactions(sb *sql.DB, number string) []Transaction {
+func getTransactions(sb *sql.DB, id string) []Transaction {
 
 	transactions := []Transaction{}
 
@@ -292,7 +281,7 @@ func getTransactions(sb *sql.DB, number string) []Transaction {
 							   transactions 
 						   where 
 							   fromid = $1 or toid = $1`,
-						   number)
+						   id)
 
 	if err != nil {
 		log.Println(err)

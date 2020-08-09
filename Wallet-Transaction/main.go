@@ -55,10 +55,8 @@ func handelRequest() {
 	r.HandleFunc("/addMoney",func(response http.ResponseWriter, request *http.Request){
 		if request.Method == "POST"{
 			response.Header().Set("Content-type", "application/json")
-
 			jwtToken := request.Header.Get("jwtToken")
 			header := decryptJwtToken(jwtToken)
-
 			if header == nil {
 				message, err := json.Marshal(map[string]string{"message": "failed"})
 				if err == nil {
@@ -69,12 +67,10 @@ func handelRequest() {
 				return
 			}
 
-				var transactionData struct {
-				From     string
-				To       string
-				Amount   string
-				ToMetadata   string
-				FromMatadata string
+			var transactionData struct {
+				Amount   interface{}
+				ToMetadata   interface{}
+				FromMatadata interface{}
 			}
 
 			err := json.NewDecoder(request.Body).Decode(&transactionData)
@@ -86,7 +82,9 @@ func handelRequest() {
 
 			amount, _ := strconv.ParseUint(transactionData.Amount, 10, 64)
 
-			if addMoney(db, transactionData.From, transactionData.FromName, transactionData.To, transactionData.ToName, amount) {
+			log.Println(db, transactionData.FromMatadata.id, transactionData.FromMatadata.Name, transactionData.FromMatadata.id, transactionData.FromMatadata.name, amount)
+
+			if addMoney(db, transactionData.FromMatadata.id, transactionData.FromMatadata.Name, transactionData.FromMatadata.id, transactionData.FromMatadata.name, amount) {
 				userJSON, err := json.Marshal(map[string]string{
 					"message": "done",
 				})

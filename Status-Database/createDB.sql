@@ -16,8 +16,6 @@ create table transactions
 (
     transactionID bigserial,
     transactionTime varchar,
-    fromID varchar,
-    toID varchar,
     fromMetadata json,
     toMetadata json,
     amount bigint,
