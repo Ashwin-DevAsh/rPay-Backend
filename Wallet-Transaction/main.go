@@ -73,6 +73,8 @@ func handelRequest() {
 				FromMatadata interface{}
 			}
 
+			log.Println("addMoney....")
+
 			err := json.NewDecoder(request.Body).Decode(&transactionData)
 
 			if err != nil {
