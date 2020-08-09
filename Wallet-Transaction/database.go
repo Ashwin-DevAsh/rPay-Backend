@@ -280,7 +280,7 @@ func getTransactions(sb *sql.DB, number string) []Transaction {
 
 	transactions := []Transaction{}
 
-	row, err := db.Query("select transaction,
+	row, err := db.Query(`select transaction,
 								 TransactionTime,
 								 fromid,
 								 toid,
@@ -293,7 +293,7 @@ func getTransactions(sb *sql.DB, number string) []Transaction {
 						   from 
 							   transactions 
 						   where 
-							   fromid = $1 or toid = $1",
+							   fromid = $1 or toid = $1`,
 						   number)
 
 	if err != nil {
