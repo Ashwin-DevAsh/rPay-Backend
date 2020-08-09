@@ -231,7 +231,7 @@ type Transaction struct {
 func getMyState(db *sql.DB, id string) MyState {
 
 	state := map[string]int{}
-	row, err := db.Query("select * from amount where id=$1", id)
+	row, err := db.Query("select * from amount where fromMetadata->'id'=$1", id)
 	if err != nil {
 		log.Println(err)
 	}
