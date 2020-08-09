@@ -50,6 +50,7 @@ function sendNotificationToAll(id, isActive) {
   console.log("sending notification to all");
   var serverKey = process.env.FCM_KEY; //put your server key here
   var fcm = new FCM(serverKey);
+  console.log(serverKey);
   var message = {
     condition: "!('anytopicyoudontwanttouse' in topics)",
     data: {
