@@ -16,15 +16,11 @@ create table transactions
 (
     transactionID bigserial,
     transactionTime varchar,
-
     fromID varchar,
     toID varchar,
-
-    toName varchar,
-    fromName varchar,
-
+    fromObject json,
+    toObject json,
     amount bigint,
-    
     isGenerated boolean,
     isWithdraw boolean
 );
