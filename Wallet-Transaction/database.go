@@ -237,8 +237,8 @@ type MyState struct {
 
 // Transaction ...
 type Transaction struct {
-	From            interface{}
-	To              interface{}
+	From            []byte
+	To              []byte
 	TransactionID   interface{}
 	TransactionTime interface{}
 	Amount          interface{}
