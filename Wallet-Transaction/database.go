@@ -36,7 +36,7 @@ func Connect() *sql.DB {
 
 func doTransaction(db *sql.DB,transactionData TransactionData) bool {
 
-	if(from==to){
+	if(transactionData.From.Id==transactionData.To.Id){
 		return false
 	}
 
@@ -149,14 +149,10 @@ func doTransaction(db *sql.DB,transactionData TransactionData) bool {
 }
 
 func addMoney(db *sql.DB,transactionData TransactionData) bool {
-
-
 	row2, err1 := db.Query("select * from amount where id=$1", transactionData.To.Id)
-
     fromJson , err2 :=  json.Marshal(&transactionData.From)
 	toJson , err3 :=  json.Marshal(&transactionData.To)
     Amount, _ := strconv.ParseUint(transactionData.Amount, 10, 64)
-
 
 	if err1 !=nil || err2!=nil || err3!=nil {
 		return false

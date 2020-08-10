@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"strconv"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
 )
