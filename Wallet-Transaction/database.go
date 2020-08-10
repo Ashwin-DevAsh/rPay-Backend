@@ -301,7 +301,7 @@ func getTransactions(sb *sql.DB, id string) []Transaction {
 						   from 
 							   transactions 
 						   where 
-							   cast(fromMetadata->'id' as varchar) = $1 or cast(toMetadata->'id' as varchar) = $1`,
+							   cast(fromMetadata->>'id' as varchar) = $1 or cast(toMetadata->>'id' as varchar) = $1`,
 						   id)
 
 	if err != nil {
@@ -338,9 +338,9 @@ func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []Transac
 						   from 
 							   transactions 
 						   where 
-								(cast(fromMetadata->'id' as varchar) = $1 or cast(fromMetadata->'id' as varchar) = $2) 
+								(cast(fromMetadata->>'id' as varchar) = $1 or cast(fromMetadata->>'id' as varchar) = $2) 
 								     and 
-								(cast(toMetadata->'id' as varchar) = $1 or cast(toMetadata->'id' as varchar) = $2)`,
+								(cast(toMetadata->>'id' as varchar) = $1 or cast(toMetadata->>'id' as varchar) = $2)`,
 						   id1, id2)
 
 	if err != nil {
@@ -352,7 +352,6 @@ func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []Transac
 		row.Scan(&transaction.TransactionID, &transaction.TransactionTime, &transaction.From, 
 			&transaction.To, &transaction.ToName, &transaction.FromName, &transaction.Amount, &transaction.IsGenerated,&transaction.IsWithdraw)
 		transactions = append(transactions, transaction)
-
 	}
 
 
