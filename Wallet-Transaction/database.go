@@ -327,13 +327,20 @@ func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []Transac
 	transactions := []Transaction{}
 
 	row, err := db.Query(`select
-	                            * 
+	                             TransactionTime,
+								 fromMetadata -> 'id',
+								 toMetadata -> 'id',
+								 fromMetadata -> 'name',
+								 toMetadata -> 'name',
+								 amount,
+								 isGenerated,
+								 isWithdraw,
 						   from 
 							   transactions 
 						   where 
-								(cast(fromMetadata->id as varchar) = $1 or cast(fromMetadata->id as varchar) = $2) 
+								(cast(fromMetadata->'id' as varchar) = $1 or cast(fromMetadata->'id' as varchar) = $2) 
 								     and 
-								(cast(toMetadata->id as varchar) = $1 or cast(toMetadata->id as varchar) = $2)`,
+								(cast(toMetadata->'id' as varchar) = $1 or cast(toMetadata->'id' as varchar) = $2)`,
 						   id1, id2)
 
 	if err != nil {
