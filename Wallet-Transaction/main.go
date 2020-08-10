@@ -16,6 +16,22 @@ var db = Connect()
 
 var smsAPIKey string = "bf344e3e-a1c5-11ea-9fa5-0200cd936042"
 
+type TransactionData  struct {
+		Amount   string
+		To struct{
+						Id string
+						Name string
+						Number string
+						Email string
+					}
+		From struct{
+						Id string
+						Number string
+						Name string
+						Email string
+					}
+}
+
 
 func decryptJwtToken(tokenString string) jwt.MapClaims {
 	claims := jwt.MapClaims{}
@@ -67,21 +83,7 @@ func handelRequest() {
 				return
 			}
 
-			var transactionData struct {
-				Amount   string
-				ToMetadata  struct{
-								Id string
-								Name string
-					            Number string
-								Email string
-							}
-				FromMatadata struct{
-								Id string
-								Number string
-								Name string
-								Email string
-							}
-			}
+			var transactionData TransactionData
 
 			log.Println("addMoney....")
 
