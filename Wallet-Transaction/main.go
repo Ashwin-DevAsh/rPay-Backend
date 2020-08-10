@@ -98,7 +98,7 @@ func handelRequest() {
 
 			log.Println(db, transactionData.From.Id, transactionData.From.Name, transactionData.From.Id, transactionData.From.Name, amount)
 
-			if addMoney(db, transactionData.From.Id, transactionData.From.Name, transactionData.To.Id, transactionData.From.Name, amount) {
+			if addMoney(db, transactionData.From.Id, transactionData.From.Name, transactionData.To.Id, transactionData.To.Name, amount) {
 				userJSON, err := json.Marshal(map[string]string{
 					"message": "done",
 				})
