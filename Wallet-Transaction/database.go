@@ -40,7 +40,6 @@ func doTransaction(db *sql.DB,transactionData TransactionData) bool {
 		return false
 	}
 
-	
     fromJson , err1 :=  json.Marshal(&transactionData.From)
 	toJson , err3 :=  json.Marshal(&transactionData.To)
 	Amount, _ := strconv.ParseUint(transactionData.Amount, 10, 64)

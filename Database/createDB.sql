@@ -1,3 +1,5 @@
+-- users...
+
 create table users
 (
   name varchar,
@@ -6,8 +8,53 @@ create table users
   password varchar,
   imageURL varchar,
   id varchar primary key,
+  AccountInfo json[],
   qrCode varchar
 );
+
+create table otp(
+    number varchar primary key,
+    otp varchar,
+    verified Boolean
+);
+
+-- merchants...
+
+create table merchants(
+  name varchar,
+  number varchar,
+  email varchar,
+  password varchar,
+  imageURL varchar,
+  id varchar primary key,
+  qrCode varchar,
+  accountInfo json[],
+  storeName varchar,
+  status varchar
+);
+
+create table merchantsOtp(
+    number varchar primary key,
+    otp varchar,
+    verified Boolean
+);
+
+-- recovery...
+
+create table recoveryOtp(
+    email varchar  primary key,
+    otp varchar,
+    verified Boolean
+);
+
+
+create table recoveryMerchantsOtp(
+    email varchar  primary key,
+    otp varchar,
+    verified Boolean
+);
+
+-- node
 
 create table info
 (
@@ -16,6 +63,9 @@ create table info
     socketid varchar,
     isonline boolean
 );
+
+
+-- assect
 
 create table amount
 (
