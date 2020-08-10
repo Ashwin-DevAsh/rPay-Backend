@@ -17,7 +17,7 @@ var db = Connect()
 var smsAPIKey string = "bf344e3e-a1c5-11ea-9fa5-0200cd936042"
 
 type TransactionData  struct {
-		Amount   string
+		Amount  string
 		To struct{
 						Id string
 						Name string
@@ -96,9 +96,9 @@ func handelRequest() {
 
 			amount, _ := strconv.ParseUint(transactionData.Amount, 10, 64)
 
-			log.Println(db, transactionData.FromMatadata.Id, transactionData.FromMatadata.Name, transactionData.FromMatadata.Id, transactionData.FromMatadata.Name, amount)
+			log.Println(db, transactionData.From.Id, transactionData.From.Name, transactionData.From.Id, transactionData.From.Name, amount)
 
-			if addMoney(db, transactionData.FromMatadata.Id, transactionData.FromMatadata.Name, transactionData.FromMatadata.Id, transactionData.FromMatadata.Name, amount) {
+			if addMoney(db, transactionData.From.Id, transactionData.From.Name, transactionData.From.Id, transactionData.From.Name, amount) {
 				userJSON, err := json.Marshal(map[string]string{
 					"message": "done",
 				})
@@ -107,7 +107,7 @@ func handelRequest() {
 					log.Println(err)
 
 				} else {
-					notify(transactionData.FromMatadata.Id,  transactionData.FromMatadata.Id , transactionData.FromMatadata.Name, transactionData.Amount,"addedMoney")
+					notify(transactionData.From.Id,  transactionData.From.Id , transactionData.From.Name, transactionData.Amount,"addedMoney")
 					response.Write(userJSON)
 				}
 
