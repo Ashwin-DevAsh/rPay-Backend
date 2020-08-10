@@ -334,7 +334,7 @@ func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []Transac
 								 toMetadata -> 'name',
 								 amount,
 								 isGenerated,
-								 isWithdraw,
+								 isWithdraw
 						   from 
 							   transactions 
 						   where 
