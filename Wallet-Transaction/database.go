@@ -297,7 +297,7 @@ func getTransactions(sb *sql.DB, id string) []Transaction {
 								 toMetadata -> 'Name',
 								 amount,
 								 isGenerated,
-								 isWithdraw
+								 isWithdraw,
 								 to_timestamp(transactionTime , 'MM-DD-YYYY HH24:MI:SS') as TimeStamp 
 						   from 
 							   transactions 
