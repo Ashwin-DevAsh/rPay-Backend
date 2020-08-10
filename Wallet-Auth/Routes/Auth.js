@@ -45,12 +45,10 @@ var setOtp = async (req, res, otpTable, userTable, id = "rpay@") => {
       return;
     }
 
-    await postgres.query(`update ${otpTable} set otp = $1 where number = $2`, [
-      otpNumber,
-      number,
-    ]);
-
-    postgres.query(`delete from ${otpTable} where number = $1`, [number]);
+    await postgres.query(
+      `update ${otpTable} set verified = true where number = $1`,
+      [number]
+    );
 
     var user = (
       await postgres.query(`select * from ${userTable} where id = $1 `, [
