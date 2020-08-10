@@ -157,12 +157,19 @@ func addMoney(db *sql.DB, from string, fromName string, to string, toName string
 	tx, err := db.Begin()
     if err != nil {
         return false
-    }
+	}
+	
+	log.Println("Checking....")
+
 	_, errTo := tx.Exec("update amount set balance = balance + $1 where id = $2", amount, to)
 	if errTo != nil {
 		tx.Rollback()
 		return false
 	}
+
+	log.Println("Stage 2....")
+
+
 	loc, _ := time.LoadLocation("Asia/Kolkata")
     dt := time.Now().In(loc)
 	_, errTrans :=
@@ -173,6 +180,9 @@ func addMoney(db *sql.DB, from string, fromName string, to string, toName string
 		tx.Rollback()
 		return false
 	}
+
+	log.Println("stage 3....")
+
 
 	jsonBodyData := map[string]interface{}{
 		"id":to,
