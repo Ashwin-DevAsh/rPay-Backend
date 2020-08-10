@@ -312,7 +312,7 @@ func getTransactions(sb *sql.DB, id string) []Transaction {
 	for row.Next() {
 		var transaction Transaction
 		row.Scan(&transaction.TransactionID, &transaction.TransactionTime, &transaction.From, 
-				 &transaction.To, &transaction.ToName, &transaction.FromName, &transaction.Amount ,
+				 &transaction.To,&transaction.FromName, &transaction.ToName,  &transaction.Amount ,
 				 &transaction.IsGenerated,&transaction.IsWithdraw,&transaction.TimeStamp)
 		transactions = append(transactions, transaction)
 
@@ -352,7 +352,7 @@ func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []Transac
 	for row.Next() {
 		var transaction Transaction
 		row.Scan(&transaction.TransactionID, &transaction.TransactionTime, &transaction.From, 
-			&transaction.To, &transaction.ToName, &transaction.FromName, &transaction.Amount, &transaction.IsGenerated,&transaction.IsWithdraw)
+			&transaction.To,&transaction.FromName,  &transaction.ToName, &transaction.Amount, &transaction.IsGenerated,&transaction.IsWithdraw)
 		transactions = append(transactions, transaction)
 	}
 
