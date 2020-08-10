@@ -142,11 +142,10 @@ func doTransaction(db *sql.DB, from string, fromName string, to string, toName s
 
 }
 
-func addMoney(db *sql.DB, from string, fromName string, to string, toName string, amount uint64) bool {
+func addMoney(db *sql.DB,transactionData TransactionData) bool {
 
-	log.Println(from , fromName , to , toName , amount )
 
-	row2, err2 := db.Query("select * from amount where id=$1", to)
+	row2, err2 := db.Query("select * from amount where id=$1", transactionData.To.Id)
 
 	log.Println("querying....")
 
@@ -172,7 +171,7 @@ func addMoney(db *sql.DB, from string, fromName string, to string, toName string
 	
 	log.Println("Checking....")
 
-	_, errTo := tx.Exec("update amount set balance = balance + $1 where id = $2", amount, to)
+	_, errTo := tx.Exec("update amount set balance = balance + $1 where id = $2", transactionData.amount, transactionData.To.Id)
 	if errTo != nil {
 		tx.Rollback()
 		return false
@@ -184,8 +183,16 @@ func addMoney(db *sql.DB, from string, fromName string, to string, toName string
 	loc, _ := time.LoadLocation("Asia/Kolkata")
     dt := time.Now().In(loc)
 	_, errTrans :=
-		tx.Exec("insert into transactions(transactionTime,fromID,toID,toObject,amount,fromObject,isGenerated,iswithdraw) values($1,$2,$3,$4,$5,$6,$7,$8)",
-			dt.Format("01-02-2006 15:04:05"), from, to, toName, amount, fromName,true,false)
+		tx.Exec(`insert
+		           into transactions(
+					   transactionTime,
+					   fromMetadata,
+					   toMetadata,
+					   amount,
+					   isGenerated,
+					   iswithdraw)
+				    values($1,$2,$3,$4,$5,$6)`,
+			dt.Format("01-02-2006 15:04:05"), json.Marshal(transactionData.From),json.Marshal(transactionData.To), transactionData.amount,true,false)
 
 	if errTrans != nil {
 		tx.Rollback()
