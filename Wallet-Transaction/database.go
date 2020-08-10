@@ -145,13 +145,13 @@ func doTransaction(db *sql.DB, from string, fromName string, to string, toName s
 func addMoney(db *sql.DB,transactionData TransactionData) bool {
 
 
-	row2, err2 := db.Query("select * from amount where id=$1", transactionData.To.Id)
+	row2, err1 := db.Query("select * from amount where id=$1", transactionData.To.Id)
 
-	log.Println("querying....")
+	fromJson , err2 =  json.Marshal(&transactionData.From)
+	toJson , err3 =  json.Marshal(&transactionData.To)
 
 
-	if err2 !=nil {
-		log.Println(err2)
+	if err1 !=nil || err2!=nil || err3!=nil {
 		return false
 	}
 
@@ -192,7 +192,7 @@ func addMoney(db *sql.DB,transactionData TransactionData) bool {
 					   isGenerated,
 					   iswithdraw)
 				    values($1,$2,$3,$4,$5,$6)`,
-			dt.Format("01-02-2006 15:04:05"), json.Marshal(&transactionData.From),json.Marshal(&transactionData.To), transactionData.Amount,true,false)
+			dt.Format("01-02-2006 15:04:05"), fromJson,toJson, transactionData.Amount,true,false)
 
 	if errTrans != nil {
 		tx.Rollback()
