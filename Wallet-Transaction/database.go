@@ -289,19 +289,20 @@ func getTransactions(sb *sql.DB, id string) []Transaction {
 
 	transactions := []Transaction{}
 
-	row, err := db.Query(`select TransactionTime,
-								 fromMetadata -> 'id',
-								 toMetadata -> 'id',
-								 fromMetadata -> 'name',
-								 toMetadata -> 'name',
+	row, err := db.Query(`select TransactionId,
+								 TransactionTime,
+								 fromMetadata -> 'Id',
+								 toMetadata -> 'Id',
+								 fromMetadata -> 'Name',
+								 toMetadata -> 'Name',
 								 amount,
 								 isGenerated,
-								 isWithdraw,
+								 isWithdraw
 								 to_timestamp(transactionTime , 'MM-DD-YYYY HH24:MI:SS') as TimeStamp 
 						   from 
 							   transactions 
 						   where 
-							   cast(fromMetadata->>'id' as varchar) = $1 or cast(toMetadata->>'id' as varchar) = $1`,
+							   cast(fromMetadata->>'Id' as varchar) = $1 or cast(toMetadata->>'Id' as varchar) = $1`,
 						   id)
 
 	if err != nil {
