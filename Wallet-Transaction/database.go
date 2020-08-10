@@ -237,8 +237,18 @@ type MyState struct {
 
 // Transaction ...
 type Transaction struct {
-	From            []byte
-	To              []byte
+	From    struct{
+				Id string
+				Name string
+				Number string
+				Email string
+			}
+	To      struct{
+				Id string
+				Name string
+				Number string
+				Email string
+			}
 	TransactionID   interface{}
 	TransactionTime interface{}
 	Amount          interface{}
@@ -347,8 +357,6 @@ func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []Transac
 		var transaction Transaction
 		row.Scan(&transaction.TransactionID, &transaction.TransactionTime, &transaction.From, 
 			&transaction.To,&transaction.Amount, &transaction.IsGenerated,&transaction.IsWithdraw)
-	    json.Unmarshal(transaction.From,&transaction.From)
-	    json.Unmarshal(transaction.To,&transaction.To)		
 		transactions = append(transactions, transaction)
 	}
 
