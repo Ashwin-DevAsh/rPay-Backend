@@ -1,3 +1,14 @@
+create table users
+(
+  name varchar,
+  number varchar,
+  email varchar,
+  password varchar,
+  imageURL varchar,
+  id varchar primary key,
+  qrCode varchar
+);
+
 create table info
 (
     id varchar primary key,
