@@ -203,8 +203,8 @@ func addMoney(db *sql.DB,transactionData TransactionData) bool {
 
 
 	jsonBodyData := map[string]interface{}{
-		"id":to,
-		"amount":amount,
+		"id":transactionData.To.Id,
+		"amount":transactionData.Amount,
 	}
 	
 	jsonBody, _ := json.Marshal(jsonBodyData)
