@@ -143,7 +143,9 @@ func doTransaction(db *sql.DB, from string, fromName string, to string, toName s
 }
 
 func addMoney(db *sql.DB, from string, fromName string, to string, toName string, amount uint64) bool {
-	log.Println(db *sql.DB, from string, fromName string, to string, toName string, amount uint64)
+
+	log.Println(from , fromName , to , toName , amount )
+
 	row2, err2 := db.Query("select * from amount where id=$1", to)
 
 	log.Println("querying....")
