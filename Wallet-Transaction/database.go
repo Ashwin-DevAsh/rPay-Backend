@@ -44,8 +44,9 @@ func doTransaction(db *sql.DB,transactionData TransactionData) bool {
     fromJson , err1 :=  json.Marshal(&transactionData.From)
 	toJson , err3 :=  json.Marshal(&transactionData.To)
 	Amount, _ := strconv.ParseUint(transactionData.Amount, 10, 64)
-	row, err := db.Query("select * from amount where id=$1", from)	
-	row2, err2 := db.Query("select * from amount where id=$1", to)
+
+	row, err := db.Query("select * from amount where id=$1", transactionData.From.Id)	
+	row2, err2 := db.Query("select * from amount where id=$1", transactionData.To.Id)
 
 	if err2 !=nil || err1!=nil || err3!=nil || err!=nil || !row2.Next() {
 		return false
