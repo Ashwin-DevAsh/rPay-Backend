@@ -171,7 +171,7 @@ func addMoney(db *sql.DB,transactionData TransactionData) bool {
 	
 	log.Println("Checking....")
 
-	_, errTo := tx.Exec("update amount set balance = balance + $1 where id = $2", transactionData.amount, transactionData.To.Id)
+	_, errTo := tx.Exec("update amount set balance = balance + $1 where id = $2", transactionData.Amount, transactionData.To.Id)
 	if errTo != nil {
 		tx.Rollback()
 		return false
@@ -192,7 +192,7 @@ func addMoney(db *sql.DB,transactionData TransactionData) bool {
 					   isGenerated,
 					   iswithdraw)
 				    values($1,$2,$3,$4,$5,$6)`,
-			dt.Format("01-02-2006 15:04:05"), json.Marshal(transactionData.From),json.Marshal(transactionData.To), transactionData.amount,true,false)
+			dt.Format("01-02-2006 15:04:05"), json.Marshal(&transactionData.From),json.Marshal(&transactionData.To), transactionData.Amount,true,false)
 
 	if errTrans != nil {
 		tx.Rollback()
