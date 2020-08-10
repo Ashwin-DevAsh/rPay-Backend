@@ -34,7 +34,7 @@ func Connect() *sql.DB {
 	return db
 }
 
-func doTransaction(db *sql.DB,,transactionData TransactionData) bool {
+func doTransaction(db *sql.DB,transactionData TransactionData) bool {
 
 	if(from==to){
 		return false
