@@ -147,8 +147,8 @@ func addMoney(db *sql.DB,transactionData TransactionData) bool {
 
 	row2, err1 := db.Query("select * from amount where id=$1", transactionData.To.Id)
 
-	fromJson , err2 =  json.Marshal(&transactionData.From)
-	toJson , err3 =  json.Marshal(&transactionData.To)
+	fromJson , err2 :=  json.Marshal(&transactionData.From)
+	toJson , err3 :=  json.Marshal(&transactionData.To)
 
 
 	if err1 !=nil || err2!=nil || err3!=nil {
