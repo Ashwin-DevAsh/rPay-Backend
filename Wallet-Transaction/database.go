@@ -326,10 +326,8 @@ func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []Transac
 	row, err := db.Query(`select
 								 TransactionId,
 								 TransactionTime,
-								 fromMetadata ->> 'Id',
-								 toMetadata ->> 'Id',
-								 fromMetadata ->> 'Name',
-								 toMetadata ->> 'Name',
+								 fromMetadata,
+								 toMetadata,
 								 amount,
 								 isGenerated,
 								 isWithdraw
@@ -348,7 +346,7 @@ func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []Transac
 	for row.Next() {
 		var transaction Transaction
 		row.Scan(&transaction.TransactionID, &transaction.TransactionTime, &transaction.From, 
-			&transaction.To,&transaction.FromName,  &transaction.ToName, &transaction.Amount, &transaction.IsGenerated,&transaction.IsWithdraw)
+			&transaction.To,&transaction.Amount, &transaction.IsGenerated,&transaction.IsWithdraw)
 		transactions = append(transactions, transaction)
 	}
 
