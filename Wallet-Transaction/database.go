@@ -15,7 +15,7 @@ import (
 // Connect ...
 func Connect() *sql.DB {
 	const (
-		host     = "status-database"
+		host     = "database"
 		port     = 5432
 		user     = "postgres"
 		password = "2017PASS"

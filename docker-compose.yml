@@ -6,42 +6,42 @@ services:
     ports:
       - "27017:27017"
 
-  status-database:
-    build: Status-Database
+  database:
+    build: Database
     ports:
       - 5432:5432
 
-  wallet-cache:
+  cache:
     image: redis
     ports:
       - 6379:6379
 
   wallet-block:
     build: Wallet-Block
-    depends_on: [wallet-cache, auth-database, status-database]
+    depends_on: [cache, auth-database, database]
     ports:
       - 9000:9000
 
   wallet-auth:
     build: Wallet-Auth
-    depends_on: [auth-database, status-database, wallet-block]
+    depends_on: [auth-database, database, wallet-block]
     ports:
       - 8000:8000
 
   wallet-admin:
     build: Wallet-Admin
-    depends_on: [auth-database, status-database]
+    depends_on: [auth-database, database]
     ports:
       - 4500:4500
 
-  wallet-sync-node:
-    build: Wallet-Sync-Node
-    depends_on: [status-database]
+  wallet-sync:
+    build: Wallet-Sync
+    depends_on: [database]
     ports:
       - 7000:7000
 
   wallet-transaction:
     build: Wallet-Transaction
-    depends_on: [status-database, wallet-block]
+    depends_on: [database, wallet-block]
     ports:
       - 10000:10000

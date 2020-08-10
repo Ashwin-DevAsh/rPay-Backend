@@ -22,5 +22,5 @@ create table transactions
     isGenerated boolean,
     isWithdraw boolean
 );
--- create table logs(currentCheckPoint bigserial,logType varchar,transactionID int,userId varchar);
+
 
