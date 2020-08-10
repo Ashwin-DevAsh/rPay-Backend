@@ -19,17 +19,17 @@ var smsAPIKey string = "bf344e3e-a1c5-11ea-9fa5-0200cd936042"
 type TransactionData  struct {
 		Amount  string
 		To struct{
-						Id string
-						Name string
-						Number string
-						Email string
-					}
+				Id string
+				Name string
+				Number string
+				Email string
+			}
 		From struct{
-						Id string
-						Number string
-						Name string
-						Email string
-					}
+				Id string
+				Number string
+				Name string
+				Email string
+			}
 }
 
 
@@ -82,27 +82,18 @@ func handelRequest() {
 				response.Write(message)
 				return
 			}
-
 			var transactionData TransactionData
-
-			log.Println("addMoney....")
-
 			err := json.NewDecoder(request.Body).Decode(&transactionData)
-
 			if err != nil {
 				log.Printf("verbose error info: %#v", err)
 				return
 			}
-
-
 			if addMoney(db, transactionData) {
 				userJSON, err := json.Marshal(map[string]string{
 					"message": "done",
 				})
-
 				if err != nil {
 					log.Println(err)
-
 				} else {
 					notify(transactionData.From.Id,  transactionData.From.Id , transactionData.From.Name, transactionData.Amount,"addedMoney")
 					response.Write(userJSON)
@@ -112,11 +103,9 @@ func handelRequest() {
 				userJSON, err := json.Marshal(map[string]string{
 					"message": "failed",
 				})
-
 				if err != nil {
 					log.Println(err)
 				}
-
 				response.Write(userJSON)
 			}
 
@@ -127,7 +116,6 @@ func handelRequest() {
 			response.Header().Set("Content-type", "application/json")
 			jwtToken := request.Header.Get("jwtToken")
 			header := decryptJwtToken(jwtToken)
-
 			if header == nil {
 				message, err := json.Marshal(map[string]string{"message": "failed"})
 				if err == nil {
@@ -137,46 +125,29 @@ func handelRequest() {
 				response.Write(message)
 				return
 			}
-
-			var transactionData struct {
-				From     string
-				To       string
-				Amount   string
-				ToName   string
-				FromName string
-			}
-
+			var transactionData TransactionData
 			err := json.NewDecoder(request.Body).Decode(&transactionData)
-
 			if err != nil {
 				log.Printf("verbose error info: %#v", err)
 				return
 			}
-
-			amount, _ := strconv.ParseUint(transactionData.Amount, 10, 64)
-
-			if doTransaction(db, transactionData.From, transactionData.FromName, transactionData.To, transactionData.ToName, amount) {
+			if doTransaction(db, transactionData) {
 				userJSON, err := json.Marshal(map[string]string{
 					"message": "done",
 				})
-
 				if err != nil {
 					log.Println(err)
-
 				} else {
-					notify(transactionData.From, transactionData.To, transactionData.FromName, transactionData.Amount,"receivedMoney")
+					notify(transactionData.From.Id, transactionData.To.Id, transactionData.From.Name, transactionData.Amount,"receivedMoney")
 					response.Write(userJSON)
 				}
-
 			} else {
 				userJSON, err := json.Marshal(map[string]string{
 					"message": "failed",
 				})
-
 				if err != nil {
 					log.Println(err)
 				}
-
 				response.Write(userJSON)
 			}
 
@@ -185,19 +156,14 @@ func handelRequest() {
 
 	r.HandleFunc("/getState", func(response http.ResponseWriter, request *http.Request) {
 		if request.Method == "GET" {
-
 			response.Header().Set("Content-type", "application/json")
-
 			jwtToken := request.Header.Get("jwtToken")
 			header := decryptJwtToken(jwtToken)
-
 			if header != nil {
 				userJSON, err := json.Marshal(getState(db))
-
 				if err != nil {
 					log.Println(err)
 				}
-
 				response.Write(userJSON)
 			}
 
@@ -206,24 +172,15 @@ func handelRequest() {
 
 	r.HandleFunc("/getMyState", func(response http.ResponseWriter, request *http.Request) {
 		if request.Method == "GET" {
-
 			response.Header().Set("Content-type", "application/json")
-
 			id := request.URL.Query().Get("id")
-
-			log.Println(id)
-
 			jwtToken := request.Header.Get("jwtToken")
 			header := decryptJwtToken(jwtToken)
-
 			if header != nil {
 				userJSON, err := json.Marshal(getMyState(db, id))
-
 				if err != nil {
 					log.Println(err)
 				}
-
-
 				response.Write(userJSON)
 			}
 
@@ -232,23 +189,15 @@ func handelRequest() {
 
 	r.HandleFunc("/getTransactions", func(response http.ResponseWriter, request *http.Request) {
 		if request.Method == "GET" {
-
 			response.Header().Set("Content-type", "application/json")
-
 			number := request.URL.Query().Get("number")
-
-			log.Println(number)
-
 			jwtToken := request.Header.Get("jwtToken")
 			header := decryptJwtToken(jwtToken)
-
 			if header != nil || true {
 				userJSON, err := json.Marshal(getTransactions(db, number))
-
 				if err != nil {
 					log.Println(err)
 				}
-
 				response.Write(userJSON)
 			}
 
@@ -257,39 +206,25 @@ func handelRequest() {
 
 	r.HandleFunc("/getTransactionsBetweenObjects", func(response http.ResponseWriter, request *http.Request) {
 		if request.Method == "GET" {
-
 			response.Header().Set("Content-type", "application/json")
-
-			number1 := request.URL.Query().Get("id1")
-			number2 := request.URL.Query().Get("id2")
-
-			log.Println(number1, number2)
-
+			id1 := request.URL.Query().Get("id1")
+			id2 := request.URL.Query().Get("id2")
 			jwtToken := request.Header.Get("jwtToken")
 			header := decryptJwtToken(jwtToken)
-
 			if header != nil || true {
-				userJSON, err := json.Marshal(getTransactionsBetweenObjects(db, number1, number2))
-
+				userJSON, err := json.Marshal(getTransactionsBetweenObjects(db, id1, id2))
 				if err != nil {
 					log.Println(err)
 				}
-
 				response.Write(userJSON)
 			}
-
 		}
 	})
 
 }
 
 func main() {
-
-	log.Println(db)
-
 	handelRequest()
-
 	defer db.Close()
-
 	log.Fatal(http.ListenAndServe(":10000", r))
 }

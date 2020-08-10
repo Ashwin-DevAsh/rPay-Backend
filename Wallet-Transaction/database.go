@@ -9,7 +9,6 @@ import (
 	"encoding/json"
 	"bytes"
 	"strconv"
-	
 	_ "github.com/lib/pq"
 )
 
@@ -35,27 +34,20 @@ func Connect() *sql.DB {
 	return db
 }
 
-func doTransaction(db *sql.DB, from string, fromName string, to string, toName string, amount uint64) bool {
+func doTransaction(db *sql.DB,,transactionData TransactionData) bool {
 
 	if(from==to){
 		return false
 	}
 
+	
+    fromJson , err1 :=  json.Marshal(&transactionData.From)
+	toJson , err3 :=  json.Marshal(&transactionData.To)
+	Amount, _ := strconv.ParseUint(transactionData.Amount, 10, 64)
+	row, err := db.Query("select * from amount where id=$1", from)	
 	row2, err2 := db.Query("select * from amount where id=$1", to)
 
-	if err2 !=nil {
-		log.Println(err2)
-		return false
-	}
-
-	if !row2.Next(){
-		return false
-	}
-	
-	row, err := db.Query("select * from amount where id=$1", from)
-
-	if err != nil {
-		log.Println(err)
+	if err2 !=nil || err1!=nil err3!=nil || err!=nil || !row2.Next() {
 		return false
 	}
 
@@ -76,7 +68,7 @@ func doTransaction(db *sql.DB, from string, fromName string, to string, toName s
     if err != nil {
         return false
     }
-	_, errFrom := tx.Exec("update amount set balance = balance - $1 where id = $2", amount, from)
+	_, errFrom := tx.Exec("update amount set balance = balance - $1 where id = $2", Amount, TransactionData.From.Id)
 
 	if errFrom != nil {
 		tx.Rollback()
@@ -84,7 +76,7 @@ func doTransaction(db *sql.DB, from string, fromName string, to string, toName s
 		return false
 	}
 
-	_, errTo := tx.Exec("update amount set balance = balance + $1 where id = $2", amount, to)
+	_, errTo := tx.Exec("update amount set balance = balance + $1 where id = $2", Amount, TransactionData.To.Id)
 
 	if errTo != nil {
 		tx.Rollback()
@@ -96,8 +88,16 @@ func doTransaction(db *sql.DB, from string, fromName string, to string, toName s
    
 
 	_, errTrans :=
-		tx.Exec("insert into transactions(transactionTime,fromID,toID,toName,amount,fromName,isGenerated,iswithdraw) values($1,$2,$3,$4,$5,$6,$7,$8)",
-			dt.Format("01-02-2006 15:04:05"), from, to, toName, amount, fromName,false,false)
+		tx.Exec(`insert
+		           into transactions(
+					   transactionTime,
+					   fromMetadata,
+					   toMetadata,
+					   amount,
+					   isGenerated,
+					   iswithdraw)
+				    values($1,$2,$3,$4,$5,$6)`,
+			dt.Format("01-02-2006 15:04:05"), fromJson,toJson, Amount,false,false)
 
 	if errTrans != nil {
 		tx.Rollback()
@@ -106,10 +106,13 @@ func doTransaction(db *sql.DB, from string, fromName string, to string, toName s
 
 	jsonBodyData := map[string]interface{}{
 		"senderBalance":  balance,
-		"fromID":from,
-		"toID":to,
-		"amount":amount,
+		"from":transactionData.From,
+		"to":transactionData.To
+		"isGenerated":false,
+		"isWithdraw":false,
+		"amount":Amount,
 	}
+	
 	jsonBody, _ := json.Marshal(jsonBodyData)
 
 	resp, err := http.Post("http://wallet-block:9000/addTransactionBlock/","application/json",bytes.NewBuffer(jsonBody))
@@ -149,39 +152,29 @@ func addMoney(db *sql.DB,transactionData TransactionData) bool {
 
 	row2, err1 := db.Query("select * from amount where id=$1", transactionData.To.Id)
 
-	fromJson , err2 :=  json.Marshal(&transactionData.From)
+    fromJson , err2 :=  json.Marshal(&transactionData.From)
 	toJson , err3 :=  json.Marshal(&transactionData.To)
-   Amount, _ := strconv.ParseUint(transactionData.Amount, 10, 64)
+    Amount, _ := strconv.ParseUint(transactionData.Amount, 10, 64)
 
 
 	if err1 !=nil || err2!=nil || err3!=nil {
 		return false
 	}
 
-	log.Println("querying 2....")
-
-
 	if !row2.Next(){
 		return false
 	}
-
-
 	
 	tx, err := db.Begin()
     if err != nil {
         return false
 	}
-	
-	log.Println("Checking....")
 
 	_, errTo := tx.Exec("update amount set balance = balance + $1 where id = $2", Amount, transactionData.To.Id)
 	if errTo != nil {
 		tx.Rollback()
 		return false
 	}
-
-	log.Println("Stage 2....")
-
 
 	loc, _ := time.LoadLocation("Asia/Kolkata")
     dt := time.Now().In(loc)
@@ -202,11 +195,11 @@ func addMoney(db *sql.DB,transactionData TransactionData) bool {
 		return false
 	}
 
-	log.Println("stage 3....")
-
-
 	jsonBodyData := map[string]interface{}{
-		"id":transactionData.To.Id,
+		"from":transactionData.From,
+		"to":transactionData.To
+		"isGenerated":true,
+		"isWithdraw":false,
 		"amount":Amount,
 	}
 	
