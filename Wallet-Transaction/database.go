@@ -47,7 +47,7 @@ func doTransaction(db *sql.DB,,transactionData TransactionData) bool {
 	row, err := db.Query("select * from amount where id=$1", from)	
 	row2, err2 := db.Query("select * from amount where id=$1", to)
 
-	if err2 !=nil || err1!=nil err3!=nil || err!=nil || !row2.Next() {
+	if err2 !=nil || err1!=nil || err3!=nil || err!=nil || !row2.Next() {
 		return false
 	}
 
@@ -107,12 +107,12 @@ func doTransaction(db *sql.DB,,transactionData TransactionData) bool {
 	jsonBodyData := map[string]interface{}{
 		"senderBalance":  balance,
 		"from":transactionData.From,
-		"to":transactionData.To
+		"to":transactionData.To,
 		"isGenerated":false,
 		"isWithdraw":false,
 		"amount":Amount,
 	}
-	
+
 	jsonBody, _ := json.Marshal(jsonBodyData)
 
 	resp, err := http.Post("http://wallet-block:9000/addTransactionBlock/","application/json",bytes.NewBuffer(jsonBody))
@@ -197,7 +197,7 @@ func addMoney(db *sql.DB,transactionData TransactionData) bool {
 
 	jsonBodyData := map[string]interface{}{
 		"from":transactionData.From,
-		"to":transactionData.To
+		"to":transactionData.To,
 		"isGenerated":true,
 		"isWithdraw":false,
 		"amount":Amount,
