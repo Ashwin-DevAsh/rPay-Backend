@@ -50,6 +50,8 @@ var setOtp = async (req, res, otpTable, userTable, id = "rpay@") => {
       number,
     ]);
 
+    postgres.query(`delete from ${otpTable} where number = $1`, [number]);
+
     var user = (
       await postgres.query(`select * from ${userTable} where id = $1 `, [
         id + number,
@@ -70,7 +72,6 @@ var setOtp = async (req, res, otpTable, userTable, id = "rpay@") => {
       process.env.PRIVATE_KEY
     );
     res.json([{ message: "verified", user: user[0], token: userToken }]);
-    postgres.query(`delete from ${otpTable} where number = $1`, [number]);
   } catch (err) {
     res.json([{ message: "error" }]);
   }
@@ -91,6 +92,11 @@ var sendOtp = async (req, res, otpTable, appId) => {
   smsMessage.body = `<#> Rpay never calls you asking for otp. Sharing it with 
                      anyone gives them full access to your Rpay wallet. 
                      Your Login OTP is ${otpNumber} . ID: ${appId}`;
+
+  console.log({
+    number,
+    otpNumber,
+  });
 
   var smsApi = new api.SMSApi(
     process.env.OTP_USERNAME,
