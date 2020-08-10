@@ -61,7 +61,7 @@ func doTransaction(db *sql.DB,transactionData TransactionData) bool {
 		return false
 	}
 
-	if(balance<amount){
+	if(balance<Amount){
 		return false
 	}
 
@@ -69,7 +69,7 @@ func doTransaction(db *sql.DB,transactionData TransactionData) bool {
     if err != nil {
         return false
     }
-	_, errFrom := tx.Exec("update amount set balance = balance - $1 where id = $2", Amount, TransactionData.From.Id)
+	_, errFrom := tx.Exec("update amount set balance = balance - $1 where id = $2", Amount, transactionData.From.Id)
 
 	if errFrom != nil {
 		tx.Rollback()
@@ -77,7 +77,7 @@ func doTransaction(db *sql.DB,transactionData TransactionData) bool {
 		return false
 	}
 
-	_, errTo := tx.Exec("update amount set balance = balance + $1 where id = $2", Amount, TransactionData.To.Id)
+	_, errTo := tx.Exec("update amount set balance = balance + $1 where id = $2", Amount, transactionData.To.Id)
 
 	if errTo != nil {
 		tx.Rollback()
