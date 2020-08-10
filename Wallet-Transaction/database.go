@@ -326,7 +326,15 @@ func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []Transac
 
 	transactions := []Transaction{}
 
-	row, err := db.Query("select * from transactions where (fromid = $1 or fromid = $2) and (toid = $1 or toid = $2)", id1, id2)
+	row, err := db.Query(`select
+	                            * 
+						   from 
+							   transactions 
+						   where 
+								(cast(fromMetadata->id as varchar) = $1 or cast(fromMetadata->id as varchar) = $2) 
+								     and 
+								(cast(toMetadata->id as varchar) = $1 or cast(toMetadata->id as varchar) = $2)`,
+						   id1, id2)
 
 	if err != nil {
 		log.Println(err)
