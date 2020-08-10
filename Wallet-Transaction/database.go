@@ -237,18 +237,8 @@ type MyState struct {
 
 // Transaction ...
 type Transaction struct {
-	From    struct{
-				Id string
-				Name string
-				Number string
-				Email string
-			}
-	To      struct{
-				Id string
-				Name string
-				Number string
-				Email string
-			}
+	From            json.RawMessage
+	To              json.RawMessage
 	TransactionID   interface{}
 	TransactionTime interface{}
 	Amount          interface{}
