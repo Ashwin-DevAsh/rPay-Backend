@@ -153,6 +153,9 @@ func addMoney(db *sql.DB, from string, fromName string, to string, toName string
 		return false
 	}
 
+	log.Println("querying 2....")
+
+
 	if !row2.Next(){
 		return false
 	}
