@@ -94,7 +94,6 @@ func handelRequest() {
 				return
 			}
 
-			Amount, _ := strconv.ParseUint(transactionData.Amount, 10, 64)
 
 			if addMoney(db, transactionData) {
 				userJSON, err := json.Marshal(map[string]string{
