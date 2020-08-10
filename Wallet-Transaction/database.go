@@ -347,8 +347,12 @@ func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []Transac
 		var transaction Transaction
 		row.Scan(&transaction.TransactionID, &transaction.TransactionTime, &transaction.From, 
 			&transaction.To,&transaction.Amount, &transaction.IsGenerated,&transaction.IsWithdraw)
+	    json.UnMarshal(transaction.From,&transaction.From)
+	    json.UnMarshal(transaction.To,&transaction.To)		
 		transactions = append(transactions, transaction)
 	}
+
+
 
 
 	return transactions
