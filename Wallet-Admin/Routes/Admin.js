@@ -1,60 +1,57 @@
 const app = require("express").Router();
 const jwt = require("jsonwebtoken");
-const Admin = require("../Database/Schema/Admin");
 const bcrypt = require("bcrypt");
+const postgres = require("./Database/Connections/pgConnections");
 
-app.post("/login", (req, res) => {
+app.post("/login", async (req, res) => {
   var email = req.body.email;
   var password = req.body.password;
   if (email && password) {
-    Admin.findOne({ email })
-      .exec()
-      .then((doc) => {
-        if (doc) {
-          let name = doc.name;
-          let email = doc.email;
-          let number = doc.number;
-          let accessTo = doc.accessTo;
-          let imageURL = doc.imageURL;
+    var admin = (
+      await postgres.query("select * from admins where email = $1", [email])
+    ).rows;
 
-          bcrypt.compare(password, doc.password, (err, isMatch) => {
-            if (err) {
-              res.send({ message: "error", err });
-              return;
-            }
-            if (!isMatch) {
-              res.send({ message: "invalid password" });
-              return;
-            }
+    if (rows.log == 0) {
+      res.send({ message: "invalid admin" });
+      return;
+    }
 
-            jwt.sign(
-              { name, email, number, accessTo },
-              process.env.PRIVATE_KEY,
-              { expiresIn: "1h" },
-              (err, token) => {
-                if (err) {
-                  res.send({ message: err.getName() });
-                } else {
-                  res.send({
-                    message: "done",
-                    token,
-                    name,
-                    number,
-                    email,
-                    imageURL,
-                    accessTo,
-                  });
-                }
-              }
-            );
-          });
-        } else {
-          res.send({ message: "invalid admin" });
+    let name = admin.name;
+    let email = admin.email;
+    let number = admin.number;
+    let permissions = admin.permissions;
+
+    bcrypt.compare(password, admin.password, async (err, isMatch) => {
+      if (err) {
+        res.send({ message: "error", err });
+        return;
+      }
+      if (!isMatch) {
+        res.send({ message: "invalid password" });
+        return;
+      }
+
+      jwt.sign(
+        { name, email, number, permissions },
+        process.env.PRIVATE_KEY,
+        { expiresIn: "1h" },
+        (err, token) => {
+          if (err) {
+            console.log(err);
+            res.send({ message: err });
+          } else {
+            res.send({
+              message: "done",
+              token,
+              name,
+              number,
+              email,
+              permissions,
+            });
+          }
         }
-      })
-      .catch((err) => {
-        res.send({ message: err });
-      });
+      );
+    });
   } else {
     res.send({
       message: "missing username or password",

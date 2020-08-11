@@ -8,7 +8,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const transactions = require("./Routes/Transactions");
 // const nodesAndBlocks = require("./Routes/nodesAndBlocks");
-// const adminRoute = require("./Routes/Admin");
+const adminRoute = require("./Routes/Admin");
 const postgres = require("./Database/Connections/pgConnections");
 
 var corsOptions = {
@@ -57,7 +57,7 @@ postgres
 app.use(cors(corsOptions));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-// app.use(adminRoute);
+app.use(adminRoute);
 app.use(transactions);
 // app.use(Merchants);
 // app.use(Users);
