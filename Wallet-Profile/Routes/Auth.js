@@ -113,7 +113,7 @@ var sendOtp = async (req, res, otpTable, appId) => {
 
     res.json([{ message: "done" }]);
   } catch (err) {
-    console.log(err);
+    // console.log(err);
     res.json([{ message: "failed", err }]);
   }
 };
