@@ -35,7 +35,10 @@ app.get("/getMyTransactions/:id", (req, res) => {
     } else {
       if (decoded.name) {
         postgres
-          .query(`select * from transactions where fromid=$1 or toid=$1`, [id])
+          .query(
+            `select * from transactions where cast(frommetadata->>id as varchar)=$1 or cast(tometadata->>id as varchar)=$1`,
+            [id]
+          )
           .then((datas) => {
             postgres
               .query(`select balance from amount where id=$1`, [id])
