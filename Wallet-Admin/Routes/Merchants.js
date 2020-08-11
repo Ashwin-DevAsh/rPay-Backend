@@ -9,6 +9,7 @@ app.get("/getMerchants", (req, res) => {
 
   jwt.verify(token, process.env.PRIVATE_KEY, async function (err, decoded) {
     if (err) {
+      console.log(err);
       res.send({ message: "error", err });
     } else {
       try {
