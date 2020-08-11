@@ -173,12 +173,12 @@ func addMoney(db *sql.DB,transactionData TransactionData) bool {
 	}
 
 	loc, _ := time.LoadLocation("Asia/Kolkata")
-    transactionId := 0
 
+    transactionID := 0
 
     dt := time.Now().In(loc)
-	_, errTrans :=
-		tx.QueryRow(`insert
+	rows, errTrans :=
+		tx.Query(`insert
 		           into transactions(
 					   transactionTime,
 					   fromMetadata,
@@ -187,7 +187,10 @@ func addMoney(db *sql.DB,transactionData TransactionData) bool {
 					   isGenerated,
 					   iswithdraw)
 				    values($1,$2,$3,$4,$5,$6) returning transactionID`,
-			dt.Format("01-02-2006 15:04:05"), fromJson,toJson, Amount,true,false).Scan(&transactionId)
+			dt.Format("01-02-2006 15:04:05"), fromJson,toJson, Amount,true,false)
+	if rows.Next(){
+		rows.Scan(&transactionID)
+	}
 
 	if errTrans != nil {
 		tx.Rollback()
