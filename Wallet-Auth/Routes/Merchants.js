@@ -1,5 +1,4 @@
 const app = require("express").Router();
-const Users = require("../Schemas/Merchants");
 const jwt = require("jsonwebtoken");
 const postgres = require("../Database/postgresql");
 const axios = require("axios");
@@ -99,23 +98,15 @@ app.post("/addMerchant", async (req, res) => {
 });
 
 app.get("/getMerchants", (req, res) => {
-  console.log("getting merchants");
-  Users.find({ status: "active" }, [
-    "name",
-    "number",
-    "email",
-    "id",
-    "storeName",
-  ])
-    .exec()
-    .then((doc) => {
-      console.log(doc);
-      res.status(200).send(doc);
-    })
-    .catch((e) => {
-      console.log(e);
-      res.send(e);
-    });
+  try {
+    var result = (
+      await postgres.query("select name,number,email,id,storeName from merchants")
+    ).rows;
+    res.send(result);
+  } catch (err) {
+    console.log(err);
+    res.send([{ message: "failed" }]);
+  }
 });
 
 module.exports = app;
