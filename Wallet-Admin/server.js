@@ -9,7 +9,7 @@ const cors = require("cors");
 const transactions = require("./Routes/Transactions");
 // const nodesAndBlocks = require("./Routes/nodesAndBlocks");
 const adminRoute = require("./Routes/Admin");
-const postgres = require("../Database/Connections/pgConnections");
+const postgres = require("./Database/Connections/pgConnections");
 
 var corsOptions = {
   origin: "*",

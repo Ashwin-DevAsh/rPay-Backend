@@ -1,7 +1,7 @@
 const app = require("express").Router();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const postgres = require("./Database/Connections/pgConnections");
+const postgres = require("../Database/Connections/pgConnections");
 
 app.post("/login", async (req, res) => {
   var email = req.body.email;
