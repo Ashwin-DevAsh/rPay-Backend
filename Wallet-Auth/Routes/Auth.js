@@ -65,7 +65,7 @@ var setOtp = async (req, res, otpTable, userTable, id = "rpay@") => {
       process.env.PRIVATE_KEY
     );
     res.json([{ message: "verified", user: user[0], token: userToken }]);
-    postgres.query(`delete from ${otpTable} where number=$1`, [user.number]);
+    postgres.query(`delete from ${otpTable} where number=$1`, [number]);
   } catch (err) {
     res.json([{ message: "error" }]);
   }
