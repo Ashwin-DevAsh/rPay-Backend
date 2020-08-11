@@ -1,6 +1,7 @@
 const app = require("express").Router();
 const FCM = require("fcm-node");
 const jwt = require("jsonwebtoken");
+const postgres = require("../Database/Connections/pgConnections");
 
 app.get("/getMerchants", (req, res) => {
   console.log("getting merchants");
