@@ -1,9 +1,7 @@
 const app = require("express").Router();
-const Users = require("../Schemas/users");
 const jwt = require("jsonwebtoken");
 const postgres = require("../Database/postgresql");
 const axios = require("axios");
-const { post, use } = require("./Merchants");
 
 app.post("/addUser", async (req, res) => {
   var user = req.body;
@@ -76,6 +74,7 @@ app.post("/addUser", async (req, res) => {
         [user.name, user.number, user.email, user.password, userID, user.qrCode]
       );
       res.json([{ message: "done", token }]);
+      postgres.query(`delete from otp where number=$1`, [user.number]);
     } else {
       res.json([{ message: "failed" }]);
     }
@@ -95,84 +94,6 @@ app.get("/getUsers", async (req, res) => {
     console.log(err);
     res.send([{ message: "failed" }]);
   }
-});
-
-app.post("/changePassword", (req, res) => {
-  console.log(req.get("token"));
-  jwt.verify(req.get("token"), process.env.PRIVATE_KEY, async function (
-    err,
-    decoded
-  ) {
-    if (err) {
-      console.log(err);
-      res.status(200).send({ message: "error" });
-      return;
-    }
-
-    console.log("Changing password...");
-    var data = req.body;
-    console.log(data);
-    if (!data.id || !data.oldPassword || !data.newPassword) {
-      res.status(200).send({ message: "error" });
-      return;
-    }
-
-    try {
-      var user = (
-        await postgres.query(
-          "select * from users where id = $1 and password=$2",
-          [data.id, data.oldPassword]
-        )
-      ).rows;
-
-      if (user.length == 0) {
-        res.status(200).send({ message: "error" });
-        return;
-      }
-
-      await postgres.query("update users set password = $2 where id = $1", [
-        data.id,
-        data.newPassword,
-      ]);
-
-      res.status(200).send({ message: "done" });
-    } catch (err) {
-      console.log(err);
-      res.status(200).send({ message: "error" });
-    }
-
-    // Users.findOne({ id: data.id })
-    //   .exec()
-    //   .then((docs) => {
-    //     console.log("data = ", docs);
-    //     if (docs == null) {
-    //       res.status(200).send({ message: "error" });
-    //       return;
-    //     }
-
-    //     if (docs.password == data.oldPassword) {
-    //       Users.findOneAndUpdate(
-    //         { id: data.id },
-    //         { password: data.newPassword },
-    //         (err, doc) => {
-    //           if (err) {
-    //             console.log(err);
-    //             res.status(200).send({ message: "error" });
-    //             return;
-    //           } else {
-    //             res.status(200).send({ message: "done" });
-    //             return;
-    //           }
-    //         }
-    //       );
-    //     } else {
-    //       console.log("data = ", null);
-
-    //       res.status(200).send({ message: "error" });
-    //       return;
-    //     }
-    //   });
-  });
 });
 
 module.exports = app;

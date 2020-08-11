@@ -22,6 +22,57 @@ app.post("/newPasswordMerchant", (req, res) =>
   newPassword(req, res, OtpMerchant, Merchants)
 );
 
+app.post("/changePassword", (req, res) => changePassword(req, res, "users"));
+app.post("/changeMerchantPassword", (req, res) => {
+  changePassword(req, res, "merchants");
+});
+
+var changePassword = (req, res, tableName) => {
+  console.log(req.get("token"));
+  jwt.verify(req.get("token"), process.env.PRIVATE_KEY, async function (
+    err,
+    decoded
+  ) {
+    if (err) {
+      console.log(err);
+      res.status(200).send({ message: "error" });
+      return;
+    }
+
+    console.log("Changing password...");
+    var data = req.body;
+    console.log(data);
+    if (!data.id || !data.oldPassword || !data.newPassword) {
+      res.status(200).send({ message: "error" });
+      return;
+    }
+
+    try {
+      var user = (
+        await postgres.query(
+          `select * from ${tableName} where id = $1 and password=$2`,
+          [data.id, data.oldPassword]
+        )
+      ).rows;
+
+      if (user.length == 0) {
+        res.status(200).send({ message: "error" });
+        return;
+      }
+
+      await postgres.query(
+        `update ${tableName} set password = $2 where id = $1`,
+        [data.id, data.newPassword]
+      );
+
+      res.status(200).send({ message: "done" });
+    } catch (err) {
+      console.log(err);
+      res.status(200).send({ message: "error" });
+    }
+  });
+};
+
 var newPassword = (req, res, Otp, Users) => {
   jwt.verify(req.get("token"), process.env.PRIVATE_KEY, function (
     err,
