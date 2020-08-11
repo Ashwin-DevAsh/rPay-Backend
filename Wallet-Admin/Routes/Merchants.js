@@ -25,6 +25,7 @@ app.get("/getMerchants", (req, res) => {
 });
 
 app.post("/updateMerchantStatus", (req, res) => {
+  var token = req.get("token");
   jwt.verify(token, process.env.PRIVATE_KEY, async function (err, decoded) {
     if (err) {
       console.log(err);
@@ -50,23 +51,6 @@ app.post("/updateMerchantStatus", (req, res) => {
       }
     }
   });
-
-  // var id = req.body.id;
-  // var status = req.body.status;
-  // console.log(id, status);
-  // if (!id || !status) {
-  //   res.send({ message: "error" });
-  //   return;
-  // }
-  // Users.findOneAndUpdate({ id }, { status })
-  //   .exec()
-  //   .then((doc) => {
-  //     sendNotificationToAll(id, status);
-  //     res.send({ message: "done" });
-  //   })
-  //   .catch((e) => {
-  //     res.send({ message: "error", e });
-  //   });
 });
 
 function sendNotificationToAll(id, isActive) {
@@ -92,3 +76,20 @@ function sendNotificationToAll(id, isActive) {
 }
 
 module.exports = app;
+
+// var id = req.body.id;
+// var status = req.body.status;
+// console.log(id, status);
+// if (!id || !status) {
+//   res.send({ message: "error" });
+//   return;
+// }
+// Users.findOneAndUpdate({ id }, { status })
+//   .exec()
+//   .then((doc) => {
+//     sendNotificationToAll(id, status);
+//     res.send({ message: "done" });
+//   })
+//   .catch((e) => {
+//     res.send({ message: "error", e });
+//   });
