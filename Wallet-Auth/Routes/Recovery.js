@@ -13,9 +13,9 @@ app.get("/getRecoveryOtpMerchant", (req, res) =>
   sendOtp(req, res, "recoveryMerchantsOtp")
 );
 
-app.post("/setRecoveryOtp", (req, res) => setOtp(req, res, Otp));
+app.post("/setRecoveryOtp", (req, res) => setOtp(req, res, "recoveryOtp"));
 app.post("/setRecoveryOtpMerchant", (req, res) =>
-  setOtp(req, res, OtpMerchant)
+  setOtp(req, res, "recoveryMerchantsOtp")
 );
 
 app.post("/newPassword", (req, res) => newPassword(req, res, Otp, Users));
