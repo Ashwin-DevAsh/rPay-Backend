@@ -88,7 +88,7 @@ func doTransaction(db *sql.DB,transactionData TransactionData) bool {
    
 	transactionID :=0
 
-	rows, errTrans :=
+	rowsTransactionID, errTrans :=
 		tx.Exec(`insert
 		           into transactions(
 					   transactionTime,
@@ -100,8 +100,8 @@ func doTransaction(db *sql.DB,transactionData TransactionData) bool {
 				    values($1,$2,$3,$4,$5,$6) returning transactionID`,
 			dt.Format("01-02-2006 15:04:05"), fromJson,toJson, Amount,false,false)
 
-	if rows.Next(){
-		rows.Scan(&transactionID)
+	if rowsTransactionID.Next(){
+		rowsTransactionID.Scan(&transactionID)
 	}
 
 	if errTrans != nil {
