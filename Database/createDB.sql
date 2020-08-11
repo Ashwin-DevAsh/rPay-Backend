@@ -47,7 +47,7 @@ create table admins(
   email varchar,
   password varchar,
   permissions json[]
-)
+);
 
 -- recovery...
 
