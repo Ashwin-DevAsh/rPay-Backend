@@ -97,10 +97,12 @@ app.post("/addMerchant", async (req, res) => {
   }
 });
 
-app.get("/getMerchants", (req, res) => {
+app.get("/getMerchants", async (req, res) => {
   try {
     var result = (
-      await postgres.query("select name,number,email,id,storeName from merchants")
+      await postgres.query(
+        "select name,number,email,id,storeName from merchants"
+      )
     ).rows;
     res.send(result);
   } catch (err) {
