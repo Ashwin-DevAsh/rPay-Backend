@@ -7,7 +7,7 @@ const bcrypt = require("bcrypt");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const transactions = require("./Routes/Transactions");
-// const nodesAndBlocks = require("./Routes/nodesAndBlocks");
+const nodesAndBlocks = require("./Routes/nodesAndBlocks");
 const adminRoute = require("./Routes/Admin");
 const postgres = require("./Database/Connections/pgConnections");
 
@@ -62,7 +62,7 @@ app.use(transactions);
 app.use(Merchants);
 app.use(Users);
 app.use(Stats);
-// app.use(nodesAndBlocks);
+app.use(nodesAndBlocks);
 
 app.listen(PORT, () => {
   console.log("Listining on ", PORT);
