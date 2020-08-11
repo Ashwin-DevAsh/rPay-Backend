@@ -94,6 +94,7 @@ create table transactions
 -- block...
 
 create table blocks(
+  type varchar,
   blockID bigserial,
   blockHash varchar,
   createdAt timestamp,
