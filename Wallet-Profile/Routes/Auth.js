@@ -98,17 +98,15 @@ var sendOtp = async (req, res, otpTable, appId) => {
     process.env.OTP_USERNAME,
     process.env.OTP_API_KEY
   );
-
   var smsCollection = new api.SmsMessageCollection();
-
   smsCollection.messages = [smsMessage];
 
   try {
+    await postgres.query(`delete from ${otpTable} where number = $1`, [number]);
     await postgres.query(`insert into ${otpTable} values($1,$2,false)`, [
       number,
       otpNumber,
     ]);
-    await postgres.query(`delete from ${otpTable} where number = $1`, [number]);
     await smsApi.smsSendPost(smsCollection);
 
     res.json([{ message: "done" }]);
