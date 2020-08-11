@@ -16,10 +16,9 @@ app.post("/login", async (req, res) => {
       return;
     }
 
-    let name = admin.name;
-    let email = admin.email;
-    let number = admin.number;
-    let permissions = admin.permissions;
+    var name = admin.name;
+    var number = admin.number;
+    var permissions = admin.permissions;
 
     bcrypt.compare(password, admin.password, async (err, isMatch) => {
       if (err) {
