@@ -1,6 +1,6 @@
 require("dotenv").config(".env");
 const express = require("express");
-// const Users = require("./Routes/Users");
+const Users = require("./Routes/Users");
 const Stats = require("./Routes/Stats");
 // const Merchants = require("./Routes/Merchants");
 const bcrypt = require("bcrypt");
@@ -60,7 +60,7 @@ app.use(bodyParser.json());
 app.use(adminRoute);
 app.use(transactions);
 // app.use(Merchants);
-// app.use(Users);
+app.use(Users);
 app.use(Stats);
 // app.use(nodesAndBlocks);
 
