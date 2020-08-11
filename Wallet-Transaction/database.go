@@ -89,7 +89,7 @@ func doTransaction(db *sql.DB,transactionData TransactionData) bool {
 	transactionID :=0
 
 	rowsTransactionID, errTrans :=
-		tx.Exec(`insert
+		tx.Query(`insert
 		           into transactions(
 					   transactionTime,
 					   fromMetadata,
