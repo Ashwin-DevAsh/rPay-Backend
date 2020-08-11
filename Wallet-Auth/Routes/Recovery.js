@@ -98,7 +98,7 @@ var newPassword = (req, res, otpTable, userTable) => {
         var otp = (
           await postgres.query(
             `select * from ${otpTable} where email = $1 and verified=true`,
-            [user.emailID]
+            [data.emailID]
           )
         ).rows;
 
