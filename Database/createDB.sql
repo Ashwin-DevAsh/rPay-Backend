@@ -37,7 +37,6 @@ create table merchantsOtp(
     verified Boolean
 );
 
-
 -- admin...
 
 create table admins(
@@ -73,7 +72,6 @@ create table info
     isonline boolean
 );
 
-
 -- assect
 
 create table amount
@@ -93,4 +91,12 @@ create table transactions
     isWithdraw boolean
 );
 
+-- block...
+
+create table blocks(
+  blockID bigserial,
+  blockHash varchar,
+  createdAt timestamp,
+  verifiedBy varchar[]
+);
 

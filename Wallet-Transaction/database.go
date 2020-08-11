@@ -173,9 +173,12 @@ func addMoney(db *sql.DB,transactionData TransactionData) bool {
 	}
 
 	loc, _ := time.LoadLocation("Asia/Kolkata")
+    transactionId := 0
+
+
     dt := time.Now().In(loc)
 	_, errTrans :=
-		tx.Exec(`insert
+		tx.QueryRow(`insert
 		           into transactions(
 					   transactionTime,
 					   fromMetadata,
@@ -183,8 +186,8 @@ func addMoney(db *sql.DB,transactionData TransactionData) bool {
 					   amount,
 					   isGenerated,
 					   iswithdraw)
-				    values($1,$2,$3,$4,$5,$6)`,
-			dt.Format("01-02-2006 15:04:05"), fromJson,toJson, Amount,true,false)
+				    values($1,$2,$3,$4,$5,$6) returning transactionID`,
+			dt.Format("01-02-2006 15:04:05"), fromJson,toJson, Amount,true,false).Scan(&transactionId)
 
 	if errTrans != nil {
 		tx.Rollback()
@@ -192,6 +195,7 @@ func addMoney(db *sql.DB,transactionData TransactionData) bool {
 	}
 
 	jsonBodyData := map[string]interface{}{
+		"transactionID":transactionID
 		"from":transactionData.From,
 		"to":transactionData.To,
 		"isGenerated":true,
@@ -202,7 +206,6 @@ func addMoney(db *sql.DB,transactionData TransactionData) bool {
 	jsonBody, _ := json.Marshal(jsonBodyData)
 
 	resp, err := http.Post("http://wallet-block:9000/addMoneyBlock/","application/json",bytes.NewBuffer(jsonBody))
-
 
 	if err!=nil {
 		tx.Rollback()
