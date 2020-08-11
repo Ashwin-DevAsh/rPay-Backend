@@ -1,7 +1,6 @@
 const app = require("express").Router();
-const Users = require("../Database/Schema/Merchant");
 const FCM = require("fcm-node");
-const { update } = require("../Database/Schema/Merchant");
+const jwt = require("jsonwebtoken");
 
 app.get("/getMerchants", (req, res) => {
   console.log("getting merchants");
