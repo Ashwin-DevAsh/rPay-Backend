@@ -121,7 +121,7 @@ app.post("/changePassword", (req, res) => {
       var user = (
         await postgres.query(
           "select * from users where id = $1 and password=$2",
-          [data.id, data.password]
+          [data.id, data.oldPassword]
         )
       ).rows;
 
