@@ -6,7 +6,6 @@ const bcrypt = require("bcrypt");
 app.post("/login", (req, res) => {
   var email = req.body.email;
   var password = req.body.password;
-  console.log(req.body);
   if (email && password) {
     Admin.findOne({ email })
       .exec()

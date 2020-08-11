@@ -37,6 +37,18 @@ create table merchantsOtp(
     verified Boolean
 );
 
+
+-- admin...
+
+create table admins(
+  id varchar primary key,
+  name varchar,
+  number varchar,
+  email varchar,
+  password varchar,
+  permissions json[]
+)
+
 -- recovery...
 
 create table recoveryOtp(

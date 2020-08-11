@@ -1,6 +1,5 @@
 require("dotenv").config(".env");
 const express = require("express");
-const Admin = require("./Database/Schema/Admin");
 const Users = require("./Routes/Users");
 const Stats = require("./Routes/Stats");
 const Merchants = require("./Routes/Merchants");
@@ -9,6 +8,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const transactions = require("./Routes/Transactions");
 const nodesAndBlocks = require("./Routes/nodesAndBlocks");
+const postgres = require("./Database/Connections/pgConnections");
 
 var corsOptions = {
   origin: "*",
@@ -21,49 +21,43 @@ const app = express();
 
 const PORT = process.env.PORT || 4500;
 
-Admin.findOne({ number: "919551574355" })
-  .exec()
-  .then((doc) => {
-    console.log(doc);
+var rootId = `radmin@919876543210`;
 
-    if (!doc) {
-      bcrypt.hash(process.env.ROOT_ADMIN_PASSWORD, 10, function (err, hash) {
+postgres
+  .query(`select * from admins where email = $1`, ["rootAdmin@rpay.com"])
+  .then((result) => {
+    var rootUser = result.rows;
+    if (rootUser.length == 0) {
+      bcrypt.hash(process.env.ROOT_ADMIN_PASSWORD, 10, async function (
+        err,
+        hash
+      ) {
         if (err) {
           console.log(err);
           return;
         }
-        let adminObject = new Admin({
-          name: "Root",
-          number: "919551574355",
-          email: "rootAdmin@rpay.com",
-          password: hash,
-          imageURL: "12345678",
-          accessTo: ["*"],
-        });
 
-        adminObject
-          .save()
-          .then(() => {
-            console.log("root user created...");
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+        await postgres.query(
+          "insert into admins(id,name,number,email,password,permissions) values($1,$2,$3,$4,$5,$6)",
+          [
+            rootId,
+            "root",
+            "919876543210",
+            "rootAdmin@rpay.com",
+            hash,
+            [{ all: true }],
+          ]
+        );
+        console.log("root user created....");
       });
     } else {
-      console.log("root user exist...");
+      console.log("root user exist....");
     }
   });
 
 app.use(cors(corsOptions));
-
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
-app.get("/", (req, res) => {
-  res.send({ message: "Wellcome to rpay admin" });
-});
-
 app.use(adminRoute);
 app.use(transactions);
 app.use(Merchants);
