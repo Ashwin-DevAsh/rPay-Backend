@@ -22,6 +22,7 @@ app.post("/login", async (req, res) => {
     var number = admin.number;
     var permissions = admin.permissions;
 
+    console.log(password, admin.password);
     bcrypt.compare(password, admin.password, async (err, isMatch) => {
       if (err) {
         console.log(err);
