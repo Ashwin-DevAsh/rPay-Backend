@@ -37,7 +37,10 @@ app.post("/addMerchant", async (req, res) => {
     }
 
     var testUser = (
-      await postgres.query("select * from merchants where id = $1 ", [userID])
+      await postgres.query(
+        "select * from merchants where id = $1  or number = $2 or email = $3 ",
+        [userID, user.number, user.email]
+      )
     ).rows;
 
     if (testUser.length != 0) {

@@ -2,6 +2,7 @@ const app = require("express").Router();
 const jwt = require("jsonwebtoken");
 var api = require("../node_modules/clicksend/api.js");
 const postgres = require("../Database/postgresql");
+const { use } = require("./User.js");
 var smsMessage = new api.SmsMessage();
 
 app.get("/getOtp", (req, res) => sendOtp(req, res, "Otp", "uPxbwGuwMaB"));
@@ -46,10 +47,12 @@ var setOtp = async (req, res, otpTable, userTable, id = "rpay@") => {
     );
 
     var user = (
-      await postgres.query(`select * from ${userTable} where id = $1 `, [
+      await postgres.query(`select * from ${userTable} where id = $1`, [
         id + number,
       ])
     ).rows;
+
+    console.log(user);
 
     if (user.length == 0) {
       res.json([{ message: "verified", user: null }]);
