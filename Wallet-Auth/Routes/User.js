@@ -3,6 +3,7 @@ const Users = require("../Schemas/users");
 const jwt = require("jsonwebtoken");
 const postgres = require("../Database/postgresql");
 const axios = require("axios");
+const { post, use } = require("./Merchants");
 
 app.post("/addUser", async (req, res) => {
   var user = req.body;
@@ -98,7 +99,7 @@ app.get("/getUsers", async (req, res) => {
 
 app.post("/changePassword", (req, res) => {
   console.log(req.get("token"));
-  jwt.verify(req.get("token"), process.env.PRIVATE_KEY, function (
+  jwt.verify(req.get("token"), process.env.PRIVATE_KEY, async function (
     err,
     decoded
   ) {
@@ -106,47 +107,71 @@ app.post("/changePassword", (req, res) => {
       console.log(err);
       res.status(200).send({ message: "error" });
       return;
-    } else {
-      console.log("Changing password...");
-      var data = req.body;
-      console.log(data);
-      if (!data.id || !data.oldPassword || !data.newPassword) {
+    }
+
+    console.log("Changing password...");
+    var data = req.body;
+    console.log(data);
+    if (!data.id || !data.oldPassword || !data.newPassword) {
+      res.status(200).send({ message: "error" });
+      return;
+    }
+
+    try {
+      var user = (
+        await postgres.query(
+          "select * from users where id = $1 and password=$2",
+          [data.id, data.password]
+        )
+      ).rows;
+
+      if (user.length == 0) {
         res.status(200).send({ message: "error" });
         return;
       }
 
-      Users.findOne({ id: data.id })
-        .exec()
-        .then((docs) => {
-          console.log("data = ", docs);
-          if (docs == null) {
-            res.status(200).send({ message: "error" });
-            return;
-          }
+      await postgres.query("update users set password = $2 where id = $1", [
+        data.id,
+        data.newPassword,
+      ]);
 
-          if (docs.password == data.oldPassword) {
-            Users.findOneAndUpdate(
-              { id: data.id },
-              { password: data.newPassword },
-              (err, doc) => {
-                if (err) {
-                  console.log(err);
-                  res.status(200).send({ message: "error" });
-                  return;
-                } else {
-                  res.status(200).send({ message: "done" });
-                  return;
-                }
-              }
-            );
-          } else {
-            console.log("data = ", null);
-
-            res.status(200).send({ message: "error" });
-            return;
-          }
-        });
+      res.status(200).send({ message: "done" });
+    } catch (err) {
+      console.log(err);
+      res.status(200).send({ message: "error" });
     }
+
+    // Users.findOne({ id: data.id })
+    //   .exec()
+    //   .then((docs) => {
+    //     console.log("data = ", docs);
+    //     if (docs == null) {
+    //       res.status(200).send({ message: "error" });
+    //       return;
+    //     }
+
+    //     if (docs.password == data.oldPassword) {
+    //       Users.findOneAndUpdate(
+    //         { id: data.id },
+    //         { password: data.newPassword },
+    //         (err, doc) => {
+    //           if (err) {
+    //             console.log(err);
+    //             res.status(200).send({ message: "error" });
+    //             return;
+    //           } else {
+    //             res.status(200).send({ message: "done" });
+    //             return;
+    //           }
+    //         }
+    //       );
+    //     } else {
+    //       console.log("data = ", null);
+
+    //       res.status(200).send({ message: "error" });
+    //       return;
+    //     }
+    //   });
   });
 });
 
