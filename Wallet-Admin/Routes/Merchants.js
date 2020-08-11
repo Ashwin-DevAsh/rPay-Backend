@@ -5,45 +5,40 @@ const { update } = require("../Database/Schema/Merchant");
 
 app.get("/getMerchants", (req, res) => {
   console.log("getting merchants");
-  Users.find({}, [
-    "name",
-    "number",
-    "email",
-    "id",
-    "qrCode",
-    "imageURL",
-    "accountInfo",
-    "storeName",
-    "status",
-  ])
-    .exec()
-    .then((doc) => {
-      console.log(doc);
-      res.status(200).send(doc);
-    })
-    .catch((e) => {
-      console.log(e);
-      res.send(e);
-    });
+  var token = req.get("token");
+  console.log("Getting Users");
+
+  jwt.verify(token, process.env.PRIVATE_KEY, async function (err, decoded) {
+    if (err) {
+      res.send({ message: "error", err });
+    } else {
+      try {
+        var users = (await postgres.query("select * from merchants")).rows;
+        res.send(users);
+      } catch (err) {
+        res.send({ err });
+      }
+    }
+  });
 });
 
 app.post("/updateMerchantStatus", (req, res) => {
-  var id = req.body.id;
-  var status = req.body.status;
-  console.log(id, status);
-  if (!id || !status) {
-    res.send({ message: "error" });
-    return;
-  }
-  Users.findOneAndUpdate({ id }, { status })
-    .exec()
-    .then((doc) => {
-      sendNotificationToAll(id, status);
-      res.send({ message: "done" });
-    })
-    .catch((e) => {
-      res.send({ message: "error", e });
-    });
+  // var id = req.body.id;
+  // var status = req.body.status;
+  // console.log(id, status);
+  // if (!id || !status) {
+  //   res.send({ message: "error" });
+  //   return;
+  // }
+  // Users.findOneAndUpdate({ id }, { status })
+  //   .exec()
+  //   .then((doc) => {
+  //     sendNotificationToAll(id, status);
+  //     res.send({ message: "done" });
+  //   })
+  //   .catch((e) => {
+  //     res.send({ message: "error", e });
+  //   });
 });
 
 function sendNotificationToAll(id, isActive) {
