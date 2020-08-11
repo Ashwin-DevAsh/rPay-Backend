@@ -112,6 +112,10 @@ var newPassword = (req, res, otpTable, userTable) => {
           [data.id, data.newPassword]
         );
 
+        await postgres.query(`delete from ${otpTable} where email = $1`, [
+          data.email,
+        ]);
+
         res.status(200).send({ message: "done" });
       } catch (err) {
         console.log(err);
