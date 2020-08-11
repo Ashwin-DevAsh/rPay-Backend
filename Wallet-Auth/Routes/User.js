@@ -22,64 +22,127 @@ app.post("/addUser", async (req, res) => {
   var userID = `rpay@${user.number}`;
 
   try {
-    var otp = await Otp.findOne({ number: user.number }).exec();
-    if (otp && otp.verified) {
-      var userDoc = await Users.findOne({
-        $or: [{ number: user.number }, { email: user.email }],
-      }).exec();
+    var otp = (
+      await postgres.query(
+        "select * from otp where number = $1 and verified=true",
+        [user.number]
+      )
+    ).rows;
 
-      if (userDoc) {
-        res.json([{ message: "User already exist" }]);
-        return;
-      }
+    if (otp.length == 0) {
+      res.json([{ message: "failed" }]);
+      return;
+    }
 
-      await postgres.query("delete from info where id=$1;", [userID]);
-      await postgres.query("delete from amount where id=$1;", [userID]);
-      await postgres.query("insert into info values($1,$2,null,null)", [
-        userID,
-        user.fcmToken,
-      ]);
-      await postgres.query("insert into amount(id,balance) values($1,0)", [
-        userID,
-      ]);
+    var testUser = (
+      await postgres.query("select * from users where id = $1 ", [userID])
+    ).rows;
 
-      let userObject = new Users({
+    if (testUser.length != 0) {
+      res.json([{ message: "User already exist" }]);
+      return;
+    }
+    await postgres.query("delete from info where id=$1;", [userID]);
+    await postgres.query("delete from amount where id=$1;", [userID]);
+    await postgres.query("insert into info values($1,$2,null,null)", [
+      userID,
+      user.fcmToken,
+    ]);
+    await postgres.query("insert into amount(id,balance) values($1,0)", [
+      userID,
+    ]);
+
+    var token = jwt.sign(
+      {
         name: user.name,
+        id: userID,
         number: user.number,
         email: user.email,
-        password: user.password,
-        qrCode: user.qrCode,
+      },
+      process.env.PRIVATE_KEY
+    );
+
+    var blockResult = await axios.post(
+      "http://wallet-block:9000/addUserBlock",
+      {
         id: userID,
-      });
-
-      var token = jwt.sign(
-        {
-          name: user.name,
-          id: userID,
-          number: user.number,
-          email: user.email,
-        },
-        process.env.PRIVATE_KEY
-      );
-
-      var blockResult = await axios.post(
-        "http://wallet-block:9000/addUserBlock",
-        {
-          id: userID,
-          initialAmount: 0,
-        }
-      );
-
-      if ((blockResult.data["message"] = "done")) {
-        await userObject.save();
-        res.json([{ message: "done", token }]);
-      } else {
-        res.json([{ message: "failed" }]);
+        initialAmount: 0,
       }
+    );
+
+    if ((blockResult.data["message"] = "done")) {
+      await postgres.query(
+        `insert into users(name,number,email,password,id,qrCode) values($1,$2,$3,$4,$5,$6)`,
+        [user.name, user.number, user.email, user.password, userID, user.qrCode]
+      );
+      res.json([{ message: "done", token }]);
+    } else {
+      res.json([{ message: "failed" }]);
     }
-  } catch {
+  } catch (err) {
+    console.log(err);
     res.json([{ message: "failed" }]);
   }
+
+  // try {
+  //   var otp = await Otp.findOne({ number: user.number }).exec();
+  //   if (otp && otp.verified) {
+  //     var userDoc = await Users.findOne({
+  //       $or: [{ number: user.number }, { email: user.email }],
+  //     }).exec();
+
+  //     if (userDoc) {
+  //       res.json([{ message: "User already exist" }]);
+  //       return;
+  //     }
+
+  //     await postgres.query("delete from info where id=$1;", [userID]);
+  //     await postgres.query("delete from amount where id=$1;", [userID]);
+  //     await postgres.query("insert into info values($1,$2,null,null)", [
+  //       userID,
+  //       user.fcmToken,
+  //     ]);
+  //     await postgres.query("insert into amount(id,balance) values($1,0)", [
+  //       userID,
+  //     ]);
+
+  //     let userObject = new Users({
+  //       name: user.name,
+  //       number: user.number,
+  //       email: user.email,
+  //       password: user.password,
+  //       qrCode: user.qrCode,
+  //       id: userID,
+  //     });
+
+  //     var token = jwt.sign(
+  //       {
+  //         name: user.name,
+  //         id: userID,
+  //         number: user.number,
+  //         email: user.email,
+  //       },
+  //       process.env.PRIVATE_KEY
+  //     );
+
+  //     var blockResult = await axios.post(
+  //       "http://wallet-block:9000/addUserBlock",
+  //       {
+  //         id: userID,
+  //         initialAmount: 0,
+  //       }
+  //     );
+
+  //     if ((blockResult.data["message"] = "done")) {
+  //       await userObject.save();
+  //       res.json([{ message: "done", token }]);
+  //     } else {
+  //       res.json([{ message: "failed" }]);
+  //     }
+  //   }
+  // } catch {
+  //   res.json([{ message: "failed" }]);
+  // }
 });
 
 app.post("/updateFcmToken", (req, res) => {

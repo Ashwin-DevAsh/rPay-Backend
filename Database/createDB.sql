@@ -6,7 +6,6 @@ create table users
   number varchar,
   email varchar,
   password varchar,
-  imageURL varchar,
   id varchar primary key,
   AccountInfo json[],
   qrCode varchar
@@ -25,7 +24,6 @@ create table merchants(
   number varchar,
   email varchar,
   password varchar,
-  imageURL varchar,
   id varchar primary key,
   qrCode varchar,
   accountInfo json[],

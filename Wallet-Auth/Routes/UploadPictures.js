@@ -3,8 +3,6 @@ const multerS3 = require("multer-s3");
 const multer = require("multer");
 const jwt = require("jsonwebtoken");
 const app = require("express").Router();
-const merchant = require("../Schemas/Merchants");
-const users = require("../Schemas/users");
 
 aws.config.update({
   secretAccessKey: process.env.AWS_SEC_KEY,
@@ -23,7 +21,6 @@ var upload = multer({
       ];
       var id = req.params.id;
       var imageName = id + "." + extension;
-      updateDatabase(id, imageName);
       cb(null, imageName);
     },
   }),
@@ -56,28 +53,5 @@ app.post("/addProfilePicture/:id", (req, res) => {
     }
   });
 });
-
-function updateDatabase(id, imageName) {
-  imageURL =
-    "https://rec-wallet-profile-pictures.s3.us-east-2.amazonaws.com/" +
-    imageName;
-  if (id.includes("rpay")) {
-    users.findOneAndUpdate({ id }, { imageURL }, (err, doc) => {
-      if (err) {
-        console.log("failed");
-      } else {
-        console.log(doc);
-      }
-    });
-  } else {
-    merchant.findOneAndUpdate({ id }, { imageURL }, (err, doc) => {
-      if (err) {
-        console.log("failed");
-      } else {
-        console.log(doc);
-      }
-    });
-  }
-}
 
 module.exports = app;
