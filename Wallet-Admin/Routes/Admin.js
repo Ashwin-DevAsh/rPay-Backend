@@ -11,6 +11,8 @@ app.post("/login", async (req, res) => {
       await postgres.query("select * from admins where email = $1", [email])
     ).rows;
 
+    console.log(admin);
+
     if (admin.length == 0) {
       res.send({ message: "invalid admin" });
       return;
