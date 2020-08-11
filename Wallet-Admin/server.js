@@ -1,13 +1,13 @@
 require("dotenv").config(".env");
 const express = require("express");
-const Users = require("./Routes/Users");
+// const Users = require("./Routes/Users");
 const Stats = require("./Routes/Stats");
-const Merchants = require("./Routes/Merchants");
+// const Merchants = require("./Routes/Merchants");
 const bcrypt = require("bcrypt");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const transactions = require("./Routes/Transactions");
-const nodesAndBlocks = require("./Routes/nodesAndBlocks");
+// const nodesAndBlocks = require("./Routes/nodesAndBlocks");
 const postgres = require("./Database/Connections/pgConnections");
 
 var corsOptions = {
@@ -60,10 +60,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(adminRoute);
 app.use(transactions);
-app.use(Merchants);
-app.use(Users);
+// app.use(Merchants);
+// app.use(Users);
 app.use(Stats);
-app.use(nodesAndBlocks);
+// app.use(nodesAndBlocks);
 
 app.listen(PORT, () => {
   console.log("Listining on ", PORT);
