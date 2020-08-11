@@ -24,6 +24,7 @@ app.post("/login", async (req, res) => {
 
     bcrypt.compare(password, admin.password, async (err, isMatch) => {
       if (err) {
+        console.log(err);
         res.send({ message: "error", err });
         return;
       }
