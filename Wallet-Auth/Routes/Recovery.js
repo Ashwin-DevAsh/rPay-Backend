@@ -18,9 +18,11 @@ app.post("/setRecoveryOtpMerchant", (req, res) =>
   setOtp(req, res, "recoveryMerchantsOtp")
 );
 
-app.post("/newPassword", (req, res) => newPassword(req, res, "recoveryOtp", "Users"));
+app.post("/newPassword", (req, res) =>
+  newPassword(req, res, "recoveryOtp", "Users")
+);
 app.post("/newPasswordMerchant", (req, res) =>
-  newPassword(req, res, 'recoveryMerchantsOtp', 'Merchants')
+  newPassword(req, res, "recoveryMerchantsOtp", "Merchants")
 );
 
 app.post("/changePassword", (req, res) => changePassword(req, res, "users"));
@@ -75,7 +77,7 @@ var changePassword = (req, res, tableName) => {
 };
 
 var newPassword = (req, res, otpTable, userTable) => {
-  jwt.verify(req.get("token"), process.env.PRIVATE_KEY, function (
+  jwt.verify(req.get("token"), process.env.PRIVATE_KEY, async function (
     err,
     decoded
   ) {
@@ -111,13 +113,10 @@ var newPassword = (req, res, otpTable, userTable) => {
         );
 
         res.status(200).send({ message: "done" });
-
-
       } catch (err) {
         console.log(err);
         res.status(200).send({ message: "error" });
       }
-
     }
   });
 };
@@ -227,36 +226,33 @@ var setOtp = (req, res, otpTable) => {
 
 module.exports = app;
 
-
-
-
-      // Otp.findOne({ emailID: data.emailID })
-      //   .exec()
-      //   .then((otpDoc) => {
-      //     console.log(otpDoc);
-      //     if (otpDoc && otpDoc.verified) {
-      //       Otp.deleteMany({
-      //         emaiID: data.emaiID,
-      //       }).exec();
-      //       Users.findOneAndUpdate(
-      //         { id: data.id },
-      //         { password: data.newPassword },
-      //         (err, doc) => {
-      //           console.log(doc);
-      //           if (err) {
-      //             console.log(err);
-      //             res.status(200).send({ message: "error" });
-      //             return;
-      //           } else {
-      //             res.status(200).send({ message: "done" });
-      //             return;
-      //           }
-      //         }
-      //       );
-      //     } else {
-      //       res.status(200).send({ message: "otp not verified" });
-      //     }
-      //   });
+// Otp.findOne({ emailID: data.emailID })
+//   .exec()
+//   .then((otpDoc) => {
+//     console.log(otpDoc);
+//     if (otpDoc && otpDoc.verified) {
+//       Otp.deleteMany({
+//         emaiID: data.emaiID,
+//       }).exec();
+//       Users.findOneAndUpdate(
+//         { id: data.id },
+//         { password: data.newPassword },
+//         (err, doc) => {
+//           console.log(doc);
+//           if (err) {
+//             console.log(err);
+//             res.status(200).send({ message: "error" });
+//             return;
+//           } else {
+//             res.status(200).send({ message: "done" });
+//             return;
+//           }
+//         }
+//       );
+//     } else {
+//       res.status(200).send({ message: "otp not verified" });
+//     }
+//   });
 
 // if (otpNumber && emailID) {
 //   OtpObject.findOne({ emailID })
