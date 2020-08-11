@@ -100,35 +100,3 @@ app.get("/getUsers", async (req, res) => {
 });
 
 module.exports = app;
-
-// app.get("/getUser", (req, res) => {
-//   if (!req.query.number) {
-//     res.json([{ message: "failed" }]);
-//     return;
-//   }
-
-//   if (req.query.number) {
-//     Users.find({ number: req.query.number }).then((doc) => {
-//       console.log(doc);
-//       res.status(200).send(doc);
-//     });
-//   } else {
-//     console.log(err);
-//     res.json([{ message: "failed" }]);
-//   }
-// });
-
-// app.post("/getUsersWithContacts", (req, res) => {
-//   var contacts = req.body["myContacts"];
-
-//   Users.find({}, ["name", "number", "email", "imageURL"])
-//     .where("number")
-//     .in(contacts)
-//     .exec()
-//     .then((doc) => {
-//       res.json(doc);
-//     })
-//     .catch((err) => {
-//       res.send(err);
-//     });
-// });

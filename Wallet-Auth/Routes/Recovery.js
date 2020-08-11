@@ -182,11 +182,11 @@ var sendOtp = (req, res, otpTable) => {
   });
 };
 
-var setOtp = (req, res, OtpObject) => {
+var setOtp = (req, res, otpTable) => {
   var otpNumber = req.body["otpNumber"];
   var emailID = req.body["emailID"];
   console.log(emailID);
-  jwt.verify(req.get("token"), process.env.PRIVATE_KEY, function (
+  jwt.verify(req.get("token"), process.env.PRIVATE_KEY, async function (
     err,
     decoded
   ) {
@@ -195,35 +195,32 @@ var setOtp = (req, res, OtpObject) => {
       res.status(200).send({ message: "error" });
       return;
     } else {
-      if (otpNumber && emailID) {
-        OtpObject.findOne({ emailID })
-          .exec()
-          .then((result) => {
-            console.log(result);
-            if (result.otp == otpNumber) {
-              OtpObject.findOneAndUpdate(
-                { emailID: emailID },
-                { verified: true },
-                (err, doc) => {
-                  console.log(doc, err);
-                  if (err) {
-                    res.json([{ message: "error" }]);
-                  } else {
-                    console.log("Verified....");
-                    res.json([{ message: "done" }]);
-                  }
-                }
-              );
-            } else {
-              console.log("Not matching....");
-              res.json([{ message: "not matching" }]);
-            }
-          })
-          .catch((err) => {
-            res.json([{ message: "error" }]);
-          });
-      } else {
+      if (!otpNumber || !emailID) {
         res.json([{ message: "elements not found" }]);
+        return;
+      }
+
+      try {
+        var result = (
+          await postgres.query(
+            `select * from ${otpTable} where otp = $1 and email = $2`,
+            [otpNumber, emailID]
+          )
+        ).rows;
+
+        if (result.length == 0) {
+          res.json([{ message: "not matching" }]);
+          return;
+        }
+
+        await postgres.query(
+          `update ${otpTable} set verified = true where email = $1`,
+          [emailID]
+        );
+        res.json([{ message: "done" }]);
+      } catch (err) {
+        console.log(err);
+        res.json([{ message: "error" }]);
       }
     }
   });
@@ -231,50 +228,33 @@ var setOtp = (req, res, OtpObject) => {
 
 module.exports = app;
 
-// OtpObject.deleteMany({ emailID: emailID })
-//   .exec()
-//   .then(() => {
-//     var emailTransactionalApi = new api.TransactionalEmailApi(
-//       // process.env.OTP_USERNAME,
-//       // process.env.OTP_API_KEY
-//       "ajaykrishnan.s.2018.cse@rajalakshmi.edu.in",
-//       "2617172A-B44A-4C96-7BA9-D9746E9D3230"
-//     );
-
-//     var emailRecipient = new api.EmailRecipient();
-//     emailRecipient.email = emailID;
-//     emailRecipient.name = "r pay";
-
-//     var emailFrom = new api.EmailFrom();
-//     emailFrom.emailAddressId = 11466;
-//     emailFrom.name = "r pay";
-
-//     var email = new api.Email();
-
-//     email.to = [emailRecipient];
-//     email.from = emailFrom;
-//     email.subject = `Password Recovery`;
-//     email.body = `Rpay never calls you asking for otp. Sharing it with anyone gives them full access to your Rpay wallet. Your Recovery OTP is ${otpNumber}`;
-
-//     emailTransactionalApi
-//       .emailSendPost(email)
-//       .then(function (response) {
-//         console.log(response.body);
-//         const otpObject = new OtpObject({
-//           emailID,
-//           otp: otpNumber,
-//           verified: false,
-//         });
-//         otpObject.save();
-//         res.json([{ message: "done" }]);
-//       })
-//       .catch(function (err) {
-//         console.log("sms error = ", err);
-//         res.json([
-//           { message: "failed", err, text: "Unable to send sms" },
-//         ]);
-//       });
-//   })
-//   .catch((e) => {
-//     res.json([{ message: "failed", err: e, text: "delete otp err" }]);
-//   });
+// if (otpNumber && emailID) {
+//   OtpObject.findOne({ emailID })
+//     .exec()
+//     .then((result) => {
+//       console.log(result);
+//       if (result.otp == otpNumber) {
+//         OtpObject.findOneAndUpdate(
+//           { emailID: emailID },
+//           { verified: true },
+//           (err, doc) => {
+//             console.log(doc, err);
+//             if (err) {
+//               res.json([{ message: "error" }]);
+//             } else {
+//               console.log("Verified....");
+//               res.json([{ message: "done" }]);
+//             }
+//           }
+//         );
+//       } else {
+//         console.log("Not matching....");
+//         res.json([{ message: "not matching" }]);
+//       }
+//     })
+//     .catch((err) => {
+//       res.json([{ message: "error" }]);
+//     });
+// } else {
+//   res.json([{ message: "elements not found" }]);
+// }
