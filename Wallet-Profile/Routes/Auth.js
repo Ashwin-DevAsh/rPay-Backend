@@ -1,6 +1,6 @@
 const app = require("express").Router();
 const jwt = require("jsonwebtoken");
-var api = require("../node_modules/clicksend/api.js");
+var api = require("clicksend");
 const postgres = require("../Database/postgresql");
 var smsMessage = new api.SmsMessage();
 
@@ -104,12 +104,13 @@ var sendOtp = async (req, res, otpTable, appId) => {
   smsCollection.messages = [smsMessage];
 
   try {
-    await postgres.query(`delete from ${otpTable} where number = $1`, [number]);
-    await smsApi.smsSendPost(smsCollection);
     await postgres.query(`insert into ${otpTable} values($1,$2,false)`, [
       number,
       otpNumber,
     ]);
+    await postgres.query(`delete from ${otpTable} where number = $1`, [number]);
+    await smsApi.smsSendPost(smsCollection);
+
     res.json([{ message: "done" }]);
   } catch (err) {
     console.log(err);
