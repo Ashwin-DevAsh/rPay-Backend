@@ -45,7 +45,6 @@ create table recoveryOtp(
     verified Boolean
 );
 
-
 create table recoveryMerchantsOtp(
     email varchar  primary key,
     otp varchar,

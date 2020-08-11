@@ -7,10 +7,10 @@ const Users = require("../Schemas/users");
 const Merchants = require("../Schemas/Merchants");
 const postgres = require("../Database/postgresql");
 
-app.get("/getRecoveryOtp", (req, res) => sendOtp(req, res, Otp));
+app.get("/getRecoveryOtp", (req, res) => sendOtp(req, res, "recoveryOtp"));
 
 app.get("/getRecoveryOtpMerchant", (req, res) =>
-  sendOtp(req, res, OtpMerchant)
+  sendOtp(req, res, "recoveryMerchantsOtp")
 );
 
 app.post("/setRecoveryOtp", (req, res) => setOtp(req, res, Otp));
@@ -123,12 +123,12 @@ var newPassword = (req, res, Otp, Users) => {
   });
 };
 
-var sendOtp = (req, res, OtpObject) => {
+var sendOtp = (req, res, otpTable) => {
   console.log("getting recovery otp");
   var emailID = req.query["emailID"];
   var otpNumber = Math.floor(1000 + Math.random() * 9000);
 
-  jwt.verify(req.get("token"), process.env.PRIVATE_KEY, function (
+  jwt.verify(req.get("token"), process.env.PRIVATE_KEY, async function (
     err,
     decoded
   ) {
@@ -139,53 +139,42 @@ var sendOtp = (req, res, OtpObject) => {
     } else {
       console.log("Recovery password...");
       if (emailID) {
-        OtpObject.deleteMany({ emailID: emailID })
-          .exec()
-          .then(() => {
-            var emailTransactionalApi = new api.TransactionalEmailApi(
-              // process.env.OTP_USERNAME,
-              // process.env.OTP_API_KEY
-              "ajaykrishnan.s.2018.cse@rajalakshmi.edu.in",
-              "2617172A-B44A-4C96-7BA9-D9746E9D3230"
-            );
+        var emailTransactionalApi = new api.TransactionalEmailApi(
+          // process.env.OTP_USERNAME,
+          // process.env.OTP_API_KEY
+          "ajaykrishnan.s.2018.cse@rajalakshmi.edu.in",
+          "2617172A-B44A-4C96-7BA9-D9746E9D3230"
+        );
 
-            var emailRecipient = new api.EmailRecipient();
-            emailRecipient.email = emailID;
-            emailRecipient.name = "r pay";
+        var emailRecipient = new api.EmailRecipient();
+        emailRecipient.email = emailID;
+        emailRecipient.name = "r pay";
 
-            var emailFrom = new api.EmailFrom();
-            emailFrom.emailAddressId = 11466;
-            emailFrom.name = "r pay";
+        var emailFrom = new api.EmailFrom();
+        emailFrom.emailAddressId = 11466;
+        emailFrom.name = "r pay";
 
-            var email = new api.Email();
+        var email = new api.Email();
 
-            email.to = [emailRecipient];
-            email.from = emailFrom;
-            email.subject = `Password Recovery`;
-            email.body = `Rpay never calls you asking for otp. Sharing it with anyone gives them full access to your Rpay wallet. Your Recovery OTP is ${otpNumber}`;
-
-            emailTransactionalApi
-              .emailSendPost(email)
-              .then(function (response) {
-                console.log(response.body);
-                const otpObject = new OtpObject({
-                  emailID,
-                  otp: otpNumber,
-                  verified: false,
-                });
-                otpObject.save();
-                res.json([{ message: "done" }]);
-              })
-              .catch(function (err) {
-                console.log("sms error = ", err);
-                res.json([
-                  { message: "failed", err, text: "Unable to send sms" },
-                ]);
-              });
-          })
-          .catch((e) => {
-            res.json([{ message: "failed", err: e, text: "delete otp err" }]);
-          });
+        email.to = [emailRecipient];
+        email.from = emailFrom;
+        email.subject = `Password Recovery`;
+        email.body = `Rpay never calls you asking for otp. Sharing it with anyone gives them full access to your Rpay wallet. Your Recovery OTP is ${otpNumber}`;
+        try {
+          await postgres.query(`delete from ${otpTable} where email=$1`, [
+            emaiID,
+          ]);
+          await emailTransactionalApi.emailSendPost(email);
+          await postgres.query(`insert into ${otpTable} values($1,$2,$3)`, [
+            emaiID,
+            otpNumber,
+            false,
+          ]);
+          res.json([{ message: "done" }]);
+        } catch (err) {
+          res.json([{ message: "failed", err }]);
+          console.log(err);
+        }
       } else {
         res.json([{ message: "failed" }]);
       }
@@ -241,3 +230,51 @@ var setOtp = (req, res, OtpObject) => {
 };
 
 module.exports = app;
+
+// OtpObject.deleteMany({ emailID: emailID })
+//   .exec()
+//   .then(() => {
+//     var emailTransactionalApi = new api.TransactionalEmailApi(
+//       // process.env.OTP_USERNAME,
+//       // process.env.OTP_API_KEY
+//       "ajaykrishnan.s.2018.cse@rajalakshmi.edu.in",
+//       "2617172A-B44A-4C96-7BA9-D9746E9D3230"
+//     );
+
+//     var emailRecipient = new api.EmailRecipient();
+//     emailRecipient.email = emailID;
+//     emailRecipient.name = "r pay";
+
+//     var emailFrom = new api.EmailFrom();
+//     emailFrom.emailAddressId = 11466;
+//     emailFrom.name = "r pay";
+
+//     var email = new api.Email();
+
+//     email.to = [emailRecipient];
+//     email.from = emailFrom;
+//     email.subject = `Password Recovery`;
+//     email.body = `Rpay never calls you asking for otp. Sharing it with anyone gives them full access to your Rpay wallet. Your Recovery OTP is ${otpNumber}`;
+
+//     emailTransactionalApi
+//       .emailSendPost(email)
+//       .then(function (response) {
+//         console.log(response.body);
+//         const otpObject = new OtpObject({
+//           emailID,
+//           otp: otpNumber,
+//           verified: false,
+//         });
+//         otpObject.save();
+//         res.json([{ message: "done" }]);
+//       })
+//       .catch(function (err) {
+//         console.log("sms error = ", err);
+//         res.json([
+//           { message: "failed", err, text: "Unable to send sms" },
+//         ]);
+//       });
+//   })
+//   .catch((e) => {
+//     res.json([{ message: "failed", err: e, text: "delete otp err" }]);
+//   });

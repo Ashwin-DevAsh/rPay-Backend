@@ -2,7 +2,6 @@ const app = require("express").Router();
 const jwt = require("jsonwebtoken");
 var api = require("../node_modules/clicksend/api.js");
 const postgres = require("../Database/postgresql");
-const { use } = require("./User.js");
 var smsMessage = new api.SmsMessage();
 
 app.get("/getOtp", (req, res) => sendOtp(req, res, "Otp", "uPxbwGuwMaB"));
