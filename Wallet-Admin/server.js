@@ -61,8 +61,8 @@ app.use(adminRoute);
 app.use(transactions);
 app.use(Merchants);
 app.use(Users);
-app.use(Stats);
 app.use(nodesAndBlocks);
+app.use(Stats);
 
 app.listen(PORT, () => {
   console.log("Listining on ", PORT);

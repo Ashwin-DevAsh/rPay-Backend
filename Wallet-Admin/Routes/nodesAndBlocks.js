@@ -3,10 +3,7 @@ const jwt = require("jsonwebtoken");
 const postgres = require("../Database/Connections/pgConnections");
 
 app.get("/getNodes", (req, res) => {
-  //   var count = req.params.count;
-  //   console.log(count);
   console.log("getting Nodes");
-
   var token = req.get("token");
 
   jwt.verify(token, process.env.PRIVATE_KEY, function (err, decoded) {
