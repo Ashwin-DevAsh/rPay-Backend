@@ -18,9 +18,9 @@ app.post("/setRecoveryOtpMerchant", (req, res) =>
   setOtp(req, res, "recoveryMerchantsOtp")
 );
 
-app.post("/newPassword", (req, res) => newPassword(req, res, Otp, Users));
+app.post("/newPassword", (req, res) => newPassword(req, res, "recoveryOtp", "Users"));
 app.post("/newPasswordMerchant", (req, res) =>
-  newPassword(req, res, OtpMerchant, Merchants)
+  newPassword(req, res, 'recoveryMerchantsOtp', 'Merchants')
 );
 
 app.post("/changePassword", (req, res) => changePassword(req, res, "users"));
@@ -74,7 +74,7 @@ var changePassword = (req, res, tableName) => {
   });
 };
 
-var newPassword = (req, res, Otp, Users) => {
+var newPassword = (req, res, otpTable, userTable) => {
   jwt.verify(req.get("token"), process.env.PRIVATE_KEY, function (
     err,
     decoded
@@ -92,33 +92,32 @@ var newPassword = (req, res, Otp, Users) => {
         return;
       }
 
-      Otp.findOne({ emailID: data.emailID })
-        .exec()
-        .then((otpDoc) => {
-          console.log(otpDoc);
-          if (otpDoc && otpDoc.verified) {
-            Otp.deleteMany({
-              emaiID: data.emaiID,
-            }).exec();
-            Users.findOneAndUpdate(
-              { id: data.id },
-              { password: data.newPassword },
-              (err, doc) => {
-                console.log(doc);
-                if (err) {
-                  console.log(err);
-                  res.status(200).send({ message: "error" });
-                  return;
-                } else {
-                  res.status(200).send({ message: "done" });
-                  return;
-                }
-              }
-            );
-          } else {
-            res.status(200).send({ message: "otp not verified" });
-          }
-        });
+      try {
+        var otp = (
+          await postgres.query(
+            `select * from ${otpTable} where email = $1 and verified=true`,
+            [user.emailID]
+          )
+        ).rows;
+
+        if (otp.length == 0) {
+          res.status(200).send({ message: "otp not verified" });
+          return;
+        }
+
+        await postgres.query(
+          `update ${userTable} set password = $2 where id = $1`,
+          [data.id, data.newPassword]
+        );
+
+        res.status(200).send({ message: "done" });
+
+
+      } catch (err) {
+        console.log(err);
+        res.status(200).send({ message: "error" });
+      }
+
     }
   });
 };
@@ -227,6 +226,37 @@ var setOtp = (req, res, otpTable) => {
 };
 
 module.exports = app;
+
+
+
+
+      // Otp.findOne({ emailID: data.emailID })
+      //   .exec()
+      //   .then((otpDoc) => {
+      //     console.log(otpDoc);
+      //     if (otpDoc && otpDoc.verified) {
+      //       Otp.deleteMany({
+      //         emaiID: data.emaiID,
+      //       }).exec();
+      //       Users.findOneAndUpdate(
+      //         { id: data.id },
+      //         { password: data.newPassword },
+      //         (err, doc) => {
+      //           console.log(doc);
+      //           if (err) {
+      //             console.log(err);
+      //             res.status(200).send({ message: "error" });
+      //             return;
+      //           } else {
+      //             res.status(200).send({ message: "done" });
+      //             return;
+      //           }
+      //         }
+      //       );
+      //     } else {
+      //       res.status(200).send({ message: "otp not verified" });
+      //     }
+      //   });
 
 // if (otpNumber && emailID) {
 //   OtpObject.findOne({ emailID })
