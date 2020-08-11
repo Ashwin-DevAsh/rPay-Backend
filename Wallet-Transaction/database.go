@@ -195,7 +195,7 @@ func addMoney(db *sql.DB,transactionData TransactionData) bool {
 	}
 
 	jsonBodyData := map[string]interface{}{
-		"transactionID":transactionID
+		"transactionID":transactionID,
 		"from":transactionData.From,
 		"to":transactionData.To,
 		"isGenerated":true,
