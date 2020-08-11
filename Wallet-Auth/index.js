@@ -6,7 +6,6 @@ const bodyParser = require("body-parser");
 const authEndPoint = require("./Routes/Auth");
 const userEndPoint = require("./Routes/User");
 const merchantEndPoint = require("./Routes/Merchants");
-const mongoose = require("./Database/mongodb");
 const recovery = require("./Routes/Recovery");
 const uploadPictures = require("./Routes/UploadPictures");
 
