@@ -1,4 +1,3 @@
-const { model } = require("../Database/Schema/Block");
 const app = require("express").Router();
 
 app.post("/addTransactionBlock", (req, res) => {

@@ -1,5 +1,4 @@
 const express = require("express");
-const redisClient = require("./Database/Connections/redisConnection");
 const transactionBlocks = require("./Routes/Transactions");
 const bodyParser = require("body-parser");
 const cors = require("cors");
