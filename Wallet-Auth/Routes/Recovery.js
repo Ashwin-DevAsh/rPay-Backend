@@ -5,6 +5,7 @@ var api = require("../node_modules/clicksend/api.js");
 const jwt = require("jsonwebtoken");
 const Users = require("../Schemas/users");
 const Merchants = require("../Schemas/Merchants");
+const postgres = require("../Database/postgresql");
 
 app.get("/getRecoveryOtp", (req, res) => sendOtp(req, res, Otp));
 
