@@ -1,6 +1,5 @@
 const app = require("express").Router();
 const Users = require("../Schemas/users");
-const Otp = require("../Schemas/otp");
 const jwt = require("jsonwebtoken");
 const postgres = require("../Database/postgresql");
 const axios = require("axios");
@@ -86,16 +85,13 @@ app.post("/addUser", async (req, res) => {
 });
 
 app.get("/getUsers", (req, res) => {
-  Users.find({}, ["name", "number", "email", "imageURL", "id"])
-    .exec()
-    .then((doc) => {
-      console.log(doc);
-      res.status(200).send(doc);
-    })
-    .catch((e) => {
-      console.log(e);
-      res.send(e);
-    });
+  try {
+    var result = (await postgres.query("select name,number,email,id from users") ).rows
+    res.send(result)
+  } catch (err) {
+    console.log(err);
+    res.send([{ message: "failed" }]);
+  }
 });
 
 app.post("/changePassword", (req, res) => {
@@ -153,3 +149,35 @@ app.post("/changePassword", (req, res) => {
 });
 
 module.exports = app;
+
+// app.get("/getUser", (req, res) => {
+//   if (!req.query.number) {
+//     res.json([{ message: "failed" }]);
+//     return;
+//   }
+
+//   if (req.query.number) {
+//     Users.find({ number: req.query.number }).then((doc) => {
+//       console.log(doc);
+//       res.status(200).send(doc);
+//     });
+//   } else {
+//     console.log(err);
+//     res.json([{ message: "failed" }]);
+//   }
+// });
+
+// app.post("/getUsersWithContacts", (req, res) => {
+//   var contacts = req.body["myContacts"];
+
+//   Users.find({}, ["name", "number", "email", "imageURL"])
+//     .where("number")
+//     .in(contacts)
+//     .exec()
+//     .then((doc) => {
+//       res.json(doc);
+//     })
+//     .catch((err) => {
+//       res.send(err);
+//     });
+// });
