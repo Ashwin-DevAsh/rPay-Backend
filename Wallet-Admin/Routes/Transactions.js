@@ -15,7 +15,7 @@ app.get("/getTransactions", (req, res) => {
     } else {
       if (decoded.name) {
         postgres
-          .query("select *,row_number() as index from transactions")
+          .query("select *,row_number() over() as index from transactions")
           .then((datas) => {
             console.log(datas.rows[0]);
             res.send(datas);
