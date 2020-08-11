@@ -1,5 +1,5 @@
 const app = require("express").Router();
-var api = require("../node_modules/clicksend/api.js");
+var api = require("clicksend");
 const jwt = require("jsonwebtoken");
 const postgres = require("../Database/postgresql");
 

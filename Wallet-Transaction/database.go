@@ -86,8 +86,9 @@ func doTransaction(db *sql.DB,transactionData TransactionData) bool {
 	loc, _ := time.LoadLocation("Asia/Kolkata")
     dt := time.Now().In(loc)
    
+	transactionID :=0
 
-	_, errTrans :=
+	rows, errTrans :=
 		tx.Exec(`insert
 		           into transactions(
 					   transactionTime,
@@ -96,8 +97,12 @@ func doTransaction(db *sql.DB,transactionData TransactionData) bool {
 					   amount,
 					   isGenerated,
 					   iswithdraw)
-				    values($1,$2,$3,$4,$5,$6)`,
+				    values($1,$2,$3,$4,$5,$6) returning transactionID`,
 			dt.Format("01-02-2006 15:04:05"), fromJson,toJson, Amount,false,false)
+
+	if rows.Next(){
+		rows.Scan(&transactionID)
+	}
 
 	if errTrans != nil {
 		tx.Rollback()
@@ -105,6 +110,7 @@ func doTransaction(db *sql.DB,transactionData TransactionData) bool {
 	}
 
 	jsonBodyData := map[string]interface{}{
+		"transactionID":transactionID,
 		"senderBalance":  balance,
 		"from":transactionData.From,
 		"to":transactionData.To,

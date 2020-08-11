@@ -51,13 +51,10 @@ var setOtp = async (req, res, otpTable, userTable, id = "rpay@") => {
       ])
     ).rows;
 
-    console.log(user);
-
     if (user.length == 0) {
       res.json([{ message: "verified", user: null }]);
       return;
     }
-
     var userToken = jwt.sign(
       {
         name: user[0].name,
@@ -88,7 +85,6 @@ var sendOtp = async (req, res, otpTable, appId) => {
   smsMessage.body = `<#> Rpay never calls you asking for otp. Sharing it with 
                      anyone gives them full access to your Rpay wallet. 
                      Your Login OTP is ${otpNumber} . ID: ${appId}`;
-
   console.log({
     number,
     otpNumber,
@@ -108,7 +104,6 @@ var sendOtp = async (req, res, otpTable, appId) => {
       otpNumber,
     ]);
     await smsApi.smsSendPost(smsCollection);
-
     res.json([{ message: "done" }]);
   } catch (err) {
     // console.log(err);
