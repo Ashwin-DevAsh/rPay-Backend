@@ -18,6 +18,8 @@ app.post("/login", async (req, res) => {
       return;
     }
 
+    admin = admin[0];
+
     var name = admin.name;
     var number = admin.number;
     var permissions = admin.permissions;
