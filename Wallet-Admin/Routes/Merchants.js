@@ -16,6 +16,7 @@ app.get("/getMerchants", (req, res) => {
         var users = (await postgres.query("select * from merchants")).rows;
         res.send(users);
       } catch (err) {
+        console.log(err);
         res.send({ err });
       }
     }
