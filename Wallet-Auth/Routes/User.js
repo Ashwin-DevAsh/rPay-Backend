@@ -84,10 +84,12 @@ app.post("/addUser", async (req, res) => {
   }
 });
 
-app.get("/getUsers", (req, res) => {
+app.get("/getUsers", async (req, res) => {
   try {
-    var result = (await postgres.query("select name,number,email,id from users") ).rows
-    res.send(result)
+    var result = (
+      await postgres.query("select name,number,email,id from users")
+    ).rows;
+    res.send(result);
   } catch (err) {
     console.log(err);
     res.send([{ message: "failed" }]);
