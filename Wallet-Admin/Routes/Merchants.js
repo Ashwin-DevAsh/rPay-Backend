@@ -25,6 +25,32 @@ app.get("/getMerchants", (req, res) => {
 });
 
 app.post("/updateMerchantStatus", (req, res) => {
+  jwt.verify(token, process.env.PRIVATE_KEY, async function (err, decoded) {
+    if (err) {
+      console.log(err);
+      res.send({ message: "error", err });
+    } else {
+      var id = req.body.id;
+      var status = req.body.status;
+      console.log(id, status);
+      if (!id || !status) {
+        res.send({ message: "error" });
+        return;
+      }
+
+      try {
+        await postgres.query("update merchants set status = $2 where id=$1", [
+          id,
+          status,
+        ]);
+        sendNotificationToAll(id, status);
+        res.send({ message: "done" });
+      } catch (e) {
+        res.send({ message: "error", e });
+      }
+    }
+  });
+
   // var id = req.body.id;
   // var status = req.body.status;
   // console.log(id, status);
