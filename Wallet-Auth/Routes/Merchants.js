@@ -1,6 +1,5 @@
 const app = require("express").Router();
 const Users = require("../Schemas/Merchants");
-const Otp = require("../Schemas/MerchantsOtp");
 const jwt = require("jsonwebtoken");
 const postgres = require("../Database/postgresql");
 const axios = require("axios");

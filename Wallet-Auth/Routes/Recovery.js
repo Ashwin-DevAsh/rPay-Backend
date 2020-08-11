@@ -1,10 +1,6 @@
 const app = require("express").Router();
-const Otp = require("../Schemas/RecoveryOtp");
-const OtpMerchant = require("../Schemas/RecoveryOtpMerchant");
 var api = require("../node_modules/clicksend/api.js");
 const jwt = require("jsonwebtoken");
-const Users = require("../Schemas/users");
-const Merchants = require("../Schemas/Merchants");
 const postgres = require("../Database/postgresql");
 
 app.get("/getRecoveryOtp", (req, res) => sendOtp(req, res, "recoveryOtp"));

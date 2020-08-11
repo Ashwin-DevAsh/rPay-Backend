@@ -18,13 +18,13 @@ services:
 
   wallet-block:
     build: Wallet-Block
-    depends_on: [cache, auth-database, database]
+    depends_on: [cache, database]
     ports:
       - 9000:9000
 
   wallet-auth:
     build: Wallet-Auth
-    depends_on: [auth-database, database, wallet-block]
+    depends_on: [database, wallet-block]
     ports:
       - 8000:8000
 
