@@ -162,11 +162,11 @@ var sendOtp = (req, res, otpTable) => {
         email.body = `Rpay never calls you asking for otp. Sharing it with anyone gives them full access to your Rpay wallet. Your Recovery OTP is ${otpNumber}`;
         try {
           await postgres.query(`delete from ${otpTable} where email=$1`, [
-            emaiID,
+            emailID,
           ]);
           await emailTransactionalApi.emailSendPost(email);
           await postgres.query(`insert into ${otpTable} values($1,$2,$3)`, [
-            emaiID,
+            emailID,
             otpNumber,
             false,
           ]);
