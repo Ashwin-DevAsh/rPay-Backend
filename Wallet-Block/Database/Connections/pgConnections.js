@@ -1,6 +1,8 @@
 const { Client } = require("pg");
 require("dotenv").config("../../.env");
 
+console.log(process.env.POSTGRES_PASSWORD);
+
 const client = new Client({
   host: "database",
   port: 5432,
