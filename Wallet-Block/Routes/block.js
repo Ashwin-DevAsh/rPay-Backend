@@ -24,12 +24,12 @@ const addBlock = async (res, refID, data, type) => {
   try {
     var prevBlock = (
       await postgres.query(
-        `select * from blocks  order by timestamp desc limit 1`
+        `select * from blocks order by timestamp desc limit 1`
       )
     ).rows;
     var prevHash = "None";
     if (prevBlock.length != 0) {
-      prevHash = prevBlock[0].blockHash;
+      prevHash = prevBlock[0].blockhash;
     }
 
     console.log(prevHash, prevBlock);
