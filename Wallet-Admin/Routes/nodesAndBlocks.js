@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const postgres = require("../Database/Connections/pgConnections");
 
 app.get("/getNodes", (req, res) => {
-  console.log("getting Nodes");
+  console.log("getting Nodes...");
   var token = req.get("token");
 
   jwt.verify(token, process.env.PRIVATE_KEY, function (err, decoded) {
@@ -15,6 +15,29 @@ app.get("/getNodes", (req, res) => {
           .query("select * from info")
           .then((datas) => {
             console.log(datas.rows[0]);
+            res.send(datas);
+          })
+          .catch((e) => {
+            console.error(e);
+            res.send({ message: "error", e });
+          });
+      }
+    }
+  });
+});
+
+app.get("/getBlocks", (req, res) => {
+  console.log("getting Blocks...");
+  var token = req.get("token");
+
+  jwt.verify(token, process.env.PRIVATE_KEY, function (err, decoded) {
+    if (err) {
+      res.send({ message: "error", err });
+    } else {
+      if (decoded.name) {
+        postgres
+          .query("select * from blocks order by timestamp desc")
+          .then((datas) => {
             res.send(datas);
           })
           .catch((e) => {

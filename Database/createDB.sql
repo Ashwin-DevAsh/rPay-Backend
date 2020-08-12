@@ -97,7 +97,7 @@ create table blocks(
   type varchar,
   blockID bigserial,
   refID varchar,
-  blockHash varchar,
+  encryptedData varchar,
   timestamp timestamp default current_timestamp,
   verifiedBy varchar[]
 );

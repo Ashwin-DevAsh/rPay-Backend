@@ -30,7 +30,7 @@ const addBlock = async (res, refID, data, type) => {
     ).rows;
     var prevHash = "None";
     if (prevBlock.length != 0) {
-      prevHash = hash(prevBlock);
+      prevHash = hash(prevBlock[0]);
     }
 
     console.log(prevHash, prevBlock);
