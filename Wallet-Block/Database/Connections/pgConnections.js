@@ -1,4 +1,6 @@
 const { Client } = require("pg");
+require("dotenv").config("../../.env");
+
 const client = new Client({
   host: "database",
   port: 5432,
