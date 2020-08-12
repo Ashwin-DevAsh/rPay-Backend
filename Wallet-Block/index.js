@@ -1,5 +1,6 @@
+require("dotenv").config(".env");
 const express = require("express");
-const transactionBlocks = require("./Routes/Transactions");
+const transactionBlocks = require("./Routes/block");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 

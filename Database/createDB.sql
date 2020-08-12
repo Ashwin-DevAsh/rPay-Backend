@@ -96,8 +96,9 @@ create table transactions
 create table blocks(
   type varchar,
   blockID bigserial,
+  refID varchar,
   blockHash varchar,
-  createdAt timestamp,
+  timestamp timestamp default current_timestamp,
   verifiedBy varchar[]
 );
 
