@@ -1,6 +1,7 @@
 const app = require("express").Router();
 const postgres = require("../Database/Connections/pgConnections");
 const jwt = require("jsonwebtoken");
+const hash = require("object-hash");
 
 app.post("/addTransactionBlock", (req, res) => {
   console.log("Adding transaction block....");
@@ -29,7 +30,7 @@ const addBlock = async (res, refID, data, type) => {
     ).rows;
     var prevHash = "None";
     if (prevBlock.length != 0) {
-      prevHash = prevBlock[0].blockhash;
+      prevHash = hash(prevBlock);
     }
 
     console.log(prevHash, prevBlock);
