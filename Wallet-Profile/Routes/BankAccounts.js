@@ -64,11 +64,11 @@ function deleteBankAccount(req, res, tableName) {
 
     var id = req.body.id;
     var accountNumber = req.body.accountNumber;
-    var isfc = req.body.isfc;
+    var ifsc = req.body.ifsc;
 
-    console.log(id, accountNumber, isfc);
+    console.log(id, accountNumber, ifsc);
 
-    if (!id || !accountNumber || !isfc) {
+    if (!id || !accountNumber || !ifsc) {
       res.send({ message: "failed" });
       return;
     }
