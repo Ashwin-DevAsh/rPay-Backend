@@ -65,6 +65,8 @@ function deleteBankAccount(req, res, tableName) {
     var id = req.body.id;
     var bankAccounts = req.body.bankAccounts;
 
+    console.log(bankAccounts);
+
     if (!id || !bankAccounts) {
       res.send({ message: "failed" });
       return;
