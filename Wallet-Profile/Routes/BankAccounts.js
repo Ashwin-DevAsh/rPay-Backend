@@ -1,6 +1,6 @@
 const app = require("express").Router();
 const jwt = require("jsonwebtoken");
-const postgres = require("../../Wallet-Admin/Database/Connections/pgConnections");
+const postgres = require("../Database/postgresql");
 
 app.post("/addBankAccount", (req, res) => addBankAccount(req, res, "users"));
 app.post("/addBankAccountMerchant", (req, res) =>
