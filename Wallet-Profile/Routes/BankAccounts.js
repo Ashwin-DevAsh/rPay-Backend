@@ -66,6 +66,8 @@ function deleteBankAccount(req, res, tableName) {
     var accountNumber = req.body.accountNumber;
     var isfc = req.body.isfc;
 
+    console.log(id, accountNumber, isfc);
+
     if (!id || !accountNumber || !isfc) {
       res.send({ message: "failed" });
       return;
