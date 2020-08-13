@@ -14,6 +14,7 @@ function addBankAccount(req, res, tableName) {
     decoded
   ) {
     if (err) {
+      console.log(err);
       res.send({ message: "failed" });
       return;
     }
@@ -23,6 +24,8 @@ function addBankAccount(req, res, tableName) {
     var accountNumber = req.body.accountNumber;
     var ifsc = req.body.ifsc;
     var bankName = req.body.bankName;
+
+    console.log(req.body);
 
     if (!id || !holderName || !accountNumber || !ifsc || !bankName) {
       res.send({ message: "failed" });
