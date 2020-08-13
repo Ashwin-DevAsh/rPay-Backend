@@ -7,6 +7,7 @@ const authEndPoint = require("./Routes/Auth");
 const userEndPoint = require("./Routes/User");
 const merchantEndPoint = require("./Routes/Merchants");
 const recovery = require("./Routes/Recovery");
+const bankAccounts = require("./Routes/BankAccounts");
 const uploadPictures = require("./Routes/UploadPictures");
 
 const app = express();
@@ -22,6 +23,7 @@ app.use(userEndPoint);
 app.use(authEndPoint);
 app.use(merchantEndPoint);
 app.use(recovery);
+app.use(bankAccounts);
 app.use(uploadPictures);
 
 console.log(process.env.Secret_Access_Key, process.env.Access_Key);
