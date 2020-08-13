@@ -37,7 +37,7 @@ const addBlock = async (res, refID, data, type) => {
 
     const dataHash = jwt.sign({ data, prevHash }, process.env.PRIVATE_KEY);
     await postgres.query(
-      `insert into blocks(refID,type,blockhash,verifiedBy) values($1,$2,$3,$4)`,
+      `insert into blocks(refID,type,encryptedData,verifiedBy) values($1,$2,$3,$4)`,
       [refID, type, dataHash, ["server"]]
     );
 
