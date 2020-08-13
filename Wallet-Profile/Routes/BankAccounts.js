@@ -73,25 +73,31 @@ function deleteBankAccount(req, res, tableName) {
       return;
     }
 
-    var prevbankAccounts = (
-      await postgres.query(`select * from users where id = $1`, [id])
-    ).rows[0].accountinfo;
+    try {
+      var prevbankAccounts = (
+        await postgres.query(`select * from users where id = $1`, [id])
+      ).rows[0].accountinfo;
 
-    var newBankAccounts = [];
+      var newBankAccounts = [];
 
-    for (var i = 0; i < prevbankAccounts.length; i++) {
-      if (
-        prevbankAccounts.accountNumber != accountNumber &&
-        prevbankAccounts.ifsc != ifsc
-      ) {
-        newBankAccounts.push(prevbankAccounts[0]);
+      for (var i = 0; i < prevbankAccounts.length; i++) {
+        if (
+          prevbankAccounts.accountNumber != accountNumber &&
+          prevbankAccounts.ifsc != ifsc
+        ) {
+          newBankAccounts.push(prevbankAccounts[0]);
+        }
       }
-    }
 
-    await postgres.query(
-      `update ${tableName} set AccountInfo = $2 where id = $1`,
-      [id, newBankAccounts]
-    );
+      await postgres.query(
+        `update ${tableName} set AccountInfo = $2 where id = $1`,
+        [id, newBankAccounts]
+      );
+
+      res.send({ message: "done" });
+    } catch (err) {
+      res.send({ message: "failed", err });
+    }
   });
 }
 module.exports = app;
