@@ -63,11 +63,10 @@ function deleteBankAccount(req, res, tableName) {
     }
 
     var id = req.body.id;
-    var bankAccount = req.body.bankAccount;
+    var accountNumber = req.body.accountNumber;
+    var isfc = req.body.isfc;
 
-    console.log(bankAccount);
-
-    if (!id || !bankAccount) {
+    if (!id || !accountNumber || !isfc) {
       res.send({ message: "failed" });
       return;
     }
@@ -80,8 +79,8 @@ function deleteBankAccount(req, res, tableName) {
 
     for (var i = 0; i < prevbankAccounts.length; i++) {
       if (
-        prevbankAccounts.accountNumber != bankAccount.accountNumber &&
-        prevbankAccounts.ifsc != bankAccount.ifsc
+        prevbankAccounts.accountNumber != accountNumber &&
+        prevbankAccounts.ifsc != ifsc
       ) {
         newBankAccounts.push(prevbankAccounts[0]);
       }
