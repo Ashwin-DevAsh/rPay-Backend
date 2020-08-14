@@ -48,19 +48,6 @@ func decryptJwtToken(tokenString string) jwt.MapClaims {
 
 func notify(from string, to string, fromName string, amount string,notifyType string) {
 	log.Println("to ", to, from, amount)
-	jsonBodyData := map[string]string{
-		"From": "RECPAY",
-		"To":   "+" + to,
-		"Msg":  amount + " deposited to A/c " + to + " From " + fromName + " ( " + from + " ) ",
-	}
-	jsonBody, _ := json.Marshal(jsonBodyData)
-	result, err := http.Post("https://2factor.in/API/V1/"+smsAPIKey+"/ADDON_SERVICES/SEND/TSMS", "application/json", bytes.NewBuffer(jsonBody))
-	if err != nil {
-		log.Println("error = ", err)
-	} else {
-		log.Println(result)
-	}
-
 	var fcmToken string = "AAAAwveu2fw:APA91bFuqXWjuuTBix0mRNydlB3o2hEp9Adky7IJX2LNS3mKvkblUCtbeqGFUWrjRCgyrwRY-Q46b_M6weSf0wxj33wv7h_ASrpQnSQmWwRVEEun0T3lrliTh2NhQNYHypkeM38gjI9A"
 	db.QueryRow("select fcmtoken from info where id=$1", to).Scan(&fcmToken)
 	sendNotification([]string{fcmToken}, fromName, from, amount,notifyType)
@@ -180,7 +167,7 @@ func handelRequest() {
 			if err != nil {
 				log.Println(err)
 			} else {
-				notify(transactionData.From.Id,  transactionData.From.Id , transactionData.From.Name, transactionData.Amount,"addedMoney")
+				notify(transactionData.From.Id,  transactionData.From.Id , transactionData.From.Name, transactionData.Amount,"withdraw")
 				response.Write(userJSON)
 			}
 
