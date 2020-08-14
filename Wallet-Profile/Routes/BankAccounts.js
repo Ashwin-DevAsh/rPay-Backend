@@ -89,6 +89,8 @@ function deleteBankAccount(req, res, tableName) {
         }
       }
 
+      console.log(prevbankAccounts, newBankAccounts);
+
       await postgres.query(
         `update ${tableName} set AccountInfo = $2 where id = $1`,
         [id, newBankAccounts]
