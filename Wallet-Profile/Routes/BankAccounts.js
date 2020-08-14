@@ -84,10 +84,10 @@ function deleteBankAccount(req, res, tableName) {
 
       for (var i = 0; i < prevbankAccounts.length; i++) {
         if (
-          prevbankAccounts.accountNumber != accountNumber &&
-          prevbankAccounts.ifsc != ifsc
+          prevbankAccounts[i].accountNumber !== accountNumber &&
+          prevbankAccounts[i].ifsc !== ifsc
         ) {
-          newBankAccounts.push(prevbankAccounts[0]);
+          newBankAccounts.push(prevbankAccounts[i]);
         }
       }
 
