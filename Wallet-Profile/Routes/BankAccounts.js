@@ -78,8 +78,6 @@ function deleteBankAccount(req, res, tableName) {
         await postgres.query(`select * from users where id = $1`, [id])
       ).rows[0].accountinfo;
 
-      console.log(prevbankAccounts);
-
       var newBankAccounts = [];
 
       for (var i = 0; i < prevbankAccounts.length; i++) {
@@ -90,8 +88,6 @@ function deleteBankAccount(req, res, tableName) {
           newBankAccounts.push(prevbankAccounts[i]);
         }
       }
-
-      console.log(newBankAccounts);
 
       await postgres.query(
         `update ${tableName} set AccountInfo = $2 where id = $1`,
