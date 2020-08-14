@@ -75,7 +75,7 @@ function deleteBankAccount(req, res, tableName) {
 
     try {
       var prevbankAccounts = (
-        await postgres.query(`select * from users where id = $1`, [id])
+        await postgres.query(`select * from ${tableName} where id = $1`, [id])
       ).rows[0].accountinfo;
 
       var newBankAccounts = [];
