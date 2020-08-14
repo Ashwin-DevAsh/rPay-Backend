@@ -240,6 +240,117 @@ func addMoney(db *sql.DB,transactionData TransactionData) bool {
 	}
 }
 
+func withdraw(db *sql.DB,transactionData TransactionData) bool {
+
+	if(transactionData.From.Id==transactionData.To.Id){
+		return false
+	}
+
+    fromJson , err1 :=  json.Marshal(&transactionData.From)
+	toJson , err3 :=  json.Marshal(&transactionData.To)
+	Amount, _ := strconv.ParseUint(transactionData.Amount, 10, 64)
+
+	row, err := db.Query("select * from amount where id=$1", transactionData.From.Id)	
+
+	if err1!=nil || err3!=nil || err!=nil {
+		return false
+	}
+
+	var id string
+    var balance uint64
+
+	if row.Next() {
+		row.Scan(&id, &balance)
+	}else {
+		return false
+	}
+
+	if(balance<Amount){
+		return false
+	}
+
+	tx, err := db.Begin()
+    if err != nil {
+        return false
+    }
+	_, errFrom := tx.Exec("update amount set balance = balance - $1 where id = $2", Amount, transactionData.From.Id)
+
+	if errFrom != nil {
+		tx.Rollback()
+		log.Println(errFrom)
+		return false
+	}
+
+	loc, _ := time.LoadLocation("Asia/Kolkata")
+    dt := time.Now().In(loc)
+   
+	transactionID :=0
+
+	rowsTransactionID, errTrans :=
+		tx.Query(`insert
+		           into transactions(
+					   transactionTime,
+					   fromMetadata,
+					   toMetadata,
+					   amount,
+					   isGenerated,
+					   iswithdraw)
+				    values($1,$2,$3,$4,$5,$6) returning transactionID`,
+			dt.Format("01-02-2006 15:04:05"), fromJson,toJson, Amount,false,true)
+
+	if rowsTransactionID.Next(){
+		rowsTransactionID.Scan(&transactionID)
+	}
+
+	if errTrans != nil {
+		tx.Rollback()
+		return false
+	}
+
+	jsonBodyData := map[string]interface{}{
+		"transactionID":transactionID,
+		"senderBalance":  balance,
+		"from":transactionData.From,
+		"to":transactionData.To,
+		"isGenerated":false,
+		"isWithdraw":true,
+		"amount":Amount,
+	}
+
+	jsonBody, _ := json.Marshal(jsonBodyData)
+
+	resp, err := http.Post("http://wallet-block:9000/addWithdrawBlock/","application/json",bytes.NewBuffer(jsonBody))
+
+
+	if err!=nil{
+		tx.Rollback()
+		return false
+	}
+
+	defer resp.Body.Close()
+
+
+	var respResult  map[string]interface{}
+	json.NewDecoder(resp.Body).Decode(&respResult)
+
+	if err!=nil{
+		tx.Rollback()
+		return false
+	}
+
+	
+	if respResult["message"]=="done"{
+       	tx.Commit()
+	   return true 
+	}else {
+		tx.Rollback()
+		return false
+	}
+
+
+
+}
+
 // MyState ...
 type MyState struct {
 	Balance      int

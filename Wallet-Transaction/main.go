@@ -153,6 +153,50 @@ func handelRequest() {
 		}
 	})
 
+	r.HandleFunc("/withdraw",func(response http.ResponseWriter, request *http.Request){
+	if request.Method == "POST"{
+		response.Header().Set("Content-type", "application/json")
+		jwtToken := request.Header.Get("jwtToken")
+		header := decryptJwtToken(jwtToken)
+		if header == nil {
+			message, err := json.Marshal(map[string]string{"message": "failed"})
+			if err == nil {
+				log.Println(err)
+			}
+			log.Println("Header error")
+			response.Write(message)
+			return
+		}
+		var transactionData TransactionData
+		err := json.NewDecoder(request.Body).Decode(&transactionData)
+		if err != nil {
+			log.Printf("verbose error info: %#v", err)
+			return
+		}
+		if withdraw(db, transactionData) {
+			userJSON, err := json.Marshal(map[string]string{
+				"message": "done",
+			})
+			if err != nil {
+				log.Println(err)
+			} else {
+				notify(transactionData.From.Id,  transactionData.From.Id , transactionData.From.Name, transactionData.Amount,"addedMoney")
+				response.Write(userJSON)
+			}
+
+		} else {
+			userJSON, err := json.Marshal(map[string]string{
+				"message": "failed",
+			})
+			if err != nil {
+				log.Println(err)
+			}
+			response.Write(userJSON)
+		}
+
+	}
+	})
+
 	r.HandleFunc("/getState", func(response http.ResponseWriter, request *http.Request) {
 		if request.Method == "GET" {
 			response.Header().Set("Content-type", "application/json")

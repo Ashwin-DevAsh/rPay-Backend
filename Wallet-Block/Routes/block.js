@@ -15,6 +15,12 @@ app.post("/addMoneyBlock", (req, res) => {
   console.log(req.body);
 });
 
+app.post("/addWithdrawBlock", (req, res) => {
+  console.log("Adding withdraw block....");
+  addBlock(res, req.body.transactionID, req.body, "Withdraw");
+  console.log(req.body);
+});
+
 app.post("/addUserBlock", (req, res) => {
   console.log("Adding user block....");
   addBlock(res, req.body.id, req.body, "New User");
