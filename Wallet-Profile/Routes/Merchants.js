@@ -111,4 +111,19 @@ app.get("/getMerchants", async (req, res) => {
   }
 });
 
+app.get("/getMerchant", async (req, res) => {
+  if (req.query.id) {
+    var rows = (
+      await postgres.query(
+        "select name,number,email,id,storeName,status from merchants where id=$1",
+        [req.query.id]
+      )
+    ).rows[0];
+    res.status(200).send(rows);
+  } else {
+    console.log(err);
+    res.json({ message: "failed" });
+  }
+});
+
 module.exports = app;
