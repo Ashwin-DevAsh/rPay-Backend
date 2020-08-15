@@ -18,18 +18,19 @@ io.on("connection", (client) => {
     });
     console.log(id, token);
     client.emit("doUpdate");
+    sendNotification();
     updateOnline(id, client.id, token, true);
   });
 
   client.on("disconnect", async () => {
     console.log("Disconnected = ", client.id);
-    var token = await postgres.query(
-      "select fcmToken from info where socketid = $1",
-      [client.id]
-    );
+    // var token = await postgres.query(
+    //   "select fcmToken from info where socketid = $1",
+    //   [client.id]
+    // );
 
-    var token = token.rows[0].fcmtoken;
-    if (token) sendNotification(token);
+    // var token = token.rows[0].fcmtoken;
+    // if (token) sendNotification(token);
     updateOffline(client.id);
   });
 
@@ -43,12 +44,11 @@ io.on("connection", (client) => {
   });
 });
 
-function sendNotification(device) {
-  console.log("sending notification to ", device);
+function sendNotification() {
   var serverKey = process.env.FCM_KEY; //put your server key here
   var fcm = new FCM(serverKey);
   var message = {
-    to: device,
+    condition: "!('anytopicyoudontwanttouse' in topics)",
     data: {
       type: "awake",
     },
