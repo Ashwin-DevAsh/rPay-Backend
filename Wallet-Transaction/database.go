@@ -492,10 +492,11 @@ func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []Transac
 								     and 
 								(cast(toMetadata->>'Id' as varchar) = $1 or cast(toMetadata->>'Id' as varchar) = $2))
 								
-						   union (select null,
+						   union all (select
+							     null,
 								 messageTime,
-								 fromMetadata,
-								 toMetadata,
+								 fromMetadata as frommetadataMessage,
+								 toMetadata as tometadataMessage,
 								 message,
 								 null,
 								 null,
