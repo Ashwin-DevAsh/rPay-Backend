@@ -1,15 +1,33 @@
 const { Client } = require("pg");
+const client = require("../../../Wallet-Sync/Database");
+const { connect } = require("../../../Wallet-Sync/Database");
 
-const client = new Client({
-  host: "database",
-  port: 5432,
-  user: "postgres",
-  password: process.env.POSTGRES_PASSWORD,
-  database: "Rec_Wallet",
-});
+class Connection {
+  static client;
+  static getClient() {
+    if (client == null) {
+      console.log("New Connection");
+      client = connect();
+    } else {
+      return client;
+    }
+  }
 
-client.connect((err) => {
-  console.log(err);
-});
+  connect() {
+    const client = new Client({
+      host: "database",
+      port: 5432,
+      user: "postgres",
+      password: process.env.POSTGRES_PASSWORD,
+      database: "Rec_Wallet",
+    });
 
-module.exports = client;
+    client.connect((err) => {
+      console.log(err);
+    });
+
+    return client;
+  }
+}
+
+module.exports = Connection.getClient();
