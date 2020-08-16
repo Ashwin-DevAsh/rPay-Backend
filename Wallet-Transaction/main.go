@@ -139,7 +139,7 @@ func handelRequest() {
 				userJSON, err := json.Marshal(map[string]interface{}{
 					"message": "done",
 					"transactionID": transactionID,
-					"transactionTime":transactionTime
+					"transactionTime":transactionTime,
 				})
 				if err != nil {
 					log.Println(err)
