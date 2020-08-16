@@ -359,7 +359,7 @@ func sendMessage(db *sql.DB,messageData MessageData) bool {
 
     fromJson , _ :=  json.Marshal(&messageData.From)
 	toJson , _ :=  json.Marshal(&messageData.To)
-	Message, _ := messageData.Message
+	Message := messageData.Message
 
 	loc, _ := time.LoadLocation("Asia/Kolkata")
     dt := time.Now().In(loc)
