@@ -423,6 +423,7 @@ func getMyState(db *sql.DB, id string) MyState {
 		state[id] = balance
 	}
 	myState := MyState{state[id], getTransactions(db, id)}
+	defer db.Close()
 	return myState
 }
 
@@ -440,6 +441,7 @@ func getState(db *sql.DB) map[string]int {
 		row.Scan(&id, &balance)
 		state[id] = balance
 	}
+	defer db.Close()
 	return state
 
 }
@@ -476,6 +478,7 @@ func getTransactions(sb *sql.DB, id string) []Transaction {
 	}
 
 
+	defer db.Close()
 
 	return transactions
 }
