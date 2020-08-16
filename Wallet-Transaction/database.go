@@ -499,7 +499,7 @@ func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []Transac
 								 message,
 								 null,
 								 null,
-								 to_timestamp(transactionTime , 'MM-DD-YYYY HH24:MI:SS') as TimeStamp 
+								 to_timestamp(messageTime , 'MM-DD-YYYY HH24:MI:SS') as TimeStamp 
 						   from 
 							   messages 
 						   where  
