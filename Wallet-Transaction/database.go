@@ -476,7 +476,7 @@ func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []Transac
 
 	transactions := []Transaction{}
 
-	row, err := db.Query(`(select
+	row, err := db.Query(`((select
 								 TransactionId,
 								 TransactionTime,
 								 fromMetadata,
@@ -490,22 +490,22 @@ func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []Transac
 						   where 
 								(cast(fromMetadata->>'Id' as varchar) = $1 or cast(fromMetadata->>'Id' as varchar) = $2) 
 								     and 
-								(cast(toMetadata->>'Id' as varchar) = $1 or cast(toMetadata->>'Id' as varchar) = $2)
+								(cast(toMetadata->>'Id' as varchar) = $1 or cast(toMetadata->>'Id' as varchar) = $2))
 								
-						   union select null,
+						   union (select 'null',
 								 messageTime,
 								 fromMetadata,
 								 toMetadata,
 								 message,
-								 null,
-								 null,
+								 'null',
+								 'null',
 								 to_timestamp(messageTime , 'MM-DD-YYYY HH24:MI:SS') as TimeStamp 
 						   from 
 							   messages 
 						   where  
 								(cast(fromMetadata->>'Id' as varchar) = $1 or cast(fromMetadata->>'Id' as varchar) = $2) 
 								     and 
-								(cast(toMetadata->>'Id' as varchar) = $1 or cast(toMetadata->>'Id' as varchar) = $2))
+								(cast(toMetadata->>'Id' as varchar) = $1 or cast(toMetadata->>'Id' as varchar) = $2)))
 						   order by TimeStamp`,
 						   id1, id2)
 
