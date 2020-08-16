@@ -303,6 +303,7 @@ func handelRequest() {
 			header := decryptJwtToken(jwtToken)
 			if header != nil || true {
 				userJSON, err := json.Marshal(getTransactionsBetweenObjects(db, id1, id2))
+				log.Println(userJSON)
 				if err != nil {
 					log.Println(err)
 				}
