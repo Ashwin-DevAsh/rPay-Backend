@@ -492,13 +492,13 @@ func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []Transac
 								     and 
 								(cast(toMetadata->>'Id' as varchar) = $1 or cast(toMetadata->>'Id' as varchar) = $2))
 								
-						   union (select 'null',
+						   union (select null,
 								 messageTime,
 								 fromMetadata,
 								 toMetadata,
 								 message,
-								 'null',
-								 'null',
+								 null,
+								 null,
 								 to_timestamp(messageTime , 'MM-DD-YYYY HH24:MI:SS') as TimeStamp 
 						   from 
 							   messages 
