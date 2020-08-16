@@ -1,6 +1,6 @@
 const { Client } = require("pg");
 const client = require("../../../Wallet-Sync/Database");
-const { connect } = require("../../../Wallet-Sync/Database");
+const { Client } = require("pg");
 
 class Connection {
   static client;
