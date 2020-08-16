@@ -357,8 +357,8 @@ func sendMessage(db *sql.DB,messageData MessageData) bool {
 		return false
 	}
 
-    fromJson , err1 :=  json.Marshal(&messageData.From)
-	toJson , err3 :=  json.Marshal(&messageData.To)
+    fromJson , _ :=  json.Marshal(&messageData.From)
+	toJson , _ :=  json.Marshal(&messageData.To)
 	Message, _ := strconv.ParseUint(messageData.Message, 10, 64)
 
 	loc, _ := time.LoadLocation("Asia/Kolkata")
