@@ -3,11 +3,11 @@ const { Client } = require("pg");
 class Connection {
   static client;
   static getClient() {
-    if (client == null) {
+    if (Connection.client == null) {
       console.log("New Connection");
-      client = connect();
+      Connection.client = connect();
     } else {
-      return client;
+      return Connection.client;
     }
   }
 
