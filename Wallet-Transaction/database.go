@@ -364,7 +364,7 @@ func sendMessage(db *sql.DB,messageData MessageData) bool {
 	loc, _ := time.LoadLocation("Asia/Kolkata")
     dt := time.Now().In(loc)
 
-	rowsTransactionID, errTrans :=
+	_, errTrans :=
 		db.Query(`insert
 		           into messages(
 					   messageTime,
