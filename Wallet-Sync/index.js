@@ -5,32 +5,39 @@ const server = require("http").createServer(app);
 const io = require("socket.io")(server);
 const postgres = require("./Database");
 const FCM = require("fcm-node");
-const { send } = require("process");
 
 io.on("connection", (client) => {
   client.on("getInformation", (data) => {
-    var id = data["id"];
-    var token = data["fcmToken"];
-    client.join(id, (err) => {
-      if (err) {
-        console.log(err);
-      }
-    });
-    console.log(id, token);
-    client.emit("doUpdate");
-    updateOnline(id, client.id, token, true);
+    try {
+      var id = data["id"];
+      var token = data["fcmToken"];
+      client.join(id, (err) => {
+        if (err) {
+          console.log(err);
+        }
+      });
+      console.log(id, token);
+      client.emit("doUpdate");
+      updateOnline(id, client.id, token, true);
+    } catch (err) {
+      console.log(err);
+    }
   });
 
   client.on("disconnect", async () => {
-    console.log("Disconnected = ", client.id);
-    var token = await postgres.query(
-      "select fcmToken from info where socketid = $1",
-      [client.id]
-    );
+    try {
+      console.log("Disconnected = ", client.id);
+      var token = await postgres.query(
+        "select fcmToken from info where socketid = $1",
+        [client.id]
+      );
 
-    var token = token.rows[0].fcmtoken;
-    if (token) sendNotification(token);
-    updateOffline(client.id);
+      var token = token.rows[0].fcmtoken;
+      if (token) sendNotification(token);
+      updateOffline(client.id);
+    } catch (err) {
+      console.log(err);
+    }
   });
 
   client.on("notifyPayment", (data) => {
@@ -38,9 +45,13 @@ io.on("connection", (client) => {
   });
 
   client.on("notifySingleObjectTransaction", (data) => {
-    console.log("payment notification");
-    io.to(data["to"]["id"]).emit("receivedSingleObjectTransaction", data);
-    io.to(data["from"]["id"]).emit("receivedSingleObjectTransaction", data);
+    try {
+      console.log("payment notification");
+      io.to(data["to"]["id"]).emit("receivedSingleObjectTransaction", data);
+      io.to(data["from"]["id"]).emit("receivedSingleObjectTransaction", data);
+    } catch (err) {
+      console.log(err);
+    }
   });
 
   client.on("notifyMessage", (data) => {
