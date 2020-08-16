@@ -371,7 +371,7 @@ func sendMessage(db *sql.DB,messageData MessageData) bool {
 					   fromMetadata,
 					   toMetadata,
 					   message)
-				    values($1,$2,$3,$4) returning transactionID`,
+				    values($1,$2,$3,$4)`,
 			dt.Format("01-02-2006 15:04:05"), fromJson,toJson, Message)
 
 
