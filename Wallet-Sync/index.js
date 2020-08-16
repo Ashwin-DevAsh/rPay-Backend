@@ -35,9 +35,7 @@ io.on("connection", (client) => {
       var token = token.rows[0].fcmtoken;
       if (token) sendNotification(token);
       updateOffline(client.id);
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   });
 
   client.on("notifyPayment", (data) => {
