@@ -38,6 +38,10 @@ io.on("connection", (client) => {
     io.to(data["to"]).emit("receivedPayment");
   });
 
+  client.on("notifyMessage", (data) => {
+    io.to(data["to"]["id"]).emit("receivedMessage", data);
+  });
+
   client.on("updateProfilePicture", (data) => {
     sendNotificationToAll(data.id);
   });
