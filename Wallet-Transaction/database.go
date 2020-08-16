@@ -485,7 +485,7 @@ type SingleObjectTransaction struct{
 	 message Message 
 }
 
-func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []SingleObjectTransactions {
+func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []SingleObjectTransaction {
 
 	singleObjectTransactions := []SingleObjectTransaction{}
 
