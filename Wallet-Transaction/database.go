@@ -401,11 +401,11 @@ type Transaction struct {
 }
 
 type Message struct {
-	From            json.RawMessage
-	To              json.RawMessage
+	From             json.RawMessage
+	To               json.RawMessage
 	MessageTime      interface{}
 	Message          interface{}
-	TimeStamp       interface{}
+	TimeStamp        interface{}
 }
 
 func getMyState(db *sql.DB, id string) MyState {
@@ -531,6 +531,7 @@ func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []SingleO
 
 	for row.Next() {
 		var singleObjectTransaction SingleObjectTransaction
+
 		var TransactionData Transaction
 		var MessageData Message
 
@@ -577,7 +578,7 @@ func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []SingleO
 		
 		singleObjectTransactions = append(singleObjectTransactions, singleObjectTransaction)
 
-		log.Println( singleObjectTransaction.Messagedata.TimeStamp,)
+		
 	}
 
 	
