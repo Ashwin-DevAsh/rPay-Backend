@@ -531,14 +531,14 @@ func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []SingleO
 
 	for row.Next() {
 		var singleObjectTransaction SingleObjectTransaction
-		var transaction Transaction
-		var message Message
+		var TransactionData Transaction
+		var MessageData Message
 
 		var id interface{}
 		var time interface{}
 		var fromMetadata json.RawMessage
 		var toMetadata json.RawMessage
-		var messageText interface{}
+		var message interface{}
 		var amount interface{}
 		var isGenerated interface{}
 		var isWithdraw interface{}
@@ -548,7 +548,7 @@ func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []SingleO
 				 &time, 
 				 &fromMetadata, 
 				 &toMetadata,
-				 &messageText,
+				 &message,
 				 &amount, 
 				 &isGenerated,
 				 &isWithdraw,
@@ -573,7 +573,7 @@ func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []SingleO
 			timeStamp}
 		}
 
-		singleObjectTransaction = SingleObjectTransaction{transaction,message}
+		singleObjectTransaction = SingleObjectTransaction{TransactionData,MessageData}
 		
 		singleObjectTransactions = append(singleObjectTransactions, singleObjectTransaction)
 
