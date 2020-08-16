@@ -555,7 +555,7 @@ func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []SingleO
 				 &timeStamp)
 		
 		if amount!=nil{
-			 transaction = Transaction{
+			 TransactionData = Transaction{
 			 fromMetadata,
 			 toMetadata,
 			 id,
@@ -565,11 +565,11 @@ func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []SingleO
     		 isWithdraw,
 			 timeStamp }
 		}else{
-			message  = Message{
+			MessageData  = Message{
 			fromMetadata,
 			toMetadata,
 			time,
-			messageText,
+			message,
 			timeStamp}
 		}
 
