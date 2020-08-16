@@ -440,7 +440,7 @@ func getTransactions(sb *sql.DB, id string) []Transaction {
 
 	transactions := []Transaction{}
 
-	row, err := db.Query(`(select TransactionId,
+	row, err := db.Query(`select TransactionId,
 								 TransactionTime,
 								 fromMetadata,
 								 toMetadata,
@@ -451,22 +451,7 @@ func getTransactions(sb *sql.DB, id string) []Transaction {
 						   from 
 							   transactions 
 						   where 
-							   cast(fromMetadata->>'Id' as varchar) = $1 or cast(toMetadata->>'Id' as varchar) = $1
-						   union select null,
-								 messageTime,
-								 fromMetadata,
-								 toMetadata,
-								 message,
-								 null,
-								 null,
-								 to_timestamp(transactionTime , 'MM-DD-YYYY HH24:MI:SS') as TimeStamp 
-						   from 
-							   transactions 
-						   where 
-							   cast(fromMetadata->>'Id' as varchar) = $1 or cast(toMetadata->>'Id' as varchar) = $1)
-						   order by TimeStamp	   
-							   
-							`,
+							   cast(fromMetadata->>'Id' as varchar) = $1 or cast(toMetadata->>'Id' as varchar) = $1`,
 						   id)
 
 	if err != nil {
@@ -491,20 +476,37 @@ func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []Transac
 
 	transactions := []Transaction{}
 
-	row, err := db.Query(`select
+	row, err := db.Query(`(select
 								 TransactionId,
 								 TransactionTime,
 								 fromMetadata,
 								 toMetadata,
 								 amount,
 								 isGenerated,
-								 isWithdraw
+								 isWithdraw,
+								  to_timestamp(transactionTime , 'MM-DD-YYYY HH24:MI:SS') as TimeStamp 
 						   from 
 							   transactions 
 						   where 
 								(cast(fromMetadata->>'Id' as varchar) = $1 or cast(fromMetadata->>'Id' as varchar) = $2) 
 								     and 
-								(cast(toMetadata->>'Id' as varchar) = $1 or cast(toMetadata->>'Id' as varchar) = $2)`,
+								(cast(toMetadata->>'Id' as varchar) = $1 or cast(toMetadata->>'Id' as varchar) = $2)
+								
+						   union select null,
+								 messageTime,
+								 fromMetadata,
+								 toMetadata,
+								 message,
+								 null,
+								 null,
+								 to_timestamp(transactionTime , 'MM-DD-YYYY HH24:MI:SS') as TimeStamp 
+						   from 
+							   messages 
+						   where  
+								(cast(fromMetadata->>'Id' as varchar) = $1 or cast(fromMetadata->>'Id' as varchar) = $2) 
+								     and 
+								(cast(toMetadata->>'Id' as varchar) = $1 or cast(toMetadata->>'Id' as varchar) = $2))
+						   order by TimeStamp`,
 						   id1, id2)
 
 	if err != nil {
