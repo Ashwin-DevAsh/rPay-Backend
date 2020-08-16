@@ -6,6 +6,7 @@ class Connection {
     if (Connection.client == null) {
       console.log("New Connection");
       Connection.client = Connection.connect();
+      return Connection.client;
     } else {
       return Connection.client;
     }
