@@ -34,7 +34,7 @@ func Connect() *sql.DB {
 	return db
 }
 
-func doTransaction(db *sql.DB,transactionData TransactionData) bool {
+func doTransaction(db *sql.DB,transactionData TransactionData,transactionID *uint64) bool {
 
 	if(transactionData.From.Id==transactionData.To.Id){
 		return false
@@ -86,7 +86,7 @@ func doTransaction(db *sql.DB,transactionData TransactionData) bool {
 	loc, _ := time.LoadLocation("Asia/Kolkata")
     dt := time.Now().In(loc)
    
-	transactionID :=0
+
 
 	rowsTransactionID, errTrans :=
 		tx.Query(`insert
