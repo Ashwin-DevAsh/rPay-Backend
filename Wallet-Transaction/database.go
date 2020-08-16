@@ -351,7 +351,7 @@ func withdraw(db *sql.DB,transactionData TransactionData) bool {
 
 }
 
-func sendMessage(db *sql.DB,messageData TransactionData) bool {
+func sendMessage(db *sql.DB,messageData MessageData) bool {
 
 	if(messageData.From.Id==messageData.To.Id){
 		return false
