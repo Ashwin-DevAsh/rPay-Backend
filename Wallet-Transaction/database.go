@@ -403,7 +403,7 @@ type Transaction struct {
 type Message struct {
 	From            json.RawMessage
 	To              json.RawMessage
-	MessageTime interface{}
+	MessageTime      interface{}
 	Message          interface{}
 	TimeStamp       interface{}
 }
@@ -490,15 +490,15 @@ func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []SingleO
 	singleObjectTransactions := []SingleObjectTransaction{}
 
 	row, err := db.Query(`((select
-								 TransactionId,
-								 TransactionTime,
+								 TransactionId as id,
+								 TransactionTime as time,
 								 fromMetadata,
 								 toMetadata,
 								 null as message,
 								 amount as amount,
 								 isGenerated,
 								 isWithdraw,
-								  to_timestamp(transactionTime , 'MM-DD-YYYY HH24:MI:SS') as TimeStamp 
+								 to_timestamp(transactionTime , 'MM-DD-YYYY HH24:MI:SS') as TimeStamp 
 						   from 
 							   transactions 
 						   where 
@@ -507,14 +507,14 @@ func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []SingleO
 								(cast(toMetadata->>'Id' as varchar) = $1 or cast(toMetadata->>'Id' as varchar) = $2))
 								
 						   union all (select
-							     null ,
-								 messageTime,
+							     null as id,
+								 messageTime as time,
 								 fromMetadata,
 								 toMetadata,
 								 message,
-								 null,
-								 null,
-								 null,
+								 null as amount,
+								 null as isGenerated,
+								 null as isWithdraw,
 								 to_timestamp(messageTime , 'MM-DD-YYYY HH24:MI:SS') as TimeStamp 
 						   from 
 							   messages 
@@ -531,27 +531,44 @@ func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []SingleO
 
 	for row.Next() {
 		var singleObjectTransaction SingleObjectTransaction
+		var id interface{}
+		var time interface{}
+		var fromMetadata json.RawMessage
+		var toMetadata json.RawMessage
+		var amount interface{}
+		var message interface{}
+		var isGenerated interface{}
+		var isWithdraw interface{}
+		var timeStamp interface{}
 
-		row.Scan(&singleObjectTransaction.transaction.TransactionID,
-				 &singleObjectTransaction.transaction.TransactionTime, 
-				 &singleObjectTransaction.transaction.From, 
-				 &singleObjectTransaction.transaction.To,
-				 &singleObjectTransaction.transaction.Amount ,
-				 &singleObjectTransaction.transaction.Amount, 
-				 &singleObjectTransaction.transaction.IsGenerated,
-				 &singleObjectTransaction.transaction.IsWithdraw)
+		row.Scan(&id,
+				 &time, 
+				 &fromMetadata, 
+				 &toMetadata,
+				 &message ,
+				 &amount, 
+				 &isGenerated,
+				 &isWithdraw,
+				 &timeStamp
+				)
 		
-		if singleObjectTransaction.transaction.Amount !=nil{
-			row.Scan(&singleObjectTransaction.message.MessageTime,
-				 &singleObjectTransaction.message.MessageTime, 
-				 &singleObjectTransaction.message.From, 
-				 &singleObjectTransaction.message.To,
-				 &singleObjectTransaction.message.MessageTime,
-				 &singleObjectTransaction.message.Message, 
-				 &singleObjectTransaction.message.MessageTime,
-				 &singleObjectTransaction.message.MessageTime)
+		if amount!=nil{
+			singleObjectTransaction.transaction.From            = fromMetadata
+			singleObjectTransaction.transaction.To              = toMetadata
+			singleObjectTransaction.transaction.TransactionID   = id
+			singleObjectTransaction.transaction.TransactionTime = time
+			singleObjectTransaction.transaction.Amount          = amount
+			singleObjectTransaction.transaction.IsGenerated     = isGenerated
+    		singleObjectTransaction.transaction.IsWithdraw      = isWithdraw
+			singleObjectTransaction.transaction.TimeStamp       = timeStamp
+		}else{
+			singleObjectTransaction.message.From        = fromMetadata
+			singleObjectTransaction.message.To          = toMetadata
+			singleObjectTransaction.message.MessageTime = time
+			singleObjectTransaction.message.Message     = message
+			singleObjectTransaction.message.TimeStamp   = timeStamp
 		}
-
+		
 		singleObjectTransactions = append(singleObjectTransactions, singleObjectTransaction)
 	}
 
