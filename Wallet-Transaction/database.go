@@ -480,7 +480,7 @@ func getTransactions(sb *sql.DB, id string) []Transaction {
 	return transactions
 }
 
-type interface SingleObjectTransaction{
+type SingleObjectTransaction struct{
 	 transaction Transaction
 	 message Message 
 }
