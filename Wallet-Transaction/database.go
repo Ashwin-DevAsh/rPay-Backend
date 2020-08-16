@@ -512,7 +512,9 @@ func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []SingleO
 								 fromMetadata,
 								 toMetadata,
 								 message,
-			
+								 null,
+								 null,
+								 null,
 								 to_timestamp(messageTime , 'MM-DD-YYYY HH24:MI:SS') as TimeStamp 
 						   from 
 							   messages 
