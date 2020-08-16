@@ -133,7 +133,7 @@ func handelRequest() {
 				log.Printf("verbose error info: %#v", err)
 				return
 			}
-			var transactionID = 0 
+			var transactionID uint64 = 0
 			if doTransaction(db, transactionData,&transactionID) {
 				userJSON, err := json.Marshal(map[string]string{
 					"message": "done",
