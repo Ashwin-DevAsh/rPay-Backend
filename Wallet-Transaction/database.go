@@ -579,15 +579,7 @@ func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []SingleO
 
 		log.Println(
 			    message,
-			    id,
-				time, 
-				fromMetadata, 
-				toMetadata,
-				message ,
-				amount, 
-				isGenerated,
-				isWithdraw,
-				timeStamp)
+			    transaction)
 	}
 
 	
