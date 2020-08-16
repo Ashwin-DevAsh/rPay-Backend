@@ -1,14 +1,32 @@
 const { Client } = require("pg");
-const client = new Client({
-  host: "database",
-  port: 5432,
-  user: "postgres",
-  password: process.env.POSTGRES_PASSWORD,
-  database: "Rec_Wallet",
-});
 
-client.connect((err) => {
-  console.log(err);
-});
+class Connection {
+  static client;
+  static getClient() {
+    if (Connection.client == null) {
+      console.log("New Connection");
+      Connection.client = Connection.connect();
+      return Connection.client;
+    } else {
+      return Connection.client;
+    }
+  }
 
-module.exports = client;
+  static connect = () => {
+    const client = new Client({
+      host: "database",
+      port: 5432,
+      user: "postgres",
+      password: process.env.POSTGRES_PASSWORD,
+      database: "Rec_Wallet",
+    });
+
+    client.connect((err) => {
+      console.log(err);
+    });
+
+    return client;
+  };
+}
+
+module.exports = Connection.getClient();
