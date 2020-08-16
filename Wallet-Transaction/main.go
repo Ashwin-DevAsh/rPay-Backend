@@ -134,10 +134,12 @@ func handelRequest() {
 				return
 			}
 			var transactionID uint64 = 0
-			if doTransaction(db, transactionData,&transactionID) {
+			var transactionTime string = ""
+			if doTransaction(db, transactionData,&transactionID,&transactionTime) {
 				userJSON, err := json.Marshal(map[string]interface{}{
 					"message": "done",
 					"transactionID": transactionID,
+					"transactionTime":transactionTime
 				})
 				if err != nil {
 					log.Println(err)

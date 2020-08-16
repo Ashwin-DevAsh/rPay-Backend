@@ -34,7 +34,7 @@ func Connect() *sql.DB {
 	return db
 }
 
-func doTransaction(db *sql.DB,transactionData TransactionData,transactionID *uint64) bool {
+func doTransaction(db *sql.DB,transactionData TransactionData,transactionID *uint64,transactionTime *string) bool {
 
 	if(transactionData.From.Id==transactionData.To.Id){
 		return false
@@ -87,6 +87,7 @@ func doTransaction(db *sql.DB,transactionData TransactionData,transactionID *uin
     dt := time.Now().In(loc)
    
 
+	transactionTime = dt.Format("01-02-2006 15:04:05")
 
 	rowsTransactionID, errTrans :=
 		tx.Query(`insert
@@ -98,7 +99,7 @@ func doTransaction(db *sql.DB,transactionData TransactionData,transactionID *uin
 					   isGenerated,
 					   iswithdraw)
 				    values($1,$2,$3,$4,$5,$6) returning transactionID`,
-			dt.Format("01-02-2006 15:04:05"), fromJson,toJson, Amount,false,false)
+			        transactionTime, fromJson,toJson, Amount,false,false)
 
 	if rowsTransactionID.Next(){
 		rowsTransactionID.Scan(&transactionID)
