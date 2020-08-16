@@ -5,13 +5,13 @@ class Connection {
   static getClient() {
     if (Connection.client == null) {
       console.log("New Connection");
-      Connection.client = this.connect();
+      Connection.client = Connection.connect();
     } else {
       return Connection.client;
     }
   }
 
-  connect() {
+  static connect = () => {
     const client = new Client({
       host: "database",
       port: 5432,
@@ -25,7 +25,7 @@ class Connection {
     });
 
     return client;
-  }
+  };
 }
 
 module.exports = Connection.getClient();
