@@ -87,7 +87,7 @@ func doTransaction(db *sql.DB,transactionData TransactionData,transactionID *uin
     dt := time.Now().In(loc)
    
 
-	&transactionTime = dt.Format("01-02-2006 15:04:05")
+	*transactionTime = dt.Format("01-02-2006 15:04:05")
 
 	rowsTransactionID, errTrans :=
 		tx.Query(`insert
