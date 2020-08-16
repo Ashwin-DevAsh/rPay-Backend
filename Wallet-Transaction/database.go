@@ -549,8 +549,7 @@ func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []SingleO
 				 &amount, 
 				 &isGenerated,
 				 &isWithdraw,
-				 &timeStamp
-				)
+				 &timeStamp)
 		
 		if amount!=nil{
 			singleObjectTransaction.transaction.From            = fromMetadata
