@@ -34,7 +34,7 @@ func Connect() *sql.DB {
 	return db
 }
 
-func doTransaction(db *sql.DB,transactionData TransactionData,transactionID *uint64) bool {
+func doTransaction(db *sql.DB,transactionData TransactionData,transactionID *int) bool {
 
 	if(transactionData.From.Id==transactionData.To.Id){
 		return false
