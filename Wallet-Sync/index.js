@@ -34,8 +34,12 @@ io.on("connection", (client) => {
   });
 
   client.on("notifyPayment", (data) => {
-    console.log(data);
     io.to(data["to"]).emit("receivedPayment");
+  });
+
+  client.on("notifySingleObjectTransaction", (data) => {
+    io.to(data["to"]["id"]).emit("receivedSingleObjectTransaction", data);
+    io.to(data["from"]["id"]).emit("receivedSingleObjectTransaction", data);
   });
 
   client.on("notifyMessage", (data) => {
@@ -45,6 +49,8 @@ io.on("connection", (client) => {
   client.on("updateProfilePicture", (data) => {
     sendNotificationToAll(data.id);
   });
+}).catch((err) => {
+  console.log(err);
 });
 
 function sendNotification(device) {
