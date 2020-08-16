@@ -494,8 +494,8 @@ func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []SingleO
 								 TransactionTime,
 								 fromMetadata,
 								 toMetadata,
-								 null,
-								 amount,
+								 null as message,
+								 amount as amount,
 								 isGenerated,
 								 isWithdraw,
 								  to_timestamp(transactionTime , 'MM-DD-YYYY HH24:MI:SS') as TimeStamp 
@@ -507,10 +507,10 @@ func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []SingleO
 								(cast(toMetadata->>'Id' as varchar) = $1 or cast(toMetadata->>'Id' as varchar) = $2))
 								
 						   union all (select
-							     null,
+							     null ,
 								 messageTime,
-								 fromMetadata as frommetadataMessage,
-								 toMetadata as tometadataMessage,
+								 fromMetadata,
+								 toMetadata,
 								 message,
 								 null,
 								 null,
