@@ -49,8 +49,6 @@ io.on("connection", (client) => {
   client.on("updateProfilePicture", (data) => {
     sendNotificationToAll(data.id);
   });
-}).catch((err) => {
-  console.log(err);
 });
 
 function sendNotification(device) {
