@@ -91,6 +91,14 @@ create table transactions
     isWithdraw boolean
 );
 
+create table messages
+(
+    messageTime varchar,
+    fromMetadata json,
+    toMetadata json,
+    message bigint,
+);
+
 -- block...
 
 create table blocks(

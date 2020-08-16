@@ -351,6 +351,37 @@ func withdraw(db *sql.DB,transactionData TransactionData) bool {
 
 }
 
+func withdraw(db *sql.DB,messageData TransactionData) bool {
+
+	if(messageData.From.Id==messageData.To.Id){
+		return false
+	}
+
+    fromJson , err1 :=  json.Marshal(&messageData.From)
+	toJson , err3 :=  json.Marshal(&messageData.To)
+	Message, _ := strconv.ParseUint(messageData.Message, 10, 64)
+
+	loc, _ := time.LoadLocation("Asia/Kolkata")
+    dt := time.Now().In(loc)
+
+	rowsTransactionID, errTrans :=
+		db.Query(`insert
+		           into messages(
+					   messageTime,
+					   fromMetadata,
+					   toMetadata,
+					   message)
+				    values($1,$2,$3,$4) returning transactionID`,
+			dt.Format("01-02-2006 15:04:05"), fromJson,toJson, Message)
+
+
+	if errTrans != nil {
+		return false
+	}
+	return true 
+
+}
+
 // MyState ...
 type MyState struct {
 	Balance      int

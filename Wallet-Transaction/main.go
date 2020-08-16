@@ -30,6 +30,23 @@ type TransactionData  struct {
 			}
 }
 
+type MessageData  struct {
+		Message  string
+		To struct{
+				Id string
+				Name string
+				Number string
+				Email string
+			}
+		From struct{
+				Id string
+				Number string
+				Name string
+				Email string
+			}
+}
+
+
 
 func decryptJwtToken(tokenString string) jwt.MapClaims {
 	claims := jwt.MapClaims{}
@@ -167,6 +184,50 @@ func handelRequest() {
 				log.Println(err)
 			} else {
 				notify(transactionData.From.Id,  transactionData.From.Id , transactionData.From.Name, transactionData.Amount,"withdraw")
+				response.Write(userJSON)
+			}
+
+		} else {
+			userJSON, err := json.Marshal(map[string]string{
+				"message": "failed",
+			})
+			if err != nil {
+				log.Println(err)
+			}
+			response.Write(userJSON)
+		}
+
+	}
+	})
+
+	r.HandleFunc("/sendMessage",func(response http.ResponseWriter, request *http.Request){
+	if request.Method == "POST"{
+		response.Header().Set("Content-type", "application/json")
+		jwtToken := request.Header.Get("jwtToken")
+		header := decryptJwtToken(jwtToken)
+		if header == nil {
+			message, err := json.Marshal(map[string]string{"message": "failed"})
+			if err == nil {
+				log.Println(err)
+			}
+			log.Println("Header error")
+			response.Write(message)
+			return
+		}
+		var messageData MessageData
+		err := json.NewDecoder(request.Body).Decode(&messageData)
+		if err != nil {
+			log.Printf("verbose error info: %#v", err)
+			return
+		}
+		if sendMessage(db, messageData) {
+			userJSON, err := json.Marshal(map[string]string{
+				"message": "done",
+			})
+			if err != nil {
+				log.Println(err)
+			} else {
+				notify(messageData.From.Id,  messageData.From.Id , messageData.From.Name, messageData.Message,"message")
 				response.Write(userJSON)
 			}
 
