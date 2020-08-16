@@ -38,6 +38,7 @@ io.on("connection", (client) => {
   });
 
   client.on("notifySingleObjectTransaction", (data) => {
+    console.log("payment notification");
     io.to(data["to"]["id"]).emit("receivedSingleObjectTransaction", data);
     io.to(data["from"]["id"]).emit("receivedSingleObjectTransaction", data);
   });
