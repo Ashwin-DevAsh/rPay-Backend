@@ -5,7 +5,7 @@ class Connection {
   static getClient() {
     if (Connection.client == null) {
       console.log("New Connection");
-      Connection.client = connect();
+      Connection.client = this.connect();
     } else {
       return Connection.client;
     }
