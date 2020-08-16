@@ -552,11 +552,9 @@ func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []SingleO
 				 &singleObjectTransaction.message.MessageTime)
 		}
 
-		singleObjectTransaction = append(singleObjectTransactions, singleObjectTransaction)
+		singleObjectTransactions = append(singleObjectTransactions, singleObjectTransaction)
 	}
 
 
-    log.Println(transactions)
-
-	return transactions
+	return singleObjectTransactions
 }
