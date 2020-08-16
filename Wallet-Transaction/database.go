@@ -565,7 +565,7 @@ func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []SingleO
 			 timeStamp }
 		}else{
 			message  = Message{
-			fromMetadata
+			fromMetadata,
 			toMetadata,
 			time,
 			messageText,
