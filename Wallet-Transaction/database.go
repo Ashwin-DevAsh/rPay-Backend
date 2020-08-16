@@ -481,8 +481,8 @@ func getTransactions(sb *sql.DB, id string) []Transaction {
 }
 
 type SingleObjectTransaction struct{
-	 transaction Transaction
-	 message Message 
+	 TransactionData Transaction
+	 MessageData Message 
 }
 
 func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []SingleObjectTransaction {
