@@ -400,6 +400,14 @@ type Transaction struct {
 	TimeStamp       interface{}
 }
 
+type Message struct {
+	From            json.RawMessage
+	To              json.RawMessage
+	MessageTime interface{}
+	Message          interface{}
+	TimeStamp       interface{}
+}
+
 func getMyState(db *sql.DB, id string) MyState {
 
 	state := map[string]int{}
@@ -472,9 +480,14 @@ func getTransactions(sb *sql.DB, id string) []Transaction {
 	return transactions
 }
 
-func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []Transaction {
+type interface SingleObjectTransaction{
+	 transaction Transaction
+	 message Message 
+}
 
-	transactions := []Transaction{}
+func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []SingleObjectTransactions {
+
+	singleObjectTransactions := []SingleObjectTransaction{}
 
 	row, err := db.Query(`((select
 								 TransactionId,
@@ -517,10 +530,29 @@ func getTransactionsBetweenObjects(sb *sql.DB, id1 string, id2 string) []Transac
 	}
 
 	for row.Next() {
-		var transaction Transaction
-		row.Scan(&transaction.TransactionID, &transaction.TransactionTime, &transaction.From, 
-			&transaction.To,&transaction.Amount ,&transaction.Amount, &transaction.IsGenerated,&transaction.IsWithdraw)
-		transactions = append(transactions, transaction)
+		var singleObjectTransaction SingleObjectTransaction
+
+		row.Scan(&singleObjectTransaction.transaction.TransactionID,
+				 &singleObjectTransaction.transaction.TransactionTime, 
+				 &singleObjectTransaction.transaction.From, 
+				 &singleObjectTransaction.transaction.To,
+				 &singleObjectTransaction.transaction.Amount ,
+				 &singleObjectTransaction.transaction.Amount, 
+				 &singleObjectTransaction.transaction.IsGenerated,
+				 &singleObjectTransaction.transaction.IsWithdraw)
+		
+		if singleObjectTransaction.transaction.Amount !=nil{
+			row.Scan(&singleObjectTransaction.message.MessageTime,
+				 &singleObjectTransaction.message.MessageTime, 
+				 &singleObjectTransaction.message.From, 
+				 &singleObjectTransaction.message.To,
+				 &singleObjectTransaction.message.MessageTime,
+				 &singleObjectTransaction.message.Message, 
+				 &singleObjectTransaction.message.MessageTime,
+				 &singleObjectTransaction.message.MessageTime)
+		}
+
+		singleObjectTransaction = append(singleObjectTransactions, singleObjectTransaction)
 	}
 
 
