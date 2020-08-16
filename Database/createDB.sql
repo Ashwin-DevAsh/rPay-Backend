@@ -96,7 +96,7 @@ create table messages
     messageTime varchar,
     fromMetadata json,
     toMetadata json,
-    message bigint,
+    message varchar
 );
 
 -- block...
