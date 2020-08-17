@@ -156,7 +156,6 @@ func handelRequest() {
 				}
 				response.Write(userJSON)
 			}
-
 		}
 	})
 
@@ -245,8 +244,7 @@ func handelRequest() {
 			}
 			response.Write(userJSON)
 		}
-
-	}
+     }
 	})
 
 	r.HandleFunc("/getState", func(response http.ResponseWriter, request *http.Request) {

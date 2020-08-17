@@ -64,4 +64,20 @@ app.post("/login", async (req, res) => {
   }
 });
 
+app.get("/getAdmins", (req, res) => {
+  var token = req.get("token");
+  jwt.verify(token, process.env.PRIVATE_KEY, async function (err, decoded) {
+    if (err) {
+      res.send({ message: "error", err });
+    } else {
+      try {
+        var users = (await postgres.query("select * from admins")).rows;
+        res.send(users);
+      } catch (err) {
+        res.send({ err });
+      }
+    }
+  });
+});
+
 module.exports = app;
