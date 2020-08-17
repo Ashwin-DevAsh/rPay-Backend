@@ -1,7 +1,6 @@
 const app = require("express").Router();
 const jwt = require("jsonwebtoken");
 const postgres = require("../Database/Connections/pgConnections");
-const Users = require("../Database/Schema/Users");
 
 app.get("/getTransactionStats/:days", (req, res) => {
   doProcess(req, res, transactionStatsQuery);
