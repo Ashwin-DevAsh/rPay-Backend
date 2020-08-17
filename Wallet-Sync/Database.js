@@ -8,6 +8,7 @@ class Connection {
       Connection.client = Connection.connect();
       return Connection.client;
     } else {
+      console.log("Old Connection");
       return Connection.client;
     }
   }
