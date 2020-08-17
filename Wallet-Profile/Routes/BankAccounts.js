@@ -37,7 +37,7 @@ function addBankAccount(req, res, tableName) {
     }
 
     await postgres.query(
-      `update ${tableName} set AccountInfo = array_append(AccountInfo,$1)`,
+      `update ${tableName} set AccountInfo = array_append(AccountInfo,$1) where id=$2 `,
       [
         {
           holderName,
@@ -45,6 +45,7 @@ function addBankAccount(req, res, tableName) {
           ifsc,
           bankName,
         },
+        id,
       ]
     );
     res.send({ message: "done" });
