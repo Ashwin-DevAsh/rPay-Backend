@@ -10,6 +10,7 @@ const recovery = require("./Routes/Recovery");
 const bankAccounts = require("./Routes/BankAccounts");
 const uploadPictures = require("./Routes/UploadPictures");
 const postgresql = require("./Database/postgresql");
+const jwt = require("jsonwebtoken");
 
 const app = express();
 
