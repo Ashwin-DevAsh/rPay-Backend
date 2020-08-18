@@ -9,7 +9,7 @@ const merchantEndPoint = require("./Routes/Merchants");
 const recovery = require("./Routes/Recovery");
 const bankAccounts = require("./Routes/BankAccounts");
 const uploadPictures = require("./Routes/UploadPictures");
-const postgresql = require("./Database/postgresql");
+const postgre = require("./Database/postgresql");
 const jwt = require("jsonwebtoken");
 
 const app = express();
@@ -46,11 +46,11 @@ app.get("/init/:id", (req, res) => {
 
     try {
       var balance = (
-        await postgresql.query("select * from amount where id=$1", [id])
+        await postgre.query("select * from amount where id=$1", [id])
       ).rows[0].balance;
 
       var transactions = (
-        await postgresql.query(
+        await postgre.query(
           `select TransactionId,
 								 TransactionTime,
 								 fromMetadata,
