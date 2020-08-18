@@ -60,6 +60,7 @@ var setOtp = async (req, res, otpTable, userTable, id = "rpay@") => {
         name: user[0].name,
         number: user[0].number,
         email: user[0].email,
+        id: id + user[0].number,
       },
       process.env.PRIVATE_KEY
     );
