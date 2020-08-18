@@ -9,7 +9,7 @@ const merchantEndPoint = require("./Routes/Merchants");
 const recovery = require("./Routes/Recovery");
 const bankAccounts = require("./Routes/BankAccounts");
 const uploadPictures = require("./Routes/UploadPictures");
-const postgre = require("./Database/postgresql");
+const postgres = require("./Database/postgresql");
 const jwt = require("jsonwebtoken");
 
 const app = express();
