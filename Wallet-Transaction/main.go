@@ -87,8 +87,9 @@ func handelRequest() {
 			}
 			var transactionData TransactionData
 			err := json.NewDecoder(request.Body).Decode(&transactionData)
-			Println(header["id"])
+			log.Println(header["id"])
 			if(header["id"]!=transactionData.To.Id){
+				message, err := json.Marshal(map[string]string{"message": "failed"})
                 log.Println("Header error")
 				response.Write(message)
 				return
