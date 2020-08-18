@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"log"
+	"strings"
 	"net/http"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
@@ -88,8 +89,7 @@ func handelRequest() {
 			var transactionData TransactionData
 			err := json.NewDecoder(request.Body).Decode(&transactionData)
 			log.Println(header["number"],transactionData.To.Number)
-			log.Println(header)
-			if((header["number"])!=transactionData.To.Number.Replace("+","")){
+			if((header["number"])!=strings.Replace(transactionData.To.Number,"+","",-1)){
 				message, _ := json.Marshal(map[string]string{"message": "failed"})
                 log.Println("Header error")
 				response.Write(message)
