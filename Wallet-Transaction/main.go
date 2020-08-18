@@ -231,7 +231,7 @@ func handelRequest() {
 				log.Println(err)
 			} else {
 					
-				notify(messageData.From.Id,  messageData.To.Id , messageData.From.Name, messageData.Message,"message",transactionData.From.Id)
+				notify(messageData.From.Id,  messageData.To.Id , messageData.From.Name, messageData.Message,"message",messageData.From.Id)
 				response.Write(userJSON)
 			}
 
