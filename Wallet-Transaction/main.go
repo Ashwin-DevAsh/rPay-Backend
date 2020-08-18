@@ -97,7 +97,7 @@ func handelRequest() {
 				if err != nil {
 					log.Println(err)
 				} else {
-					notify(transactionData.From.Id,  transactionData.From.Id , transactionData.From.Name, transactionData.Amount,"addedMoney")
+					notify(transactionData.From.Id,  transactionData.From.Id , transactionData.From.Name, transactionData.Amount,"addedMoney",transactionData.From.Id)
 					response.Write(userJSON)
 				}
 
@@ -144,7 +144,7 @@ func handelRequest() {
 				if err != nil {
 					log.Println(err)
 				} else {
-					notify(transactionData.From.Id, transactionData.To.Id, transactionData.From.Name, transactionData.Amount,"receivedMoney")
+					notify(transactionData.From.Id, transactionData.To.Id, transactionData.From.Name, transactionData.Amount,"receivedMoney",transactionData.From.Id)
 					response.Write(userJSON)
 				}
 			} else {
@@ -186,7 +186,7 @@ func handelRequest() {
 			if err != nil {
 				log.Println(err)
 			} else {
-				notify(transactionData.From.Id,  transactionData.From.Id , transactionData.From.Name, transactionData.Amount,"withdraw")
+				notify(transactionData.From.Id,  transactionData.From.Id , transactionData.From.Name, transactionData.Amount,"withdraw",transactionData.From.Id)
 				response.Write(userJSON)
 			}
 
@@ -231,7 +231,7 @@ func handelRequest() {
 				log.Println(err)
 			} else {
 					
-				notify(messageData.From.Id,  messageData.To.Id , messageData.From.Name, messageData.Message,"message")
+				notify(messageData.From.Id,  messageData.To.Id , messageData.From.Name, messageData.Message,"message",transactionData.From.Id)
 				response.Write(userJSON)
 			}
 
