@@ -15,7 +15,7 @@ func sendNotification(
 	c := fcm.NewFcmClient(serverKey)
 	c.AppendDevices(devices)
 	c.NewFcmRegIdsMsg(devices, map[string]string{
-		"type":  notifyType+"," + fromName + "," + from + "," + amount+","fromID,
+		"type":  notifyType+"," + fromName + "," + from + "," + amount+","+fromID,
 	})
 	c.Send()
 }
