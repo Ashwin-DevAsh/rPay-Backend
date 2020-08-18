@@ -88,13 +88,14 @@ func handelRequest() {
 			}
 			var transactionData TransactionData
 			err := json.NewDecoder(request.Body).Decode(&transactionData)
-			log.Println(header["number"],transactionData.To.Number)
+		
 			if((header["number"])!=strings.Replace(transactionData.To.Number,"+","",-1)){
 				message, _ := json.Marshal(map[string]string{"message": "failed"})
                 log.Println("Header error")
 				response.Write(message)
 				return
 			}
+
 			if err != nil {
 				log.Printf("verbose error info: %#v", err)
 				return
@@ -138,6 +139,14 @@ func handelRequest() {
 			}
 			var transactionData TransactionData
 			err := json.NewDecoder(request.Body).Decode(&transactionData)
+
+			if((header["number"])!=strings.Replace(transactionData.From.Number,"+","",-1)){
+				message, _ := json.Marshal(map[string]string{"message": "failed"})
+                log.Println("Header error")
+				response.Write(message)
+				return
+			}
+
 			if err != nil {
 				log.Printf("verbose error info: %#v", err)
 				return
@@ -184,6 +193,14 @@ func handelRequest() {
 		}
 		var transactionData TransactionData
 		err := json.NewDecoder(request.Body).Decode(&transactionData)
+
+		if((header["number"])!=strings.Replace(transactionData.From.Number,"+","",-1)){
+				message, _ := json.Marshal(map[string]string{"message": "failed"})
+                log.Println("Header error")
+				response.Write(message)
+				return
+		}
+
 		if err != nil {
 			log.Printf("verbose error info: %#v", err)
 			return
