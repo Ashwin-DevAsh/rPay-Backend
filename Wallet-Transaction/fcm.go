@@ -6,9 +6,7 @@ import (
 	"github.com/NaySoftware/go-fcm"
 )
 
-func sendNotification(
-	devices []string, fromName string, from string, amount string,notifyType string,fromID string
-	) {
+func sendNotification(devices []string, fromName string, from string, amount string,notifyType string,fromID string) {
 	var serverKey string = "AAAAwveu2fw:APA91bFuqXWjuuTBix0mRNydlB3o2hEp9Adky7IJX2LNS3mKvkblUCtbeqGFUWrjRCgyrwRY-Q46b_M6weSf0wxj33wv7h_ASrpQnSQmWwRVEEun0T3lrliTh2NhQNYHypkeM38gjI9A"
 
 	log.Println("Notification send to ", devices)
