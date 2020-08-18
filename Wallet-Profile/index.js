@@ -46,11 +46,11 @@ app.get("/init/:id", (req, res) => {
 
     try {
       var balance = (
-        await postgre.query("select * from amount where id=$1", [id])
+        await postgres.query("select * from amount where id=$1", [id])
       ).rows[0].balance;
 
       var transactions = (
-        await postgre.query(
+        await postgres.query(
           `select TransactionId,
 								 TransactionTime,
 								 fromMetadata,
