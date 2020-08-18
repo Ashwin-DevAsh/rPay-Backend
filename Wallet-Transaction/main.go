@@ -62,11 +62,11 @@ func decryptJwtToken(tokenString string) jwt.MapClaims {
 
 }
 
-func notify(from string, to string, fromName string, amount string,notifyType string,fromID string) {
+func notify(from string, to string, fromName string, amount string,notifyType string,fromEmail string) {
 	log.Println("to ", to, from, amount)
 	var fcmToken string = "AAAAwveu2fw:APA91bFuqXWjuuTBix0mRNydlB3o2hEp9Adky7IJX2LNS3mKvkblUCtbeqGFUWrjRCgyrwRY-Q46b_M6weSf0wxj33wv7h_ASrpQnSQmWwRVEEun0T3lrliTh2NhQNYHypkeM38gjI9A"
 	db.QueryRow("select fcmtoken from info where id=$1", to).Scan(&fcmToken)
-	sendNotification([]string{fcmToken}, fromName, from, amount,notifyType,fromID)
+	sendNotification([]string{fcmToken}, fromName, from, amount,notifyType,fromEmail)
 }
 
 func handelRequest() {
@@ -97,7 +97,7 @@ func handelRequest() {
 				if err != nil {
 					log.Println(err)
 				} else {
-					notify(transactionData.From.Id,  transactionData.From.Id , transactionData.From.Name, transactionData.Amount,"addedMoney",transactionData.From.Id)
+					notify(transactionData.From.Id,  transactionData.From.Id , transactionData.From.Name, transactionData.Amount,"addedMoney",transactionData.From.Email)
 					response.Write(userJSON)
 				}
 
@@ -144,7 +144,7 @@ func handelRequest() {
 				if err != nil {
 					log.Println(err)
 				} else {
-					notify(transactionData.From.Id, transactionData.To.Id, transactionData.From.Name, transactionData.Amount,"receivedMoney",transactionData.From.Id)
+					notify(transactionData.From.Id, transactionData.To.Id, transactionData.From.Name, transactionData.Amount,"receivedMoney",transactionData.From.Email)
 					response.Write(userJSON)
 				}
 			} else {
@@ -186,7 +186,7 @@ func handelRequest() {
 			if err != nil {
 				log.Println(err)
 			} else {
-				notify(transactionData.From.Id,  transactionData.From.Id , transactionData.From.Name, transactionData.Amount,"withdraw",transactionData.From.Id)
+				notify(transactionData.From.Id,  transactionData.From.Id , transactionData.From.Name, transactionData.Amount,"withdraw",transactionData.From.Email)
 				response.Write(userJSON)
 			}
 
@@ -231,7 +231,7 @@ func handelRequest() {
 				log.Println(err)
 			} else {
 					
-				notify(messageData.From.Id,  messageData.To.Id , messageData.From.Name, messageData.Message,"message",messageData.From.Id)
+				notify(messageData.From.Id,  messageData.To.Id , messageData.From.Name, messageData.Message,"message",messageData.From.Email)
 				response.Write(userJSON)
 			}
 
