@@ -75,6 +75,7 @@ func handelRequest() {
 			response.Header().Set("Content-type", "application/json")
 			jwtToken := request.Header.Get("jwtToken")
 			header := decryptJwtToken(jwtToken)
+			
 			if header == nil {
 				message, err := json.Marshal(map[string]string{"message": "failed"})
 				if err == nil {
@@ -86,6 +87,12 @@ func handelRequest() {
 			}
 			var transactionData TransactionData
 			err := json.NewDecoder(request.Body).Decode(&transactionData)
+			Println(header["id"])
+			if(header["id"]!=transactionData.To.Id){
+                log.Println("Header error")
+				response.Write(message)
+				return
+			}
 			if err != nil {
 				log.Printf("verbose error info: %#v", err)
 				return
@@ -97,7 +104,7 @@ func handelRequest() {
 				if err != nil {
 					log.Println(err)
 				} else {
-					notify(transactionData.From.Id,  transactionData.From.Id , transactionData.From.Name, transactionData.Amount,"addedMoney",transactionData.From.Email)
+					notify(transactionData.To.Id,  transactionData.To.Id , transactionData.From.Name, transactionData.Amount,"addedMoney",transactionData.From.Email)
 					response.Write(userJSON)
 				}
 
