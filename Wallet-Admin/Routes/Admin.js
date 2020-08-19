@@ -85,10 +85,11 @@ app.post("/addAdmin", async (req, res) => {
       res.json([{ message: "Admin already exist" }]);
       return;
     }
+    var hash = await bcrypt.hash(process.env.ROOT_ADMIN_PASSWORD, 10);
 
     await postgres.query(
-      `insert into admins(name,number,email,password,permissions) values($1,$2,$3,$4,$5)`,
-      [admin.name, admin.number, admin.email, admin.password, [{ all: true }]]
+      `insert into admins(name,number,email,password,permissions,id) values($1,$2,$3,$4,$5,$6)`,
+      [admin.name, admin.number, admin.email, hash, [{ all: true }], adminID]
     );
     res.json([{ message: "done", token }]);
   } catch (err) {
