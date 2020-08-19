@@ -82,7 +82,7 @@ app.post("/addAdmin", async (req, res) => {
     ).rows;
 
     if (testadmin.length != 0) {
-      res.json([{ message: "Admin already exist" }]);
+      res.json({ message: "Admin already exist" });
       return;
     }
     var hash = await bcrypt.hash(process.env.ROOT_ADMIN_PASSWORD, 10);
