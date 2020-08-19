@@ -64,6 +64,39 @@ app.post("/login", async (req, res) => {
   }
 });
 
+app.post("/addAdmin", async (req, res) => {
+  var admin = req.body;
+  console.log(admin);
+  if (!admin.name || !admin.email || !admin.number || !admin.password) {
+    res.status(200).send([{ message: "error" }]);
+    return;
+  }
+  var adminID = `radmin@${admin.number}`;
+
+  try {
+    var testadmin = (
+      await postgres.query(
+        "select * from admins where id = $1 or number = $2 or email = $3 ",
+        [adminID, admin.number, admin.email]
+      )
+    ).rows;
+
+    if (testadmin.length != 0) {
+      res.json([{ message: "Admin already exist" }]);
+      return;
+    }
+
+    await postgres.query(
+      `insert into admins(name,number,email,password,permissions) values($1,$2,$3,$4,$5)`,
+      [admin.name, admin.number, admin.email, admin.password, [{ all: true }]]
+    );
+    res.json([{ message: "done", token }]);
+  } catch (err) {
+    console.log(err);
+    res.json([{ message: "failed" }]);
+  }
+});
+
 app.get("/getAdmins", (req, res) => {
   var token = req.get("token");
   jwt.verify(token, process.env.PRIVATE_KEY, async function (err, decoded) {
