@@ -91,7 +91,7 @@ app.post("/addAdmin", async (req, res) => {
       `insert into admins(name,number,email,password,permissions,id) values($1,$2,$3,$4,$5,$6)`,
       [admin.name, admin.number, admin.email, hash, [{ all: true }], adminID]
     );
-    res.json([{ message: "done", token }]);
+    res.json([{ message: "done" }]);
   } catch (err) {
     console.log(err);
     res.json([{ message: "failed" }]);
