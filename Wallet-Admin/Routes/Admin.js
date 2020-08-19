@@ -89,7 +89,14 @@ app.post("/addAdmin", async (req, res) => {
 
     await postgres.query(
       `insert into admins(name,number,email,password,permissions,id) values($1,$2,$3,$4,$5,$6)`,
-      [admin.name, admin.number, admin.email, hash, [{ all: true }], adminID]
+      [
+        admin.name,
+        "+91" + admin.number,
+        admin.email,
+        hash,
+        [{ all: true }],
+        adminID,
+      ]
     );
     res.json([{ message: "done" }]);
   } catch (err) {
