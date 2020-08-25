@@ -104,10 +104,11 @@ var sendOtp = async (req, res, otpTable, appId) => {
       number,
       otpNumber,
     ]);
-    await smsApi.smsSendPost(smsCollection);
+    var sms = await smsApi.smsSendPost(smsCollection);
+    console.log(sms);
     res.json([{ message: "done" }]);
   } catch (err) {
-    // console.log(err);
+    console.log(err);
     res.json([{ message: "failed", err }]);
   }
 };
