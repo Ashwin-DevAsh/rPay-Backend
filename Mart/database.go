@@ -98,6 +98,8 @@ func doOrder(db *sql.DB, transactionData TransactionData, transactionID *uint64,
 		rowsTransactionID.Scan(&transactionID)
 	}
 
+	log.Println("transaction id = ", transactionID)
+
 	if errTrans != nil {
 		tx.Rollback()
 		return false
