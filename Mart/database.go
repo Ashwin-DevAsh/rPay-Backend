@@ -37,6 +37,7 @@ func Connect() *sql.DB {
 
 func doOrder(db *sql.DB, transactionData TransactionData, transactionID *uint64, transactionTime *string) bool {
 
+	return true
 	if transactionData.From.Id == transactionData.To.Id {
 		return false
 	}
