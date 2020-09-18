@@ -37,7 +37,6 @@ func Connect() *sql.DB {
 
 func doOrder(db *sql.DB, transactionData TransactionData, transactionID *uint64, transactionTime *string) bool {
 
-	return true
 	if transactionData.From.Id == transactionData.To.Id {
 		return false
 	}
@@ -47,6 +46,11 @@ func doOrder(db *sql.DB, transactionData TransactionData, transactionID *uint64,
 	Amount, _ := strconv.ParseUint(transactionData.Amount, 10, 64)
 
 	row, err := db.Query("select * from amount where id=$1", transactionData.From.Id)
+
+	if err!=nil{
+		log.Println(err)
+		return false
+	}
 
 	var id string
 	var balance uint64
