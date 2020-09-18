@@ -107,7 +107,7 @@ func handelRequest() {
 			if doOrder(db, orderData.TransactionData, &transactionID, &transactionTime) {
 				userJSON, err := json.Marshal(map[string]interface{}{
 					"message":         "done",
-					"transactionID":   transactionID,
+					"transactionID":   *transactionID,
 					"transactionTime": transactionTime,
 				})
 				if err != nil {
