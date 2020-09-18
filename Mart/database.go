@@ -1,9 +1,13 @@
 package main
 
 import (
+	"bytes"
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"log"
+	"net/http"
+	"strconv"
 	"time"
 
 	_ "github.com/lib/pq"
@@ -31,30 +35,104 @@ func Connect() *sql.DB {
 	return db
 }
 
-func doTransaction(db *sql.DB, from string, to string, toName string, amount uint64) bool {
-	_, errFrom := db.Exec("update amount set balance = balance - $1 where id = $2", amount, from)
+func doOrder(db *sql.DB, transactionData TransactionData, transactionID *uint64, transactionTime *string) bool {
+
+	if transactionData.From.Id == transactionData.To.Id {
+		return false
+	}
+
+	fromJson, _ := json.Marshal(&transactionData.From)
+	toJson, _ := json.Marshal(&transactionData.To)
+	Amount, _ := strconv.ParseUint(transactionData.Amount, 10, 64)
+
+	row, err := db.Query("select * from amount where id=$1", transactionData.From.Id)
+
+	var id string
+	var balance uint64
+
+	if row.Next() {
+		row.Scan(&id, &balance)
+	} else {
+		return false
+	}
+
+	if balance < Amount {
+		return false
+	}
+
+	tx, err := db.Begin()
+	if err != nil {
+		return false
+	}
+	_, errFrom := tx.Exec("update amount set balance = balance - $1 where id = $2", Amount, transactionData.From.Id)
 
 	if errFrom != nil {
+		tx.Rollback()
 		log.Println(errFrom)
 		return false
 	}
 
-	_, errTo := db.Exec("update amount set balance = balance + $1 where id = $2", amount, to)
+	loc, _ := time.LoadLocation("Asia/Kolkata")
+	dt := time.Now().In(loc)
 
-	if errTo != nil {
-		db.Exec("update amount set balance = balance + $1 where id = $2", amount, from)
-		return false
+	*transactionTime = dt.Format("01-02-2006 15:04:05")
+
+	rowsTransactionID, errTrans :=
+		tx.Query(`insert
+		           into transactions(
+					   transactionTime,
+					   fromMetadata,
+					   toMetadata,
+					   amount,
+					   isGenerated,
+					   iswithdraw)
+				    values($1,$2,$3,$4,$5,$6) returning transactionID`,
+			transactionTime, fromJson, toJson, Amount, false, false)
+
+	if rowsTransactionID.Next() {
+		rowsTransactionID.Scan(&transactionID)
 	}
-
-	dt := time.Now()
-
-	_, errTrans := db.Exec("insert into transactions(transactionTime,fromID,toID,toName,amount) values($1,$2,$3,$4,$5)", dt.Format("01-02-2006 15:04:05"), from, to, toName, amount)
 
 	if errTrans != nil {
-		db.Exec("update amount set balance = balance + $1 where id = $2", amount, from)
-		db.Exec("update amount set balance = balance - $1 where id = $2", amount, to)
+		tx.Rollback()
 		return false
 	}
 
-	return true
+	jsonBodyData := map[string]interface{}{
+		"transactionID": transactionID,
+		"senderBalance": balance,
+		"from":          transactionData.From,
+		"to":            transactionData.To,
+		"isGenerated":   false,
+		"isWithdraw":    false,
+		"amount":        Amount,
+	}
+
+	jsonBody, _ := json.Marshal(jsonBodyData)
+
+	resp, err := http.Post("http://wallet-block:9000/addTransactionBlock/", "application/json", bytes.NewBuffer(jsonBody))
+
+	if err != nil {
+		tx.Rollback()
+		return false
+	}
+
+	defer resp.Body.Close()
+
+	var respResult map[string]interface{}
+	json.NewDecoder(resp.Body).Decode(&respResult)
+
+	if err != nil {
+		tx.Rollback()
+		return false
+	}
+
+	if respResult["message"] == "done" {
+		tx.Commit()
+		return true
+	} else {
+		tx.Rollback()
+		return false
+	}
+
 }

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
@@ -73,28 +74,28 @@ func handelRequest() {
 	r.HandleFunc("/order", func(response http.ResponseWriter, request *http.Request) {
 		if request.Method == "POST" {
 			response.Header().Set("Content-type", "application/json")
-			// jwtToken := request.Header.Get("jwtToken")
-			// header := decryptJwtToken(jwtToken)
-			// if header == nil {
-			// 	message, err := json.Marshal(map[string]string{"message": "failed"})
-			// 	if err == nil {
-			// 		log.Println(err)
-			// 	}
-			// 	log.Println("Header error")
-			// 	response.Write(message)
-			// 	return
-			// }
+			jwtToken := request.Header.Get("jwtToken")
+			header := decryptJwtToken(jwtToken)
+			if header == nil {
+				message, err := json.Marshal(map[string]string{"message": "failed"})
+				if err == nil {
+					log.Println(err)
+				}
+				log.Println("Header error")
+				response.Write(message)
+				return
+			}
 			var orderData OrderData
 			err := json.NewDecoder(request.Body).Decode(&orderData)
 
 			log.Println(orderData)
 
-			// if (header["number"]) != strings.Replace(orderData.transactionData.From.Number, "+", "", -1) {
-			// 	message, _ := json.Marshal(map[string]string{"message": "failed"})
-			// 	log.Println("Header error")
-			// 	response.Write(message)
-			// 	return
-			// }
+			if (header["number"]) != strings.Replace(orderData.transactionData.From.Number, "+", "", -1) {
+				message, _ := json.Marshal(map[string]string{"message": "failed"})
+				log.Println("Header error")
+				response.Write(message)
+				return
+			}
 
 			if err != nil {
 				log.Printf("verbose error info: %#v", err)
@@ -103,7 +104,7 @@ func handelRequest() {
 
 			var transactionID uint64 = 0
 			var transactionTime string = ""
-			if true {
+			if doOrder(db, orderData.transactionData, &transactionID, &transactionTime) {
 				userJSON, err := json.Marshal(map[string]interface{}{
 					"message":         "done",
 					"transactionID":   transactionID,
