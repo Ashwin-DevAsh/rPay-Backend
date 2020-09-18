@@ -67,7 +67,7 @@ type CartProuct struct {
 type OrderData struct {
 	Amount          string
 	Products        []CartProuct
-	transactionData TransactionData
+	TransactionData TransactionData
 }
 
 func handelRequest() {
