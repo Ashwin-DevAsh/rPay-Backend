@@ -90,7 +90,7 @@ func handelRequest() {
 
 			log.Println(orderData)
 
-			if (header["number"]) != strings.Replace(orderData.transactionData.From.Number, "+", "", -1) {
+			if (header["number"]) != strings.Replace(orderData.TransactionData.From.Number, "+", "", -1) {
 				message, _ := json.Marshal(map[string]string{"message": "failed"})
 				log.Println("Header error")
 				response.Write(message)
@@ -104,7 +104,7 @@ func handelRequest() {
 
 			var transactionID uint64 = 0
 			var transactionTime string = ""
-			if doOrder(db, orderData.transactionData, &transactionID, &transactionTime) {
+			if doOrder(db, orderData.TransactionData, &transactionID, &transactionTime) {
 				userJSON, err := json.Marshal(map[string]interface{}{
 					"message":         "done",
 					"transactionID":   transactionID,
