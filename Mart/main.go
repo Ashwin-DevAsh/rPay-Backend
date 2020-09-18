@@ -113,6 +113,7 @@ func handelRequest() {
 				if err != nil {
 					log.Println(err)
 				} else {
+					notify(orderData.TransactionData.To.Id,  orderData.TransactionData.To.Id , orderData.TransactionData.From.Name, orderData.TransactionData.Amount,"rmartPayment",orderData.TransactionData.From.Email)
 					response.Write(userJSON)
 				}
 
