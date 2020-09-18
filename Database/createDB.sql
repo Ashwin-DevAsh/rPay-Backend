@@ -37,6 +37,16 @@ create table merchantsOtp(
     verified Boolean
 );
 
+-- mart --
+
+create table orders(
+  orederId bigserial,
+  status varchar,
+  amount bigint,
+  products json[],
+  paymentMetadata json
+)
+
 -- admin...
 
 create table admins(
