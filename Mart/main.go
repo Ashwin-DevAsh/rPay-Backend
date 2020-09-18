@@ -53,7 +53,7 @@ type TransactionData struct {
 }
 
 type CartProuct struct {
-	Count   string
+	Count   uint64
 	Amount  string
 	Product struct {
 		ProductId    string
