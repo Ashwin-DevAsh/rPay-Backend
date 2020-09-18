@@ -95,8 +95,9 @@ func doOrder(db *sql.DB, transactionData TransactionData, transactionID *uint64,
 			transactionTime, fromJson, toJson, Amount, false, false)
 
 	if rowsTransactionID.Next() {
-		rowsTransactionID.Scan(&transactionID)
+		rowsTransactionID.Scan(transactionID)
 	}
+
 
 
 	if errTrans != nil {
@@ -104,7 +105,7 @@ func doOrder(db *sql.DB, transactionData TransactionData, transactionID *uint64,
 		return false
 	}
 
-	log.Println("transaction id = ", *transactionID)
+	log.Println("transaction id = ", transactionID)
 
 
 	jsonBodyData := map[string]interface{}{
