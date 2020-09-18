@@ -102,7 +102,7 @@ func doTransaction(db *sql.DB, transactionData TransactionData, transactionID *u
 			transactionTime, fromJson, toJson, Amount, false, false)
 
 	if rowsTransactionID.Next() {
-		rowsTransactionID.Scan(&transactionID)
+		rowsTransactionID.Scan(transactionID)
 	}
 
 	if errTrans != nil {
