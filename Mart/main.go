@@ -102,7 +102,7 @@ func handelRequest() {
 				return
 			}
 
-			var transactionID uint64 = 0
+			var transactionID *uint64 = 0
 			var transactionTime string = ""
 			if doOrder(db, orderData.TransactionData, &transactionID, &transactionTime) {
 				userJSON, err := json.Marshal(map[string]interface{}{
