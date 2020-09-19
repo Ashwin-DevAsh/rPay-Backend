@@ -109,9 +109,18 @@ func doOrder(db *sql.DB, orderData OrderData, transactionID *uint64, transaction
 				    values($1,$2,$3,$4,$5,$6) returning transactionID`,
 			transactionTime, fromJson, toJson, Amount, false, false)
 
+
+	if errTrans!=nil{
+		tx.Rollback()
+		log.Println(errTrans)
+		tx.Rollback()
+	}
+
 	if rowsTransactionID.Next() {
 		rowsTransactionID.Scan(transactionID)
 	}
+
+
 
 
 	order, errTrans :=
@@ -127,8 +136,9 @@ func doOrder(db *sql.DB, orderData OrderData, transactionID *uint64, transaction
 			Amount,toJson, transactionTime, products,fromJson)
 
 	if errTrans!=nil{
+		tx.Rollback()
 		log.Println(errTrans)
-		return false
+		tx.Rollback()
 	}
 
 	if order.Next() {
