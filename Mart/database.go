@@ -54,7 +54,7 @@ func doOrder(db *sql.DB, orderData OrderData, transactionID *uint64, transaction
 	fromJson, _ := json.Marshal(&orderData.TransactionData.From)
 	toJson, _ := json.Marshal(&orderData.TransactionData.To)
 	Amount, _ := strconv.ParseUint(orderData.TransactionData.Amount, 10, 64)
-	products,_ := json.Marshal(&orderData.Products)   
+	// products,_ := json.Marshal(&orderData.Products)   
 
 
 	row, err := db.Query("select * from amount where id=$1", orderData.TransactionData.From.Id)
@@ -133,7 +133,7 @@ func doOrder(db *sql.DB, orderData OrderData, transactionID *uint64, transaction
 					   products,
 					   paymentMetadata)
 				    values('pending',$1,$2,$3,$4,$5) returning *`,
-			Amount,toJson, transactionTime, pq.Array(products),fromJson)
+			Amount,toJson, transactionTime, pq.Array(orderData.Products),fromJson)
 
 	if errTrans!=nil{
 		tx.Rollback()
