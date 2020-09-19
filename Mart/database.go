@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"time"
 
-	pq "github.com/lib/pq"
+	_ "github.com/lib/pq"
 )
 
 // Connect ...
