@@ -125,7 +125,7 @@ func doOrder(db *sql.DB, orderData OrderData, transactionID *uint64, transaction
 
 	order, errTrans :=
 		tx.Query(`insert
-		           into orders(
+		           into table(
 					   status,
 					   amount,
 					   orderdBy,
@@ -138,7 +138,7 @@ func doOrder(db *sql.DB, orderData OrderData, transactionID *uint64, transaction
 	if errTrans!=nil{
 		tx.Rollback()
 		log.Println(errTrans)
-		tx.Rollback()
+	    return false
 	}
 
 	if order.Next() {
