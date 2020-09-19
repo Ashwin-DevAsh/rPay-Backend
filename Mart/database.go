@@ -98,28 +98,28 @@ func doOrder(db *sql.DB, orderData OrderData, transactionID *uint64, transaction
 
 	*transactionTime = dt.Format("01-02-2006 15:04:05")
 
-	rowsTransactionID, errTrans :=
-		tx.Query(`insert
-		           into transactions(
-					   transactionTime,
-					   fromMetadata,
-					   toMetadata,
-					   amount,
-					   isGenerated,
-					   iswithdraw)
-				    values($1,$2,$3,$4,$5,$6) returning transactionID`,
-			transactionTime, fromJson, toJson, Amount, false, false)
+	// rowsTransactionID, errTrans :=
+	// 	tx.Query(`insert
+	// 	           into transactions(
+	// 				   transactionTime,
+	// 				   fromMetadata,
+	// 				   toMetadata,
+	// 				   amount,
+	// 				   isGenerated,
+	// 				   iswithdraw)
+	// 			    values($1,$2,$3,$4,$5,$6) returning transactionID`,
+	// 		transactionTime, fromJson, toJson, Amount, false, false)
 
 
-	if errTrans!=nil{
-		tx.Rollback()
-		log.Println(errTrans)
-		return false
-	}
+	// if errTrans!=nil{
+	// 	tx.Rollback()
+	// 	log.Println(errTrans)
+	// 	return false
+	// }
 
-	if rowsTransactionID.Next() {
-		rowsTransactionID.Scan(transactionID)
-	}
+	// if rowsTransactionID.Next() {
+	// 	rowsTransactionID.Scan(transactionID)
+	// }
 
 
 
