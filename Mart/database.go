@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"strconv"
 	"time"
-	// "strings"
+	"strings"
 	_ "github.com/lib/pq"
 )
 
@@ -124,6 +124,12 @@ func doOrder(db *sql.DB, orderData OrderData, transactionID *uint64, transaction
 
 
 	productString :=  string(products) 
+	productString = strings.Replace(productString,"[","{")
+	productString = strings.Replace(productString,"]","}")
+	productString = strings.Replace(productString,"'","")
+
+
+
 
 
 
