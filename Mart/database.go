@@ -124,9 +124,9 @@ func doOrder(db *sql.DB, orderData OrderData, transactionID *uint64, transaction
 
 
 	productString :=  string(products) 
-	productString = strings.Replace(productString,"[","{")
-	productString = strings.Replace(productString,"]","}")
-	productString = strings.Replace(productString,"'","")
+	productString = strings.Replace(productString,"[","{",-1)
+	productString = strings.Replace(productString,"]","}",-1)
+	productString = strings.Replace(productString,"'","",-1)
 
 
 
