@@ -61,7 +61,7 @@ func doOrder(db *sql.DB, orderData OrderData, transactionID *uint64, transaction
 
 	for _,product := range orderData.Products{
 		productJson,_ :=  json.Marshal(&product) 
-		products = append(products,string(productJson))
+		products = append(products,product)
 	}
 
 
