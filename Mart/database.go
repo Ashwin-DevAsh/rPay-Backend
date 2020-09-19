@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"strconv"
 	"time"
-
+	"strings"
 	_ "github.com/lib/pq"
 )
 
