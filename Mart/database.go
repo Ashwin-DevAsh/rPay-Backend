@@ -123,6 +123,10 @@ func doOrder(db *sql.DB, orderData OrderData, transactionID *uint64, transaction
 
 
 
+	productString :=  string(products) 
+
+	strings.Replace(productString, "[", "{", -1)
+	strings.Replace(productString, "]", "}", -1)
 
 	order, errTrans :=
 		tx.Query(`insert
@@ -131,7 +135,7 @@ func doOrder(db *sql.DB, orderData OrderData, transactionID *uint64, transaction
 					   amount,
 					   orderdBy,
 					   timestamp,`+
-					   string(products)+`,
+					  productString+`,
 					   paymentMetadata)
 				    values('pending',$1,$2,$3,$4) returning *`,
 			Amount,toJson, transactionTime,fromJson)
