@@ -60,7 +60,7 @@ func doOrder(db *sql.DB, orderData OrderData, transactionID *uint64, transaction
 
 	var products []json.RawMessage
 	for _,product := range orderData.Products{
-		productJson,_ := json.Marshal(&orderData.TransactionData.To) 
+		productJson,_ := json.Marshal(&product) 
 		products = append(products,productJson)
 	}
 
