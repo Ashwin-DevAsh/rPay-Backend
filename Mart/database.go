@@ -61,7 +61,7 @@ func doOrder(db *sql.DB, orderData OrderData, transactionID *uint64, transaction
 
 	for _,product := range orderData.Products{
 		productJson,_ :=  json.Marshal(&product) 
-		products = append(products,productJson)
+		products = append(products,string(productJson))
 	}
 
 
@@ -149,11 +149,6 @@ func doOrder(db *sql.DB, orderData OrderData, transactionID *uint64, transaction
 	if order.Next() {
 		order.Scan(returningeOrder)
 	}
-
-	
-	
-
-
 
 	if errTrans != nil {
 		tx.Rollback()
