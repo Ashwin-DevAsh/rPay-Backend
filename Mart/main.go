@@ -110,7 +110,7 @@ func handelRequest() {
 					"message":         "done",
 					"transactionID":   transactionID,
 					"transactionTime": transactionTime,
-					"order":orderDatabase
+					"order":orderDatabase,
 				})
 				if err != nil {
 					log.Println(err)
