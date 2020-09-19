@@ -58,6 +58,8 @@ func doOrder(db *sql.DB, orderData OrderData, transactionID *uint64, transaction
 
 	row, err := db.Query("select * from amount where id=$1", orderData.TransactionData.From.Id)
 
+	log.Println(products)
+
 	if err!=nil{
 		log.Println(err)
 		return false
