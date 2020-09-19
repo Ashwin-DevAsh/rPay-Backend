@@ -123,8 +123,8 @@ func doOrder(db *sql.DB, orderData OrderData, transactionID *uint64, transaction
 					   timestamp,
 					   products,
 					   paymentMetadata)
-				    values($1,$2,$3,$4,$5,$6)`,
-			"pending", Amount,toJson, transactionTime, products,fromJson)
+				    values('pending',$1,$2,$3,$4,$5) returning *`,
+			Amount,toJson, transactionTime, products,fromJson)
 
 	if errTrans!=nil{
 		log.Println(errTrans)
