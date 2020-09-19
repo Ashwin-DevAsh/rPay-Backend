@@ -130,11 +130,11 @@ func doOrder(db *sql.DB, orderData OrderData, transactionID *uint64, transaction
 					   status,
 					   amount,
 					   orderdBy,
-					   timestamp,
-					   products,
+					   timestamp,`+
+					   string(products)+`,
 					   paymentMetadata)
-				    values('pending',$1,$2,$3,$4,$5) returning *`,
-			Amount,toJson, transactionTime, pq.Array(products),fromJson)
+				    values('pending',$1,$2,$3,$4) returning *`,
+			Amount,toJson, transactionTime,fromJson)
 
 	if errTrans!=nil{
 		tx.Rollback()
