@@ -127,11 +127,7 @@ func doOrder(db *sql.DB, orderData OrderData, transactionID *uint64, transaction
 		tx.Query(`insert
 		           into orders(
 					   status,
-					   amount,
-					   orderdBy,
-					   timestamp,
-					   products,
-					   paymentMetadata)
+					   amount)
 				    values('pending',$1) returning *`,
 			Amount)
 
