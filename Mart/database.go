@@ -36,12 +36,12 @@ func Connect() *sql.DB {
 }
 
 type OrderDatabase{
-  OrederId interface{},
-  Status interface{},
-  Amount interface{},
-  OrderdBy interface{},
-  Timestamp interface{},
-  Products []json.RawMessage,
+  OrederId interface{}
+  Status interface{}
+  Amount interface{}
+  OrderdBy interface{}
+  Timestamp interface{}
+  Products []json.RawMessage
   PaymentMetadata json.RawMessage
 }
 
