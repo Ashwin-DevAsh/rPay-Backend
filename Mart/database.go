@@ -121,6 +121,11 @@ func doOrder(db *sql.DB, orderData OrderData, transactionID *uint64, transaction
 				    values($1,$2,$3,$4,$5,$6) returning *`,
 			"pending", Amount,toJson, transactionTime, orderData.Products,fromJson)
 
+	if errTrans!=nil{
+		log.Println(errTrans)
+		return false
+	}
+
 	if order.Next() {
 		order.Scan(returningeOrder)
 	}
