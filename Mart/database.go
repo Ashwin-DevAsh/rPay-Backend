@@ -59,7 +59,7 @@ func doOrder(db *sql.DB, orderData OrderData, transactionID *uint64, transaction
 
 	row, err := db.Query("select * from amount where id=$1", orderData.TransactionData.From.Id)
 
-	for _,product : range orderData.Products{
+	for _,product := range orderData.Products{
 		products = append(products,product)
 	}
 
