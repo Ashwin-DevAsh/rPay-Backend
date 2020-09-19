@@ -136,7 +136,7 @@ func doOrder(db *sql.DB, orderData OrderData, transactionID *uint64, transaction
 					   timestamp,
 					   products,
 					   paymentMetadata)
-				    values('pending',$1,$2,$3,  jsonb_array_elements('`+productString+`'::jsonb),$4) returning *`,
+				    values('pending',$1,$2,$3,  json_array_elements('`+productString+`'::json),$4) returning *`,
 			Amount,toJson, transactionTime,fromJson)
 
 	if errTrans!=nil{
