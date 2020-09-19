@@ -39,7 +39,7 @@ type OrderDatabase{
   OrederId interface{},
   Status interface{},
   Amount interface{},
-  OrderdBy interface{}
+  OrderdBy interface{},
   Timestamp interface{},
   Products []json.RawMessage,
   PaymentMetadata json.RawMessage
