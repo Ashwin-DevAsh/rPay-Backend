@@ -58,6 +58,7 @@ func doOrder(db *sql.DB, orderData OrderData, transactionID *uint64, transaction
 	log.Println(products)
 
 
+
 	row, err := db.Query("select * from amount where id=$1", orderData.TransactionData.From.Id)
 
 
@@ -127,11 +128,9 @@ func doOrder(db *sql.DB, orderData OrderData, transactionID *uint64, transaction
 	order, errTrans :=
 		tx.Query(`insert
 		           into orders(
-					
-					   amount
-					 )
+					   products)
 				    values($1) returning *`,
-			Amount)
+			 products)
 
 	if errTrans!=nil{
 		tx.Rollback()
