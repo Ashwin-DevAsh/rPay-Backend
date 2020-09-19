@@ -43,6 +43,8 @@ create table orders(
   orederId bigserial,
   status varchar,
   amount bigint,
+  orderdBy json
+  timestamp timestamp default current_timestamp,
   products json[],
   paymentMetadata json
 )

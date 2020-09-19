@@ -35,17 +35,27 @@ func Connect() *sql.DB {
 	return db
 }
 
-func doOrder(db *sql.DB, transactionData TransactionData, transactionID *uint64, transactionTime *string) bool {
+type OrderDatabase{
+  OrederId interface{},
+  Status interface{},
+  Amount interface{},
+  OrderdBy interface{}
+  Timestamp interface{},
+  Products []json.RawMessage,
+  PaymentMetadata json.RawMessage
+}
 
-	if transactionData.From.Id == transactionData.To.Id {
+func doOrder(db *sql.DB, orderData OrderData, transactionID *uint64, transactionTime *string) bool {
+
+	if orderData.TransactionData.From.Id == orderData.ransactionData.To.Id {
 		return false
 	}
 
-	fromJson, _ := json.Marshal(&transactionData.From)
-	toJson, _ := json.Marshal(&transactionData.To)
-	Amount, _ := strconv.ParseUint(transactionData.Amount, 10, 64)
+	fromJson, _ := json.Marshal(&orderData.TransactionData.From)
+	toJson, _ := json.Marshal(&orderData.TransactionData.To)
+	Amount, _ := strconv.ParseUint(orderData.TransactionData.Amount, 10, 64)
 
-	row, err := db.Query("select * from amount where id=$1", transactionData.From.Id)
+	row, err := db.Query("select * from amount where id=$1", orderData.TransactionData.From.Id)
 
 	if err!=nil{
 		log.Println(err)
@@ -69,7 +79,7 @@ func doOrder(db *sql.DB, transactionData TransactionData, transactionID *uint64,
 	if err != nil {
 		return false
 	}
-	_, errFrom := tx.Exec("update amount set balance = balance - $1 where id = $2", Amount, transactionData.From.Id)
+	_, errFrom := tx.Exec("update amount set balance = balance - $1 where id = $2", Amount, orderData.TransactionData.From.Id)
 
 	if errFrom != nil {
 		tx.Rollback()
@@ -98,6 +108,9 @@ func doOrder(db *sql.DB, transactionData TransactionData, transactionID *uint64,
 		rowsTransactionID.Scan(transactionID)
 	}
 
+	
+	
+
 
 
 	if errTrans != nil {
@@ -111,8 +124,8 @@ func doOrder(db *sql.DB, transactionData TransactionData, transactionID *uint64,
 	jsonBodyData := map[string]interface{}{
 		"transactionID": transactionID,
 		"senderBalance": balance,
-		"from":          transactionData.From,
-		"to":            transactionData.To,
+		"from":         orderData.transactionData.From,
+		"to":           orderData.transactionData.To,
 		"isGenerated":   false,
 		"isWithdraw":    false,
 		"amount":        Amount,
