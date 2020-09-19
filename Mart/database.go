@@ -112,7 +112,7 @@ func doOrder(db *sql.DB, orderData OrderData, transactionID *uint64, transaction
 
 	if errTrans!=nil{
 		tx.Rollback()
-		log.Println("error = ",errTrans)
+		log.Println(errTrans)
 		return false
 	}
 
@@ -137,7 +137,7 @@ func doOrder(db *sql.DB, orderData OrderData, transactionID *uint64, transaction
 
 	if errTrans!=nil{
 		tx.Rollback()
-		log.Println(errTrans)
+		log.Println("err = ",errTrans)
 	    return false
 	}
 
