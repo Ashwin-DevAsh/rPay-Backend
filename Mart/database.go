@@ -35,7 +35,7 @@ func Connect() *sql.DB {
 	return db
 }
 
-type OrderDatabase{
+type OrderDatabase struct{
   OrederId interface{}
   Status interface{}
   Amount interface{}
