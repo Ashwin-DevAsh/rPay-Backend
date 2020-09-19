@@ -134,10 +134,10 @@ func doOrder(db *sql.DB, orderData OrderData, transactionID *uint64, transaction
 					   status,
 					   amount,
 					   orderdBy,
-					   timestamp,`+
-					  productString+`,
+					   timestamp,
+					   products,
 					   paymentMetadata)
-				    values('pending',$1,$2,$3,$4) returning *`,
+				    values('pending',$1,$2,$3,`+productString+`,$4) returning *`,
 			Amount,toJson, transactionTime,fromJson)
 
 	if errTrans!=nil{
