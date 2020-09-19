@@ -144,7 +144,7 @@ func doOrder(db *sql.DB, orderData OrderData, transactionID *uint64, transaction
 					   timestamp,
 					   products,
 					   paymentMetadata)
-				    values('pending',$1,$2,$3,array(`+productString+`::json[]),$4) returning *`,
+				    values('pending',$1,$2,$3,array`+productString+`::json[],$4) returning *`,
 			Amount,toJson, transactionTime,fromJson)
 
 	if errTrans!=nil{
