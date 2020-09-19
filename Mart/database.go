@@ -47,7 +47,7 @@ type OrderDatabase struct{
 
 func doOrder(db *sql.DB, orderData OrderData, transactionID *uint64, transactionTime *string) bool {
 
-	if orderData.TransactionData.From.Id == orderData.ransactionData.To.Id {
+	if orderData.TransactionData.From.Id == orderData.TransactionData.To.Id {
 		return false
 	}
 
@@ -124,8 +124,8 @@ func doOrder(db *sql.DB, orderData OrderData, transactionID *uint64, transaction
 	jsonBodyData := map[string]interface{}{
 		"transactionID": transactionID,
 		"senderBalance": balance,
-		"from":         orderData.transactionData.From,
-		"to":           orderData.transactionData.To,
+		"from":         orderData.TransactionData.From,
+		"to":           orderData.TransactionData.To,
 		"isGenerated":   false,
 		"isWithdraw":    false,
 		"amount":        Amount,
