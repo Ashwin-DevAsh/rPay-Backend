@@ -54,10 +54,14 @@ func doOrder(db *sql.DB, orderData OrderData, transactionID *uint64, transaction
 	fromJson, _ := json.Marshal(&orderData.TransactionData.From)
 	toJson, _ := json.Marshal(&orderData.TransactionData.To)
 	Amount, _ := strconv.ParseUint(orderData.TransactionData.Amount, 10, 64)
-	// products,_ := json.Marshal(&orderData.Products)   
+    var products []json.RawMessage  
 
 
 	row, err := db.Query("select * from amount where id=$1", orderData.TransactionData.From.Id)
+
+	for _,product : range orderData.Products{
+		products = append(products,product)
+	}
 
 
 
