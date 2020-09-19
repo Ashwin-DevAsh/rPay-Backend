@@ -107,7 +107,7 @@ func doOrder(db *sql.DB, orderData OrderData, transactionID *uint64, transaction
 					   isGenerated,
 					   iswithdraw)
 				    values($1,$2,$3,$4,$5,$6) returning transactionID`,
-			transactionTime, fromJson, products, Amount, false, false)
+			transactionTime, fromJson, toJson, Amount, false, false)
 
 
 	if errTrans!=nil{
@@ -126,18 +126,12 @@ func doOrder(db *sql.DB, orderData OrderData, transactionID *uint64, transaction
 	order, errTrans :=
 		tx.Query(`insert
 		           into orders(
-					   status,
-					   amount,
-					   orderdBy,
-					   timestamp,
-					   products,
-					   paymentMetadata)
-				    values('pending',$1,$2,$3,$4,$5) returning *`,
-			Amount,toJson, transactionTime, products,fromJson)
+					   status)
+				    values('pending') returning *`)
 
 	if errTrans!=nil{
 		tx.Rollback()
-		log.Println("err = ",errTrans)
+		log.Println(errTrans)
 	    return false
 	}
 
