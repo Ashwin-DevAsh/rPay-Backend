@@ -44,7 +44,7 @@ create table orders(
   status varchar,
   amount bigint,
   orderdBy json,
-  timestamp timestamp default current_timestamp,
+  timestamp varchar,
   products json[],
   paymentMetadata json
 );
