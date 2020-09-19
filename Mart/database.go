@@ -45,7 +45,7 @@ type OrderDatabase struct{
   PaymentMetadata json.RawMessage
 }
 
-func doOrder(db *sql.DB, orderData OrderData, transactionID *uint64, transactionTime *string) bool {
+func doOrder(db *sql.DB, orderData OrderData, transactionID *uint64, transactionTime *string,returningeOrder *OrderDatabase) bool {
 
 	if orderData.TransactionData.From.Id == orderData.TransactionData.To.Id {
 		return false
@@ -106,6 +106,23 @@ func doOrder(db *sql.DB, orderData OrderData, transactionID *uint64, transaction
 
 	if rowsTransactionID.Next() {
 		rowsTransactionID.Scan(transactionID)
+	}
+
+
+	order, errTrans :=
+		tx.Query(`insert
+		           into orders(
+					   status,
+					   amount,
+					   orderdBy,
+					   timestamp,
+					   products,
+					   paymentMetadata)
+				    values($1,$2,$3,$4,$5,$6) returning *`,
+			"pending", Amount,toJson, transactionTime, orderData.Products,fromJson)
+
+	if order.Next() {
+		order.Scan(returningeOrder)
 	}
 
 	
