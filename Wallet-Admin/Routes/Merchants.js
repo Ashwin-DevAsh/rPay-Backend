@@ -58,7 +58,7 @@ function sendNotificationToAll(id, isActive) {
   var fcm = new FCM(serverKey);
   console.log(serverKey);
   var message = {
-    condition: "true",
+    condition: "!('fakeTopic' in topics)",
     data: {
       type: `merchantStatus,${id},${isActive}`,
     },
