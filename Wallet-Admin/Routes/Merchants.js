@@ -58,11 +58,9 @@ function sendNotificationToAll(id, isActive) {
   var fcm = new FCM(serverKey);
   console.log(serverKey);
   var message = {
-    condition: "!('anytopicyoudontwanttouse' in topics)",
+    condition: "true",
     data: {
-      type: `merchantStatus`,
-
-      // type: `merchantStatus,${id},${isActive}`,
+      type: `merchantStatus,${id},${isActive}`,
     },
   };
   fcm.send(message, function (err, response) {
