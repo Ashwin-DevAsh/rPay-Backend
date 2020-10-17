@@ -149,7 +149,7 @@ var sendOtp = (req, res, otpTable) => {
         emailRecipient.name = "r pay";
 
         var emailFrom = new api.EmailFrom();
-        emailFrom.emailAddressId = 11756;
+        emailFrom.emailAddressId = 12701;
         emailFrom.name = "r pay";
 
         var email = new api.Email();
