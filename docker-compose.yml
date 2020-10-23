@@ -27,7 +27,7 @@ services:
     build: Wallet-Admin
     depends_on: [database]
     environment:
-      VIRTUAL_HOST: a.localhost.com
+      VIRTUAL_HOST: http://a.ec2-3-17-161-20.us-east-2.compute.amazonaws.com/
     ports:
       - 4500:4500
 
