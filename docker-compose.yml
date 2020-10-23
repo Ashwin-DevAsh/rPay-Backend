@@ -26,6 +26,8 @@ services:
   wallet-admin:
     build: Wallet-Admin
     depends_on: [database]
+    environment:
+      VIRTUAL_HOST: a.localhost.com
     ports:
       - 4500:4500
 
