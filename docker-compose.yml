@@ -16,38 +16,48 @@ services:
     depends_on: [cache, database]
     ports:
       - 9000:9000
+    environment:
+        VIRTUAL_HOST: block.localhost
 
   wallet-profile:
     build: Wallet-Profile
     depends_on: [database, wallet-block]
     ports:
       - 8000:8000
+    environment:
+        VIRTUAL_HOST: profile.localhost
 
   wallet-admin:
     build: Wallet-Admin
     depends_on: [database]
-    environment:
-      VIRTUAL_HOST: http://a.ec2-3-17-161-20.us-east-2.compute.amazonaws.com/
     ports:
       - 4500:4500
+    environment:
+        VIRTUAL_HOST: admin.localhost
 
   mart:
     build: Mart
     depends_on: [database, wallet-block]
     ports:
       - 4600:4600
+    environment:
+        VIRTUAL_HOST: mart.localhost
 
   wallet-sync:
     build: Wallet-Sync
     depends_on: [database]
     ports:
       - 7000:7000
+    environment:
+        VIRTUAL_HOST: sync.localhost
 
   wallet-transaction:
     build: Wallet-Transaction
     depends_on: [database, wallet-block]
     ports:
       - 10000:10000
+    environment:
+        VIRTUAL_HOST: transaction.localhost
 
   nginx-proxy:
       image: jwilder/nginx-proxy
