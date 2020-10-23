@@ -48,7 +48,7 @@ services:
       - 10000:10000
 
   nginx-proxy:
-      image: nginx-proxy
+      image: jwilder/nginx-proxy
       ports:
         - "80:80"
         - "443:443"
