@@ -369,7 +369,6 @@ func sendMessage(db *sql.DB, messageData MessageData) bool {
 		return false
 	}
 	return true
-
 }
 
 // MyState ...

@@ -46,3 +46,13 @@ services:
     depends_on: [database, wallet-block]
     ports:
       - 10000:10000
+
+  nginx-proxy: (3)
+      image: jwilder/nginx-proxy
+      ports:
+        - "80:80"
+        - "443:443"
+      volumes:
+        - /var/run/docker.sock:/tmp/docker.sock:ro
+      restart: always
+      privileged: true
