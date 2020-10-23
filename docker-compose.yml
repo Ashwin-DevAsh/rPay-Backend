@@ -47,7 +47,7 @@ services:
     ports:
       - 10000:10000
 
-  nginx-proxy: (3)
+  nginx-proxy:
       image: nginx-proxy
       ports:
         - "80:80"
