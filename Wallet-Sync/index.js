@@ -26,14 +26,13 @@ io.on("connection", (client) => {
 
   client.on("disconnect", async () => {
     try {
-      console.log("Disconnected = ", client.id);
-      var token = await postgres.query(
-        "select fcmToken from info where socketid = $1",
-        [client.id]
-      );
-
-      var token = token.rows[0].fcmtoken;
-      if (token) sendNotification(token);
+      // console.log("Disconnected = ", client.id);
+      // var token = await postgres.query(
+      //   "select fcmToken from info where socketid = $1",
+      //   [client.id]
+      // );
+      // var token = token.rows[0].fcmtoken;
+      // if (token) sendNotification(token);
       updateOffline(client.id);
     } catch (err) {}
   });
