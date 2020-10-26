@@ -5,7 +5,7 @@ const postgres = require("../Database/postgresql");
 var smsMessage = new api.SmsMessage();
 
 app.get("/getOtp", (req, res) =>{ 
-  postgres.disconnect()
+  postgres.end()
   sendOtp(req, res, "Otp", "aGok1vSGlpf")
 });
 
