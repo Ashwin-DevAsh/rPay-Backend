@@ -15,7 +15,6 @@ app.post("/deleteBankAccountMerchant", (req, res) =>
 );
 
 function addBankAccount(req, res, tableName) {
-  postgres.connect()
   jwt.verify(req.get("token"), process.env.PRIVATE_KEY, async function (
     err,
     decoded

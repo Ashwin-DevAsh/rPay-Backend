@@ -4,32 +4,18 @@ var api = require("clicksend");
 const postgres = require("../Database/postgresql");
 var smsMessage = new api.SmsMessage();
 
-app.get("/getOtp", async(req, res) =>{ 
-  postgres.connect()
-  await sendOtp(req, res, "Otp", "aGok1vSGlpf")
-  postgres.end()
+app.get("/getOtp", (req, res) => sendOtp(req, res, "Otp", "aGok1vSGlpf"));
 
-});
-
-app.get("/getOtpMerchant", async(req, res) =>{
-  postgres.connect()
-  await sendOtp(req, res, "MerchantsOtp", "Uf4HyXRcQ7x")
-  postgres.end()
-}
+app.get("/getOtpMerchant", (req, res) =>
+  sendOtp(req, res, "MerchantsOtp", "Uf4HyXRcQ7x")
 );
 
-app.post("/setOtp", async(req, res) => {
-  postgres.connect()
-  await setOtp(req, res, "Otp", "users");
-  postgres.end()
-  
+app.post("/setOtp", (req, res) => {
+  setOtp(req, res, "Otp", "users");
 });
 
-app.post("/setOtpMerchant", async(req, res) => {
-  postgres.connect()
-  await setOtp(req, res, "MerchantsOtp", "merchants", "rbusiness@");
-  postgres.end()
-
+app.post("/setOtpMerchant", (req, res) => {
+  setOtp(req, res, "MerchantsOtp", "merchants", "rbusiness@");
 });
 
 var setOtp = async (req, res, otpTable, userTable, id = "rpay@") => {
