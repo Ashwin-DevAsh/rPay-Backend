@@ -22,9 +22,9 @@ class Connection {
       database: "Rec_Wallet",
     });
 
-    // client.connect((err) => {
-    //   console.log(err);
-    // });
+    client.connect((err) => {
+      console.log(err);
+    });
 
     return client;
   };
