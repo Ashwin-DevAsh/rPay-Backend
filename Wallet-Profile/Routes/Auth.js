@@ -5,21 +5,30 @@ const postgres = require("../Database/postgresql");
 var smsMessage = new api.SmsMessage();
 
 app.get("/getOtp", (req, res) =>{ 
-  postgres.end()
+  postgres.connect()
   sendOtp(req, res, "Otp", "aGok1vSGlpf")
+  postgres.end()
+
 });
 
 app.get("/getOtpMerchant", (req, res) =>{
+  postgres.connect()
   sendOtp(req, res, "MerchantsOtp", "Uf4HyXRcQ7x")
+  postgres.end()
 }
 );
 
 app.post("/setOtp", (req, res) => {
+  postgres.connect()
   setOtp(req, res, "Otp", "users");
+  postgres.end()
 });
 
 app.post("/setOtpMerchant", (req, res) => {
+  postgres.connect()
   setOtp(req, res, "MerchantsOtp", "merchants", "rbusiness@");
+  postgres.end()
+
 });
 
 var setOtp = async (req, res, otpTable, userTable, id = "rpay@") => {
