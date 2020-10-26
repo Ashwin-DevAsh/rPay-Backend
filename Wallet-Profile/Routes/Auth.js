@@ -6,8 +6,7 @@ var smsMessage = new api.SmsMessage();
 
 app.get("/getOtp", (req, res) =>{ 
   postgres.disconnect()
-
-  endOtp(req, res, "Otp", "aGok1vSGlpf")
+  sendOtp(req, res, "Otp", "aGok1vSGlpf")
 });
 
 app.get("/getOtpMerchant", (req, res) =>{
