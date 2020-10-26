@@ -4,9 +4,9 @@ var api = require("clicksend");
 const postgres = require("../Database/postgresql");
 var smsMessage = new api.SmsMessage();
 
-app.get("/getOtp", (req, res) =>{ 
+app.get("/getOtp", async(req, res) =>{ 
   postgres.connect()
-  sendOtp(req, res, "Otp", "aGok1vSGlpf")
+  await sendOtp(req, res, "Otp", "aGok1vSGlpf")
   postgres.end()
 
 });
