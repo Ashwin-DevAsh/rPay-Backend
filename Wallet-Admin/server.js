@@ -57,6 +57,7 @@ postgres
 app.use(cors(corsOptions));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
 app.use(adminRoute);
 app.use(transactions);
 app.use(Merchants);
