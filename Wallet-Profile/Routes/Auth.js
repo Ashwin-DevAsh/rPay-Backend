@@ -11,22 +11,22 @@ app.get("/getOtp", async(req, res) =>{
 
 });
 
-app.get("/getOtpMerchant", (req, res) =>{
+app.get("/getOtpMerchant", async(req, res) =>{
   postgres.connect()
-  sendOtp(req, res, "MerchantsOtp", "Uf4HyXRcQ7x")
+  await sendOtp(req, res, "MerchantsOtp", "Uf4HyXRcQ7x")
   postgres.end()
 }
 );
 
-app.post("/setOtp", (req, res) => {
+app.post("/setOtp", async(req, res) => {
   postgres.connect()
-  setOtp(req, res, "Otp", "users");
+  await setOtp(req, res, "Otp", "users");
   postgres.end()
 });
 
-app.post("/setOtpMerchant", (req, res) => {
+app.post("/setOtpMerchant", async(req, res) => {
   postgres.connect()
-  setOtp(req, res, "MerchantsOtp", "merchants", "rbusiness@");
+  await setOtp(req, res, "MerchantsOtp", "merchants", "rbusiness@");
   postgres.end()
 
 });
