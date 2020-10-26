@@ -4,10 +4,15 @@ var api = require("clicksend");
 const postgres = require("../Database/postgresql");
 var smsMessage = new api.SmsMessage();
 
-app.get("/getOtp", (req, res) => sendOtp(req, res, "Otp", "aGok1vSGlpf"));
+app.get("/getOtp", (req, res) =>{ 
+  postgres.disconnect()
 
-app.get("/getOtpMerchant", (req, res) =>
+  endOtp(req, res, "Otp", "aGok1vSGlpf")
+});
+
+app.get("/getOtpMerchant", (req, res) =>{
   sendOtp(req, res, "MerchantsOtp", "Uf4HyXRcQ7x")
+}
 );
 
 app.post("/setOtp", (req, res) => {
@@ -19,7 +24,6 @@ app.post("/setOtpMerchant", (req, res) => {
 });
 
 var setOtp = async (req, res, otpTable, userTable, id = "rpay@") => {
-  postgres.connect()
   var otpNumber = req.body["otpNumber"];
   var number = req.body["number"];
 
@@ -70,11 +74,9 @@ var setOtp = async (req, res, otpTable, userTable, id = "rpay@") => {
   } catch (err) {
     res.json([{ message: "error" }]);
   }
-  postgres.disconnect()
 };
 
 var sendOtp = async (req, res, otpTable, appId) => {
-  postgres.connect()
   var number = req.query["number"];
 
   if (!number) {
@@ -114,8 +116,6 @@ var sendOtp = async (req, res, otpTable, appId) => {
     console.log(err);
     res.json([{ message: "failed", err }]);
   }
-  postgres.disconnect()
-
 };
 
 module.exports = app;
