@@ -1,24 +1,49 @@
 const app = require("express").Router();
 const jwt = require("jsonwebtoken");
 var api = require("clicksend");
-const postgres = require("../Database/postgresql");
 var smsMessage = new api.SmsMessage();
+const { Client , Pool} = require("pg");
 
-app.get("/getOtp", (req, res) => sendOtp(req, res, "Otp", "aGok1vSGlpf"));
+const clientDetails = {
+  host: "database",
+  port: 5432,
+  user: "postgres",
+  password: process.env.POSTGRES_PASSWORD,
+  database: "Rec_Wallet",
+}
 
-app.get("/getOtpMerchant", (req, res) =>
-  sendOtp(req, res, "MerchantsOtp", "Uf4HyXRcQ7x")
+app.get("/getOtp", async(req, res) => {
+  var postgres = new Pool(clientDetails)
+  postgres.connect()
+  await sendOtp(postgres,req, res, "Otp", "aGok1vSGlpf");
+  postgres.end()
+  
+});
+
+app.get("/getOtpMerchant", async function (req, res) {
+      var postgres = new Pool(clientDetails)
+      postgres.connect()
+     await sendOtp(postgres,req, res, "MerchantsOtp", "Uf4HyXRcQ7x");
+     postgres.end()
+  }
 );
 
-app.post("/setOtp", (req, res) => {
-  setOtp(req, res, "Otp", "users");
+app.post("/setOtp", async (req, res) => {
+  var postgres = new Pool(clientDetails)
+  postgres.connect()
+  await setOtp(postgres,req, res, "Otp", "users");
+  postgres.end()
 });
 
 app.post("/setOtpMerchant", (req, res) => {
-  setOtp(req, res, "MerchantsOtp", "merchants", "rbusiness@");
+  var postgres = new Pool(clientDetails)
+  postgres.connect()
+  setOtp(postgres,req, res, "MerchantsOtp", "merchants", "rbusiness@");
+  postgres.end()
+
 });
 
-var setOtp = async (req, res, otpTable, userTable, id = "rpay@") => {
+var setOtp = async (postgres,req, res, otpTable, userTable, id = "rpay@") => {
   var otpNumber = req.body["otpNumber"];
   var number = req.body["number"];
 
@@ -71,7 +96,7 @@ var setOtp = async (req, res, otpTable, userTable, id = "rpay@") => {
   }
 };
 
-var sendOtp = async (req, res, otpTable, appId) => {
+var sendOtp = async (postgres,req, res, otpTable, appId) => {
   var number = req.query["number"];
 
   if (!number) {
