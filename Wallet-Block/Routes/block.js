@@ -14,23 +14,23 @@ app.post("/addTransactionBlock", async(req, res) => {
 app.post("/addMoneyBlock", async(req, res) => {
   var postgres = new Pool(clientDetails)
   postgres.connect()
-  addBlock(postgres,res, req.body.transactionID, req.body, "Amount Generated");
+  await addBlock(postgres,res, req.body.transactionID, req.body, "Amount Generated");
   postgres.end()
 
 });
 
-app.post("/addWithdrawBlock", (req, res) => {
+app.post("/addWithdrawBlock", async (req, res) => {
   var postgres = new Pool(clientDetails)
   postgres.connect()
-  addBlock(postgres,res, req.body.transactionID, req.body, "Withdraw");
+  await addBlock(postgres,res, req.body.transactionID, req.body, "Withdraw");
   postgres.end()
 
 });
 
-app.post("/addUserBlock", (req, res) => {
+app.post("/addUserBlock", async (req, res) => {
   var postgres = new Pool(clientDetails)
   postgres.connect()
-  addBlock(postgres,res, req.body.id, req.body, "New User");
+  await addBlock(postgres,res, req.body.id, req.body, "New User");
   postgres.end()
 
 });
