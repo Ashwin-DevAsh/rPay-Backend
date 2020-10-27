@@ -1,9 +1,38 @@
 const app = require("express").Router();
 const jwt = require("jsonwebtoken");
-const postgres = require("../Database/postgresql");
+const {Pool} = require("pg");
+const clientDetails = require("../Database/ClientDetails")
 const axios = require("axios");
 
-app.post("/addMerchant", async (req, res) => {
+app.post("/addMerchant", async (req, res) =>{
+  var postgres = new Pool(clientDetails)
+  postgres.connect()
+  await addMerchant(postgres,req,res)
+  postgres.end()  
+
+});
+
+app.get("/getMerchants", async (req, res) => {
+  var postgres = new Pool(clientDetails)
+  postgres.connect()
+  await getMerchants(postgres,req,res)
+  postgres.end()  
+
+});
+
+app.get("/getMerchant", async (req, res) => {
+  var postgres = new Pool(clientDetails)
+  postgres.connect()
+  await getMerchant(postgres,req,res)
+  postgres.end()  
+
+});
+
+
+
+
+
+var addMerchant = async (postgres,req,res)=>{
   var user = req.body;
   console.log(user);
 
@@ -95,9 +124,9 @@ app.post("/addMerchant", async (req, res) => {
     console.log(err);
     res.json([{ message: "failed" }]);
   }
-});
+}
 
-app.get("/getMerchants", async (req, res) => {
+var getMerchants = async (postgres,req,res)=>{
   try {
     var result = (
       await postgres.query(
@@ -109,9 +138,9 @@ app.get("/getMerchants", async (req, res) => {
     console.log(err);
     res.send([{ message: "failed" }]);
   }
-});
+}
 
-app.get("/getMerchant", async (req, res) => {
+var getMerchant = async (postgres,req,res)=>{
   if (req.query.id) {
     var rows = (
       await postgres.query(
@@ -124,6 +153,6 @@ app.get("/getMerchant", async (req, res) => {
     console.log(err);
     res.json({ message: "failed" });
   }
-});
+}
 
 module.exports = app;
