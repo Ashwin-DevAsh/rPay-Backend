@@ -1,6 +1,5 @@
 const app = require("express").Router();
 const jwt = require("jsonwebtoken");
-const postgres = require("../Database/postgresql");
 const axios = require("axios");
 
 const {Pool} = require("pg");
