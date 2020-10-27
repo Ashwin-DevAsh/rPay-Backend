@@ -215,7 +215,7 @@ var sendOtp = async (postgres,req, res, otpTable) => {
    
 };
 
-var setOtp = async(req, res, otpTable) => {
+var setOtp = async(postgres,req, res, otpTable) => {
   var otpNumber = req.body["otpNumber"];
   var emailID = req.body["emailID"];
   console.log(emailID);
