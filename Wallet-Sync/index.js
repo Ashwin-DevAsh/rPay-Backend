@@ -3,7 +3,8 @@ require("dotenv").config(".env");
 const app = require("express")();
 const server = require("http").createServer(app);
 const io = require("socket.io")(server);
-const postgres = require("./Database");
+const {Pool} = require("pg");
+const clientDetails = require("../Database/ClientDetails")
 const FCM = require("fcm-node");
 
 io.on("connection", (client) => {
@@ -26,13 +27,6 @@ io.on("connection", (client) => {
 
   client.on("disconnect", async () => {
     try {
-      // console.log("Disconnected = ", client.id);
-      // var token = await postgres.query(
-      //   "select fcmToken from info where socketid = $1",
-      //   [client.id]
-      // );
-      // var token = token.rows[0].fcmtoken;
-      // if (token) sendNotification(token);
       updateOffline(client.id);
     } catch (err) {}
   });
@@ -99,21 +93,27 @@ function sendNotificationToAll(id) {
 }
 
 async function updateOnline(id, socketID, fcmToken, isOnline) {
+  var postgres = new Pool(clientDetails)
+  postgres.connect()
   var insertStatement = `update info set isonline=$4 , socketid=$2 , fcmToken = $3  where id=$1`;
   try {
     await postgres.query(insertStatement, [id, socketID, fcmToken, isOnline]);
   } catch (e) {
     console.log(e);
   }
+  postgres.end()
 }
 
 async function updateOffline(socketID) {
+  var postgres = new Pool(clientDetails)
+  postgres.connect()
   insertStatement = `update info set socketid=null , isonline=false where socketid=$1`;
   try {
     await postgres.query(insertStatement, [socketID]);
   } catch (e) {
     console.log(e);
   }
+  postgres.end()
 }
 
 server.listen(7000, () => {
