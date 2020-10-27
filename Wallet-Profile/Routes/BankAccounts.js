@@ -8,7 +8,7 @@ app.post("/addBankAccount", async (req, res) => {
   var postgres = new Pool(clientDetails)
   postgres.connect()
   await addBankAccount(postgres,req, res, "users");
-  postgres.end()
+  postgres.end()  
 
 });
 app.post("/deleteBankAccount", async(req, res) =>{
@@ -25,7 +25,6 @@ app.post("/addBankAccountMerchant", async(req, res) => {
   postgres.connect()
   await addBankAccount(postgres,req, res, "merchants");
   postgres.end()
-
   }
 );
 app.post("/deleteBankAccountMerchant", async(req, res) =>{

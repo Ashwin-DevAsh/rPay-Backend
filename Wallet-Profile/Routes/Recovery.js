@@ -1,42 +1,79 @@
 const app = require("express").Router();
 var api = require("clicksend");
 const jwt = require("jsonwebtoken");
-const postgres = require("../Database/postgresql");
+const {Pool} = require("pg");
+const clientDetails = require("../Database/ClientDetails")
 
-app.get("/getRecoveryOtp", (req, res) => sendOtp(req, res, "recoveryOtp"));
+app.get("/getRecoveryOtp", async function (req, res) {
+  var postgres = new Pool(clientDetails)
+  postgres.connect()
+     await sendOtp(postgres,req, res, "recoveryOtp");
+     postgres.end()
+  });
 
-app.get("/getRecoveryOtpMerchant", (req, res) =>
-  sendOtp(req, res, "recoveryMerchantsOtp")
+app.get("/getRecoveryOtpMerchant", (req, res) =>{
+  var postgres = new Pool(clientDetails)
+  postgres.connect()
+  await sendOtp(postgres,req, res, "recoveryMerchantsOtp");
+  postgres.end()
+  }
 );
 
-app.post("/setRecoveryOtp", (req, res) => setOtp(req, res, "recoveryOtp"));
-app.post("/setRecoveryOtpMerchant", (req, res) =>
-  setOtp(req, res, "recoveryMerchantsOtp")
+app.post("/setRecoveryOtp", async (req, res) => {
+  var postgres = new Pool(clientDetails)
+  postgres.connect()
+  await setOtp(postgres,req, res, "recoveryOtp");
+  postgres.end()
+
+});
+app.post("/setRecoveryOtpMerchant", (req, res) => {
+  var postgres = new Pool(clientDetails)
+  postgres.connect()
+  await setOtp(postgres,req, res, "recoveryMerchantsOtp");
+  postgres.end()
+  }
 );
 
 app.post("/newPassword", (req, res) =>
-  newPassword(req, res, "recoveryOtp", "Users")
+  {
+    var postgres = new Pool(clientDetails)
+    postgres.connect()
+    await newPassword(postgres,req, res, "recoveryOtp", "Users");
+    postgres.end()
+  }
 );
 app.post("/newPasswordMerchant", (req, res) =>
-  newPassword(req, res, "recoveryMerchantsOtp", "Merchants")
+  {
+    var postgres = new Pool(clientDetails)
+    postgres.connect()
+    await newPassword(postgres,req, res, "recoveryMerchantsOtp", "Merchants");
+    postgres.end()
+  }
 );
 
-app.post("/changePassword", (req, res) => changePassword(req, res, "users"));
+app.post("/changePassword", (req, res) => {
+  var postgres = new Pool(clientDetails)
+  postgres.connect()
+  await changePassword(postgres,req, res, "users");
+  postgres.end()
+});
 app.post("/changeMerchantPassword", (req, res) => {
-  changePassword(req, res, "merchants");
+  var postgres = new Pool(clientDetails)
+  postgres.connect()
+  await changePassword(postgres,req, res, "merchants");
+  postgres.end()
 });
 
-var changePassword = (req, res, tableName) => {
-  console.log(req.get("token"));
-  jwt.verify(req.get("token"), process.env.PRIVATE_KEY, async function (
-    err,
-    decoded
-  ) {
-    if (err) {
-      console.log(err);
-      res.status(200).send({ message: "error" });
-      return;
-    }
+var changePassword = async (postgres,req, res, tableName) => {
+
+  try{
+    var decoded = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY)
+   }catch(e){
+     console.log(e)
+     res.send({ message: "failed" });
+     return
+   }
+
 
     console.log("Changing password...");
     var data = req.body;
@@ -69,19 +106,19 @@ var changePassword = (req, res, tableName) => {
       console.log(err);
       res.status(200).send({ message: "error" });
     }
-  });
 };
 
-var newPassword = (req, res, otpTable, userTable) => {
-  jwt.verify(req.get("token"), process.env.PRIVATE_KEY, async function (
-    err,
-    decoded
-  ) {
-    if (err) {
-      console.log(err);
-      res.status(200).send({ message: "error" });
-      return;
-    } else {
+var newPassword = async(postgres,req, res, otpTable, userTable) => {
+
+
+  try{
+    var decoded = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY)
+   }catch(e){
+     console.log(e)
+     res.send({ message: "error" });
+     return
+   }
+
       console.log("Changing password...");
       var data = req.body;
       console.log(data);
@@ -117,24 +154,23 @@ var newPassword = (req, res, otpTable, userTable) => {
         console.log(err);
         res.status(200).send({ message: "error" });
       }
-    }
-  });
 };
 
-var sendOtp = (req, res, otpTable) => {
+var sendOtp = async (postgres,req, res, otpTable) => {
   console.log("getting recovery otp");
   var emailID = req.query["emailID"];
   var otpNumber = Math.floor(1000 + Math.random() * 9000);
 
-  jwt.verify(req.get("token"), process.env.PRIVATE_KEY, async function (
-    err,
-    decoded
-  ) {
-    if (err) {
-      console.log("jwt error = ", err);
-      res.status(200).send({ message: "error" });
-      return;
-    } else {
+
+  try{
+    var decoded = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY)
+   }catch(e){
+     console.log(e)
+     res.send({ message: "error" });
+     return
+   }
+
+
       console.log("Recovery password...");
       if (emailID) {
         var emailTransactionalApi = new api.TransactionalEmailApi(
@@ -176,23 +212,24 @@ var sendOtp = (req, res, otpTable) => {
       } else {
         res.json([{ message: "failed" }]);
       }
-    }
-  });
+   
 };
 
-var setOtp = (req, res, otpTable) => {
+var setOtp = async(req, res, otpTable) => {
   var otpNumber = req.body["otpNumber"];
   var emailID = req.body["emailID"];
   console.log(emailID);
-  jwt.verify(req.get("token"), process.env.PRIVATE_KEY, async function (
-    err,
-    decoded
-  ) {
-    if (err) {
-      console.log("jwt error = ", err);
-      res.status(200).send({ message: "error" });
-      return;
-    } else {
+
+
+  try{
+    var decoded = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY)
+   }catch(e){
+     console.log(e)
+     res.send({ message: "error" });
+     return
+   }
+
+ 
       if (!otpNumber || !emailID) {
         res.json([{ message: "elements not found" }]);
         return;
@@ -220,67 +257,7 @@ var setOtp = (req, res, otpTable) => {
         console.log(err);
         res.json([{ message: "error" }]);
       }
-    }
-  });
 };
 
 module.exports = app;
 
-// Otp.findOne({ emailID: data.emailID })
-//   .exec()
-//   .then((otpDoc) => {
-//     console.log(otpDoc);
-//     if (otpDoc && otpDoc.verified) {
-//       Otp.deleteMany({
-//         emaiID: data.emaiID,
-//       }).exec();
-//       Users.findOneAndUpdate(
-//         { id: data.id },
-//         { password: data.newPassword },
-//         (err, doc) => {
-//           console.log(doc);
-//           if (err) {
-//             console.log(err);
-//             res.status(200).send({ message: "error" });
-//             return;
-//           } else {
-//             res.status(200).send({ message: "done" });
-//             return;
-//           }
-//         }
-//       );
-//     } else {
-//       res.status(200).send({ message: "otp not verified" });
-//     }
-//   });
-
-// if (otpNumber && emailID) {
-//   OtpObject.findOne({ emailID })
-//     .exec()
-//     .then((result) => {
-//       console.log(result);
-//       if (result.otp == otpNumber) {
-//         OtpObject.findOneAndUpdate(
-//           { emailID: emailID },
-//           { verified: true },
-//           (err, doc) => {
-//             console.log(doc, err);
-//             if (err) {
-//               res.json([{ message: "error" }]);
-//             } else {
-//               console.log("Verified....");
-//               res.json([{ message: "done" }]);
-//             }
-//           }
-//         );
-//       } else {
-//         console.log("Not matching....");
-//         res.json([{ message: "not matching" }]);
-//       }
-//     })
-//     .catch((err) => {
-//       res.json([{ message: "error" }]);
-//     });
-// } else {
-//   res.json([{ message: "elements not found" }]);
-// }
