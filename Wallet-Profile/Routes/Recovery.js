@@ -11,7 +11,7 @@ app.get("/getRecoveryOtp", async function (req, res) {
      postgres.end()
   });
 
-app.get("/getRecoveryOtpMerchant", (req, res) =>{
+app.get("/getRecoveryOtpMerchant", async(req, res) =>{
   var postgres = new Pool(clientDetails)
   postgres.connect()
   await sendOtp(postgres,req, res, "recoveryMerchantsOtp");
@@ -26,7 +26,7 @@ app.post("/setRecoveryOtp", async (req, res) => {
   postgres.end()
 
 });
-app.post("/setRecoveryOtpMerchant", (req, res) => {
+app.post("/setRecoveryOtpMerchant", async(req, res) => {
   var postgres = new Pool(clientDetails)
   postgres.connect()
   await setOtp(postgres,req, res, "recoveryMerchantsOtp");
@@ -34,7 +34,7 @@ app.post("/setRecoveryOtpMerchant", (req, res) => {
   }
 );
 
-app.post("/newPassword", (req, res) =>
+app.post("/newPassword", async(req, res) =>
   {
     var postgres = new Pool(clientDetails)
     postgres.connect()
@@ -42,7 +42,7 @@ app.post("/newPassword", (req, res) =>
     postgres.end()
   }
 );
-app.post("/newPasswordMerchant", (req, res) =>
+app.post("/newPasswordMerchant", async(req, res) =>
   {
     var postgres = new Pool(clientDetails)
     postgres.connect()
@@ -51,13 +51,13 @@ app.post("/newPasswordMerchant", (req, res) =>
   }
 );
 
-app.post("/changePassword", (req, res) => {
+app.post("/changePassword", async (req, res) => {
   var postgres = new Pool(clientDetails)
   postgres.connect()
   await changePassword(postgres,req, res, "users");
   postgres.end()
 });
-app.post("/changeMerchantPassword", (req, res) => {
+app.post("/changeMerchantPassword", async (req, res) => {
   var postgres = new Pool(clientDetails)
   postgres.connect()
   await changePassword(postgres,req, res, "merchants");
