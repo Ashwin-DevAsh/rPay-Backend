@@ -26,16 +26,24 @@ var upload = multer({
   }),
 }).single("profilePicture");
 
-app.post("/addProfilePicture/:id", (req, res) => {
-  jwt.verify(req.get("token"), process.env.PRIVATE_KEY, function (
-    err,
-    decoded
-  ) {
-    if (err) {
-      console.log("jwt error = ", err);
-      res.status(200).send({ message: "error", err });
-      return;
-    } else {
+app.post("/addProfilePicture/:id", async(req, res) => {
+
+  await addProfilePicture(req,res)
+
+
+});
+
+var addProfilePicture =  async (req,res)=>{
+
+
+  try{
+    var decoded = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY)
+   }catch(e){
+     console.log(e)
+     res.send({ message: "error" });
+     return
+   }
+
       upload(req, res, (err, result) => {
         if (err) {
           console.log(err);
@@ -50,8 +58,7 @@ app.post("/addProfilePicture/:id", (req, res) => {
           });
         }
       });
-    }
-  });
-});
+}
+
 
 module.exports = app;
