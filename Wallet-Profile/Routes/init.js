@@ -1,16 +1,27 @@
 const app = require("express").Router();
 const jwt = require("jsonwebtoken");
-const postgres = require("../Database/postgresql");
+const {Pool} = require("pg");
+const clientDetails = require("../Database/ClientDetails")
 
-app.get("/init/:id", (req, res) => {
-  jwt.verify(req.get("token"), process.env.PRIVATE_KEY, async function (
-    err,
-    decoded
-  ) {
-    if (err) {
-      res.status(200).send({ message: "error" });
-      return;
-    }
+app.get("/init/:id", async(req, res) => {
+
+  var postgres = new Pool(clientDetails)
+  postgres.connect()
+  await init(postgres,req,res)
+  postgres.end()  
+
+ 
+});
+
+var init = async(postgres,req,res)=>{
+
+  try{
+    var decoded = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY)
+   }catch(e){
+     console.log(e)
+     res.send({ message: "failed" });
+     return
+   }
 
     var id = req.params.id;
     if (!id) {
@@ -52,7 +63,7 @@ app.get("/init/:id", (req, res) => {
       console.log(err);
       res.json({ message: "failed" });
     }
-  });
-});
+
+ }
 
 module.exports = app;

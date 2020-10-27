@@ -2,15 +2,9 @@ const app = require("express").Router();
 const jwt = require("jsonwebtoken");
 var api = require("clicksend");
 var smsMessage = new api.SmsMessage();
-const { Client , Pool} = require("pg");
+const {  Pool} = require("pg");
+const clientDetails = require("../Database/ClientDetails")
 
-const clientDetails = {
-  host: "database",
-  port: 5432,
-  user: "postgres",
-  password: process.env.POSTGRES_PASSWORD,
-  database: "Rec_Wallet",
-}
 
 app.get("/getOtp", async(req, res) => {
   var postgres = new Pool(clientDetails)
