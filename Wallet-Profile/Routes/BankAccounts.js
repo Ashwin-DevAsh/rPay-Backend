@@ -1,28 +1,48 @@
 const app = require("express").Router();
 const jwt = require("jsonwebtoken");
-const postgres = require("../Database/postgresql");
+const {Pool} = require("pg");
+const clientDetails = require("../Database/ClientDetails")
 
-app.post("/addBankAccount", (req, res) => addBankAccount(req, res, "users"));
-app.post("/deleteBankAccount", (req, res) =>
-  deleteBankAccount(req, res, "users")
+
+app.post("/addBankAccount", async (req, res) => {
+  var postgres = new Pool(clientDetails)
+  postgres.connect()
+  await addBankAccount(postgres,req, res, "users");
+  postgres.end()
+
+});
+app.post("/deleteBankAccount", async(req, res) =>{
+  var postgres = new Pool(clientDetails)
+  postgres.connect()
+  await deleteBankAccount(postgres,req, res, "users");
+  postgres.end()
+
+  }
 );
 
-app.post("/addBankAccountMerchant", (req, res) =>
-  addBankAccount(req, res, "merchants")
+app.post("/addBankAccountMerchant", async(req, res) => {
+  var postgres = new Pool(clientDetails)
+  postgres.connect()
+  await addBankAccount(postgres,req, res, "merchants");
+  postgres.end()
+
+  }
 );
-app.post("/deleteBankAccountMerchant", (req, res) =>
-  deleteBankAccount(req, res, "merchants")
+app.post("/deleteBankAccountMerchant", async(req, res) =>{
+  var postgres = new Pool(clientDetails)
+  postgres.connect()
+  await deleteBankAccount(postgres,req, res, "merchants");
+  postgres.end()
+  }
 );
 
-function addBankAccount(req, res, tableName) {
-  jwt.verify(req.get("token"), process.env.PRIVATE_KEY, async function (
-    err,
-    decoded
-  ) {
-    if (err) {
-      console.log(err);
+async function addBankAccount(postgres,req, res, tableName) {
+    try{
+     var decoded = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY)
+    }catch(e){
+      console.log(e)
       res.send({ message: "failed" });
-      return;
+      return
     }
 
     var id = req.body.id;
@@ -49,19 +69,20 @@ function addBankAccount(req, res, tableName) {
       ]
     );
     res.send({ message: "done" });
-  });
+ 
 }
 
-function deleteBankAccount(req, res, tableName) {
-  jwt.verify(req.get("token"), process.env.PRIVATE_KEY, async function (
-    err,
-    decoded
-  ) {
-    if (err) {
-      console.log(err);
-      res.send({ message: "failed" });
-      return;
-    }
+async function deleteBankAccount(postgres,req, res, tableName) {
+
+  try{
+    var decoded = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY)
+   }catch(e){
+     console.log(e)
+     res.send({ message: "failed" });
+     return
+   }
+
+
 
     var id = req.body.id;
     var accountNumber = req.body.accountNumber;
@@ -102,6 +123,5 @@ function deleteBankAccount(req, res, tableName) {
       console.log(err);
       res.send({ message: "failed", err });
     }
-  });
 }
 module.exports = app;
