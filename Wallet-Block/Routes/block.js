@@ -1,33 +1,41 @@
 const app = require("express").Router();
-const postgres = require("../Database/Connections/pgConnections");
 const jwt = require("jsonwebtoken");
 const hash = require("object-hash");
+const {Pool} = require("pg");
+const clientDetails = require("../Database/ClientDetails")
 
-app.post("/addTransactionBlock", (req, res) => {
-  console.log("Adding transaction block....");
-  addBlock(res, req.body.transactionID, req.body, "Transaction");
-  console.log(req.body);
+app.post("/addTransactionBlock", async(req, res) => {
+  var postgres = new Pool(clientDetails)
+  postgres.connect()
+  await addBlock(postgres,res, req.body.transactionID, req.body, "Transaction");
+  postgres.end()
 });
 
-app.post("/addMoneyBlock", (req, res) => {
-  console.log("Adding money block....");
-  addBlock(res, req.body.transactionID, req.body, "Amount Generated");
-  console.log(req.body);
+app.post("/addMoneyBlock", async(req, res) => {
+  var postgres = new Pool(clientDetails)
+  postgres.connect()
+  addBlock(postgres,res, req.body.transactionID, req.body, "Amount Generated");
+  postgres.end()
+
 });
 
 app.post("/addWithdrawBlock", (req, res) => {
-  console.log("Adding withdraw block....");
-  addBlock(res, req.body.transactionID, req.body, "Withdraw");
-  console.log(req.body);
+  var postgres = new Pool(clientDetails)
+  postgres.connect()
+  addBlock(postgres,res, req.body.transactionID, req.body, "Withdraw");
+  postgres.end()
+
 });
 
 app.post("/addUserBlock", (req, res) => {
-  console.log("Adding user block....");
-  addBlock(res, req.body.id, req.body, "New User");
-  console.log(req.body);
+  var postgres = new Pool(clientDetails)
+  postgres.connect()
+  addBlock(postgres,res, req.body.id, req.body, "New User");
+  postgres.end()
+
 });
 
-const addBlock = async (res, refID, data, type) => {
+const addBlock = async (postgres,res, refID, data, type) => {
   try {
     var prevBlock = (
       await postgres.query(
