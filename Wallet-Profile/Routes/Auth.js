@@ -27,7 +27,7 @@ app.post("/setOtp", async (req, res) => {
   (await postgres).release()
 });
 
-app.post("/setOtpMerchant", (req, res) => {
+app.post("/setOtpMerchant", async (req, res) => {
   var postgres = await pool.connect()
   setOtp(postgres,req, res, "MerchantsOtp", "merchants", "rbusiness@");
   (await postgres).release()
