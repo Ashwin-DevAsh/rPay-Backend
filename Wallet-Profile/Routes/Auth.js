@@ -6,11 +6,14 @@ const {  Pool} = require("pg");
 const clientDetails = require("../Database/ClientDetails")
 
 
+var pool = new Pool(clientDetails)
+
 app.get("/getOtp", async(req, res) => {
-  var postgres = new Pool(clientDetails)
+  var postgres = await pool.connect()
   postgres.connect()
   await sendOtp(postgres,req, res, "Otp", "aGok1vSGlpf");
-  postgres.end()
+  postgres.release()
+  console.log("Ended")
   
 });
 

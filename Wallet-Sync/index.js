@@ -7,6 +7,9 @@ const {Pool} = require("pg");
 const clientDetails = require("../Database/ClientDetails")
 const FCM = require("fcm-node");
 
+var pool = new Pool(clientDetails)
+
+
 io.on("connection", (client) => {
   client.on("getInformation", (data) => {
     try {
@@ -93,27 +96,26 @@ function sendNotificationToAll(id) {
 }
 
 async function updateOnline(id, socketID, fcmToken, isOnline) {
-  var postgres = new Pool(clientDetails)
-  postgres.connect()
+
+  var postgres = await pool.connect()
   var insertStatement = `update info set isonline=$4 , socketid=$2 , fcmToken = $3  where id=$1`;
   try {
     await postgres.query(insertStatement, [id, socketID, fcmToken, isOnline]);
   } catch (e) {
     console.log(e);
   }
-  postgres.end()
+  postgres.release()
 }
 
 async function updateOffline(socketID) {
-  var postgres = new Pool(clientDetails)
-  postgres.connect()
+  var postgres = await pool.connect()
   insertStatement = `update info set socketid=null , isonline=false where socketid=$1`;
   try {
     await postgres.query(insertStatement, [socketID]);
   } catch (e) {
     console.log(e);
   }
-  postgres.end()
+  postgres.release()
 }
 
 server.listen(7000, () => {
