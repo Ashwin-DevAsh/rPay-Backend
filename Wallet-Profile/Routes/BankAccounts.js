@@ -3,35 +3,36 @@ const jwt = require("jsonwebtoken");
 const {Pool} = require("pg");
 const clientDetails = require("../Database/ClientDetails")
 
+var pool = new Pool(clientDetails)
+
 
 app.post("/addBankAccount", async (req, res) => {
-  var postgres = new Pool(clientDetails)
-  postgres.connect()
+  var postgres = pool.connect()
   await addBankAccount(postgres,req, res, "users");
-  postgres.end()  
+  (await postgres).release()  
 
 });
 app.post("/deleteBankAccount", async(req, res) =>{
-  var postgres = new Pool(clientDetails)
-  postgres.connect()
+  var postgres = pool.connect()
+
   await deleteBankAccount(postgres,req, res, "users");
-  postgres.end()
+  (await postgres).release()
 
   }
 );
 
 app.post("/addBankAccountMerchant", async(req, res) => {
-  var postgres = new Pool(clientDetails)
-  postgres.connect()
+  var postgres = pool.connect()
+
   await addBankAccount(postgres,req, res, "merchants");
-  postgres.end()
+  (await postgres).release()
   }
 );
 app.post("/deleteBankAccountMerchant", async(req, res) =>{
-  var postgres = new Pool(clientDetails)
-  postgres.connect()
+  var postgres = pool.connect()
+
   await deleteBankAccount(postgres,req, res, "merchants");
-  postgres.end()
+  (await postgres).release()
   }
 );
 

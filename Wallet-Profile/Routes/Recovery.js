@@ -4,64 +4,60 @@ const jwt = require("jsonwebtoken");
 const {Pool} = require("pg");
 const clientDetails = require("../Database/ClientDetails")
 
+var pool = new Pool(clientDetails)
+
+
 app.get("/getRecoveryOtp", async function (req, res) {
-  var postgres = new Pool(clientDetails)
-  postgres.connect()
+  
+     var postgres =  pool.connect()
      await sendOtp(postgres,req, res, "recoveryOtp");
-     postgres.end()
+     (await postgres).release()
   });
 
 app.get("/getRecoveryOtpMerchant", async(req, res) =>{
-  var postgres = new Pool(clientDetails)
-  postgres.connect()
+  var postgres =  pool.connect()
   await sendOtp(postgres,req, res, "recoveryMerchantsOtp");
-  postgres.end()
+  (await postgres).release()
   }
 );
 
 app.post("/setRecoveryOtp", async (req, res) => {
-  var postgres = new Pool(clientDetails)
-  postgres.connect()
+  var postgres =  pool.connect()
   await setOtp(postgres,req, res, "recoveryOtp");
-  postgres.end()
+  (await postgres).release()
 
 });
 app.post("/setRecoveryOtpMerchant", async(req, res) => {
-  var postgres = new Pool(clientDetails)
-  postgres.connect()
+  var postgres =  pool.connect()
   await setOtp(postgres,req, res, "recoveryMerchantsOtp");
-  postgres.end()
+  (await postgres).release()
   }
 );
 
 app.post("/newPassword", async(req, res) =>
   {
-    var postgres = new Pool(clientDetails)
-    postgres.connect()
+    var postgres =  pool.connect()
     await newPassword(postgres,req, res, "recoveryOtp", "Users");
-    postgres.end()
+    (await postgres).release()
   }
 );
 app.post("/newPasswordMerchant", async(req, res) =>
   {
-    var postgres = new Pool(clientDetails)
-    postgres.connect()
+    var postgres =  pool.connect()
     await newPassword(postgres,req, res, "recoveryMerchantsOtp", "Merchants");
-    postgres.end()
+    (await postgres).release()
   }
 );
 
 app.post("/changePassword", async (req, res) => {
-  var postgres = new Pool(clientDetails)
-  postgres.connect()
+  var postgres =  pool.connect()
   await changePassword(postgres,req, res, "users");
-  postgres.end()
+  (await postgres).release()
 });
 app.post("/changeMerchantPassword", async (req, res) => {
-  var postgres = new Pool(clientDetails)
-  postgres.connect()
+  var postgres =  pool.connect()
   await changePassword(postgres,req, res, "merchants");
-  postgres.end()
+  (await postgres).release()
 });
 
 var changePassword = async (postgres,req, res, tableName) => {

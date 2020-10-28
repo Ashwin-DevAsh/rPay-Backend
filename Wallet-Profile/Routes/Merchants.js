@@ -4,27 +4,28 @@ const {Pool} = require("pg");
 const clientDetails = require("../Database/ClientDetails")
 const axios = require("axios");
 
+
+var pool = new Pool(clientDetails)
+
+
 app.post("/addMerchant", async (req, res) =>{
-  var postgres = new Pool(clientDetails)
-  postgres.connect()
+  var postgres =  pool.connect()
   await addMerchant(postgres,req,res)
-  postgres.end()  
+  ;(await postgres).release()  
 
 });
 
 app.get("/getMerchants", async (req, res) => {
-  var postgres = new Pool(clientDetails)
-  postgres.connect()
+  var postgres =  pool.connect()
   await getMerchants(postgres,req,res)
-  postgres.end()  
+  ;(await postgres).release()  
 
 });
 
 app.get("/getMerchant", async (req, res) => {
-  var postgres = new Pool(clientDetails)
-  postgres.connect()
+  var postgres =  pool.connect()
   await getMerchant(postgres,req,res)
-  postgres.end()  
+  ;(await postgres).release()  
 
 });
 

@@ -5,18 +5,20 @@ const axios = require("axios");
 const {Pool} = require("pg");
 const clientDetails = require("../Database/ClientDetails")
 
+var pool = new Pool(clientDetails)
+
+
 app.post("/addUser", async (req, res) => {
-  var postgres = new Pool(clientDetails)
-  postgres.connect()
+  var postgres = pool.connect()
    await addUser(postgres,req,res)
-   postgres.end()
+   ;(await postgres).release()
 });
 
 app.get("/getUsers", async (req, res) => {
-  var postgres = new Pool(clientDetails)
-  postgres.connect()
+  var postgres = pool.connect()
+
   await getUser(postgres,req,res)
-  postgres.end()
+  ;(await postgres).release()
  
 });
 
