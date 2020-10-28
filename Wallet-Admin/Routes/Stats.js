@@ -1,25 +1,39 @@
 const app = require("express").Router();
 const jwt = require("jsonwebtoken");
-const postgres = require("../Database/Connections/pgConnections");
+const {Pool} = require("pg");
+const clientDetails = require("../Database/ClientDetails")
+
 
 app.get("/getTransactionStats/:days", (req, res) => {
-  doProcess(req, res, transactionStatsQuery);
+  var postgres = new Pool(clientDetails)
+  postgres.connect()
+   await doProcess(postgres,req, res, transactionStatsQuery);
+   postgres.end()
 });
 
 app.get("/getNoTransactionStats/:days", (req, res) => {
-  doProcess(req, res, noTransactionStatsQuery);
+  var postgres = new Pool(clientDetails)
+  postgres.connect()
+  await doProcess(postgres,req, res, noTransactionStatsQuery);
+  postgres.end()
 });
 
 app.get("/getGeneratedStats/:days", (req, res) => {
-  doProcess(req, res, generatedStatsQuery);
+  var postgres = new Pool(clientDetails)
+  postgres.connect()
+  await doProcess(postgres,req, res, generatedStatsQuery);
+  postgres.end()
 });
 
 app.get("/getWithdrawStats/:days", (req, res) => {
-  doProcess(req, res, withdrawStatsQuery);
+  var postgres = new Pool(clientDetails)
+  postgres.connect()
+  await doProcess(postgres,req, res, withdrawStatsQuery);
+  postgres.end()
+
 });
 
-function doProcess(req, res, queryFunction) {
-  var token = req.get("token");
+async function doProcess(postgres,req, res, queryFunction) {
 
   if (!req.params.days) {
     res.send({ message: "error" });
@@ -35,10 +49,15 @@ function doProcess(req, res, queryFunction) {
 
   console.log(days);
 
-  jwt.verify(token, process.env.PRIVATE_KEY, async function (err, decoded) {
-    if (err) {
-      res.send({ message: "error", err });
-    } else {
+  try{
+    var decoded = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY)
+   }catch(e){
+     console.log(e)
+     res.send({ message: "failed" });
+     return
+   }
+
+
       try {
         var day = await postgres.query(queryFunction(days), ["day"]);
         var week = await postgres.query(queryFunction(days), ["week"]);
@@ -60,8 +79,7 @@ function doProcess(req, res, queryFunction) {
         console.error(e.stack);
         res.send(e);
       }
-    }
-  });
+  
 }
 
 function transactionStatsQuery(day) {

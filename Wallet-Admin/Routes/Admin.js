@@ -1,9 +1,97 @@
 const app = require("express").Router();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const postgres = require("../Database/Connections/pgConnections");
+const {Pool} = require("pg");
+const clientDetails = require("../Database/ClientDetails")
 
 app.post("/login", async (req, res) => {
+  var postgres = new Pool(clientDetails)
+  postgres.connect()
+  await login(postgres,req,res)
+  postgres.end()
+});
+
+
+
+app.post("/addAdmin", async (req, res) => {
+  var postgres = new Pool(clientDetails)
+  postgres.connect()
+  await addAdmin(postgres,req,res)
+  postgres.end()
+
+});
+
+app.get("/getAdmins", (req, res) => {
+  var postgres = new Pool(clientDetails)
+  postgres.connect()
+  await getAdmins(postgres,req,res)
+  postgres.end()
+
+});
+
+var getAdmins = async(postgres,req,res)=>{
+
+  try{
+    var decoded = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY)
+   }catch(e){
+     console.log(e)
+     res.send({ message: "failed" });
+     return
+   }
+
+   
+      try {
+        var users = (await postgres.query("select * from admins")).rows;
+        res.send(users);
+      } catch (err) {
+        res.send({ err });
+      }
+ 
+}
+
+
+var addAdmin = async(postgres,req,res)=>{
+  var admin = req.body;
+  console.log(admin);
+  if (!admin.name || !admin.email || !admin.number || !admin.password) {
+    res.status(200).send([{ message: "error" }]);
+    return;
+  }
+  var adminID = `radmin@${admin.number}`;
+
+  try {
+    var testadmin = (
+      await postgres.query(
+        "select * from admins where id = $1 or number = $2 or email = $3 ",
+        [adminID, admin.number, admin.email]
+      )
+    ).rows;
+
+    if (testadmin.length != 0) {
+      res.json({ message: "Admin already exist" });
+      return;
+    }
+    var hash = await bcrypt.hash(process.env.ROOT_ADMIN_PASSWORD, 10);
+
+    await postgres.query(
+      `insert into admins(name,number,email,password,permissions,id) values($1,$2,$3,$4,$5,$6)`,
+      [
+        admin.name,
+        "91" + admin.number,
+        admin.email,
+        hash,
+        [{ all: true }],
+        adminID,
+      ]
+    );
+    res.json({ message: "done" });
+  } catch (err) {
+    console.log(err);
+    res.json({ message: "failed" });
+  }
+}
+
+var login = async(postgres,req,res)=>{
   var email = req.body.email;
   var password = req.body.password;
   if (email && password) {
@@ -62,63 +150,7 @@ app.post("/login", async (req, res) => {
       message: "missing username or password",
     });
   }
-});
+}
 
-app.post("/addAdmin", async (req, res) => {
-  var admin = req.body;
-  console.log(admin);
-  if (!admin.name || !admin.email || !admin.number || !admin.password) {
-    res.status(200).send([{ message: "error" }]);
-    return;
-  }
-  var adminID = `radmin@${admin.number}`;
-
-  try {
-    var testadmin = (
-      await postgres.query(
-        "select * from admins where id = $1 or number = $2 or email = $3 ",
-        [adminID, admin.number, admin.email]
-      )
-    ).rows;
-
-    if (testadmin.length != 0) {
-      res.json({ message: "Admin already exist" });
-      return;
-    }
-    var hash = await bcrypt.hash(process.env.ROOT_ADMIN_PASSWORD, 10);
-
-    await postgres.query(
-      `insert into admins(name,number,email,password,permissions,id) values($1,$2,$3,$4,$5,$6)`,
-      [
-        admin.name,
-        "91" + admin.number,
-        admin.email,
-        hash,
-        [{ all: true }],
-        adminID,
-      ]
-    );
-    res.json({ message: "done" });
-  } catch (err) {
-    console.log(err);
-    res.json({ message: "failed" });
-  }
-});
-
-app.get("/getAdmins", (req, res) => {
-  var token = req.get("token");
-  jwt.verify(token, process.env.PRIVATE_KEY, async function (err, decoded) {
-    if (err) {
-      res.send({ message: "error", err });
-    } else {
-      try {
-        var users = (await postgres.query("select * from admins")).rows;
-        res.send(users);
-      } catch (err) {
-        res.send({ err });
-      }
-    }
-  });
-});
 
 module.exports = app;
