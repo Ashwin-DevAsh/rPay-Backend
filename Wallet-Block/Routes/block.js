@@ -4,34 +4,37 @@ const hash = require("object-hash");
 const {Pool} = require("pg");
 const clientDetails = require("../Database/ClientDetails")
 
+var pool = new Pool(clientDetails)
+
+
 app.post("/addTransactionBlock", async(req, res) => {
-  var postgres = new Pool(clientDetails)
-  postgres.connect()
+  var postgres = pool.connect()
+
   await addBlock(postgres,res, req.body.transactionID, req.body, "Transaction");
-  postgres.end()
+  (await postgres).release()
 });
 
 app.post("/addMoneyBlock", async(req, res) => {
-  var postgres = new Pool(clientDetails)
-  postgres.connect()
+  var postgres = pool.connect()
+
   await addBlock(postgres,res, req.body.transactionID, req.body, "Amount Generated");
-  postgres.end()
+  (await postgres).release()
 
 });
 
 app.post("/addWithdrawBlock", async (req, res) => {
-  var postgres = new Pool(clientDetails)
-  postgres.connect()
+  var postgres = pool.connect()
+
   await addBlock(postgres,res, req.body.transactionID, req.body, "Withdraw");
-  postgres.end()
+  (await postgres).release()
 
 });
 
 app.post("/addUserBlock", async (req, res) => {
-  var postgres = new Pool(clientDetails)
-  postgres.connect()
+  var postgres = pool.connect()
+
   await addBlock(postgres,res, req.body.id, req.body, "New User");
-  postgres.end()
+  (await postgres).release()
 
 });
 

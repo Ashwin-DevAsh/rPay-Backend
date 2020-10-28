@@ -42,7 +42,7 @@ app.post("/newPassword", async(req, res) =>
   }
 );
 app.post("/newPasswordMerchant", async(req, res) =>
-  {
+ {
     var postgres =  pool.connect()
     await newPassword(postgres,req, res, "recoveryMerchantsOtp", "Merchants");
     (await postgres).release()
