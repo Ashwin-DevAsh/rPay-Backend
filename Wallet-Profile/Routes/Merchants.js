@@ -9,21 +9,21 @@ var pool = new Pool(clientDetails)
 
 
 app.post("/addMerchant", async (req, res) =>{
-  var postgres =  pool.connect()
+  var postgres =  await pool.connect()
   await addMerchant(postgres,req,res)
   ;(await postgres).release()  
 
 });
 
 app.get("/getMerchants", async (req, res) => {
-  var postgres =  pool.connect()
+  var postgres = await  pool.connect()
   await getMerchants(postgres,req,res)
   ;(await postgres).release()  
 
 });
 
 app.get("/getMerchant", async (req, res) => {
-  var postgres =  pool.connect()
+  var postgres = await  pool.connect()
   await getMerchant(postgres,req,res)
   ;(await postgres).release()  
 

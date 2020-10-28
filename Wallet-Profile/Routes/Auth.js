@@ -9,26 +9,26 @@ const clientDetails = require("../Database/ClientDetails")
 var pool = new Pool(clientDetails)
 
 app.get("/getOtp", async(req, res) => {
-  var postgres = pool.connect()
+  var postgres = await pool.connect()
   await sendOtp(postgres,req, res, "Otp", "aGok1vSGlpf");
   (await postgres).release()  
 });
 
 app.get("/getOtpMerchant", async function (req, res) {
-      var postgres = pool.connect()
+      var postgres = await pool.connect()
       await sendOtp(postgres,req, res, "MerchantsOtp", "Uf4HyXRcQ7x");
      (await postgres).release()
   }
 );
 
 app.post("/setOtp", async (req, res) => {
-  var postgres = pool.connect()
+  var postgres = await pool.connect()
   await setOtp(postgres,req, res, "Otp", "users");
   (await postgres).release()
 });
 
 app.post("/setOtpMerchant", (req, res) => {
-  var postgres = pool.connect()
+  var postgres = await pool.connect()
   setOtp(postgres,req, res, "MerchantsOtp", "merchants", "rbusiness@");
   (await postgres).release()
 

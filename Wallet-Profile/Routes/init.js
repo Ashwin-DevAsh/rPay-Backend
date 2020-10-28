@@ -7,7 +7,7 @@ var pool = new Pool(clientDetails)
 
 
 app.get("/init/:id", async(req, res) => {
-  var postgres = pool.connect()
+  var postgres = await pool.connect()
   await init(postgres,req,res)
   postgres.release()  
 });

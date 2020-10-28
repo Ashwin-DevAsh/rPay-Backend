@@ -9,26 +9,26 @@ var pool = new Pool(clientDetails)
 
 app.get("/getRecoveryOtp", async function (req, res) {
   
-     var postgres =  pool.connect()
+     var postgres = await pool.connect()
      await sendOtp(postgres,req, res, "recoveryOtp");
      (await postgres).release()
   });
 
 app.get("/getRecoveryOtpMerchant", async(req, res) =>{
-  var postgres =  pool.connect()
+  var postgres = await pool.connect()
   await sendOtp(postgres,req, res, "recoveryMerchantsOtp");
   (await postgres).release()
   }
 );
 
 app.post("/setRecoveryOtp", async (req, res) => {
-  var postgres =  pool.connect()
+  var postgres =  await pool.connect()
   await setOtp(postgres,req, res, "recoveryOtp");
   (await postgres).release()
 
 });
 app.post("/setRecoveryOtpMerchant", async(req, res) => {
-  var postgres =  pool.connect()
+  var postgres = await pool.connect()
   await setOtp(postgres,req, res, "recoveryMerchantsOtp");
   (await postgres).release()
   }
@@ -36,26 +36,26 @@ app.post("/setRecoveryOtpMerchant", async(req, res) => {
 
 app.post("/newPassword", async(req, res) =>
   {
-    var postgres =  pool.connect()
+    var postgres = await  pool.connect()
     await newPassword(postgres,req, res, "recoveryOtp", "Users");
     (await postgres).release()
   }
 );
 app.post("/newPasswordMerchant", async(req, res) =>
  {
-    var postgres =  pool.connect()
+    var postgres = await pool.connect()
     await newPassword(postgres,req, res, "recoveryMerchantsOtp", "Merchants");
     (await postgres).release()
   }
 );
 
 app.post("/changePassword", async (req, res) => {
-  var postgres =  pool.connect()
+  var postgres = await pool.connect()
   await changePassword(postgres,req, res, "users");
   (await postgres).release()
 });
 app.post("/changeMerchantPassword", async (req, res) => {
-  var postgres =  pool.connect()
+  var postgres = await pool.connect()
   await changePassword(postgres,req, res, "merchants");
   (await postgres).release()
 });

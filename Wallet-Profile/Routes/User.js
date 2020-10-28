@@ -9,13 +9,13 @@ var pool = new Pool(clientDetails)
 
 
 app.post("/addUser", async (req, res) => {
-  var postgres = pool.connect()
+  var postgres = await pool.connect()
    await addUser(postgres,req,res)
    ;(await postgres).release()
 });
 
 app.get("/getUsers", async (req, res) => {
-  var postgres = pool.connect()
+  var postgres = await pool.connect()
 
   await getUser(postgres,req,res)
   ;(await postgres).release()

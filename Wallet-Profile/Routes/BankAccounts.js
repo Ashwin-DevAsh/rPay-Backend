@@ -7,13 +7,13 @@ var pool = new Pool(clientDetails)
 
 
 app.post("/addBankAccount", async (req, res) => {
-  var postgres = pool.connect()
+  var postgres = await pool.connect()
   await addBankAccount(postgres,req, res, "users");
   (await postgres).release()  
 
 });
 app.post("/deleteBankAccount", async(req, res) =>{
-  var postgres = pool.connect()
+  var postgres = await pool.connect()
 
   await deleteBankAccount(postgres,req, res, "users");
   (await postgres).release()
@@ -22,14 +22,14 @@ app.post("/deleteBankAccount", async(req, res) =>{
 );
 
 app.post("/addBankAccountMerchant", async(req, res) => {
-  var postgres = pool.connect()
+  var postgres = await pool.connect()
 
   await addBankAccount(postgres,req, res, "merchants");
   (await postgres).release()
   }
 );
 app.post("/deleteBankAccountMerchant", async(req, res) =>{
-  var postgres = pool.connect()
+  var postgres = await pool.connect()
 
   await deleteBankAccount(postgres,req, res, "merchants");
   (await postgres).release()
