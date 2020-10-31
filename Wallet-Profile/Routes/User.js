@@ -130,10 +130,9 @@ var getUser = async(postgres,req,res)=>{
 }
 
 var getUsersWithContacts = async(postgres,req,res)=>{
-  console.log(req.body)
   var contacts = req.body["contacts"]
   contacts = contacts.replace("[","('").replace("]","')").split( "," ).join("','")
-
+  console.log(contacts)
   try {
     var result = (
       await postgres.query("select name,number,email,id from users where number in "+contacts)
