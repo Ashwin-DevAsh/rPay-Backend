@@ -137,7 +137,7 @@ var getUsersWithContacts = async(postgres,contacts,req,res)=>{
   console.log("select name,number,email,id from users where number = Any("+contacts+")")
   try {
     var result = (
-      await postgres.query("select name,number,email,id from users where number = Any(Array"+contacts+")")
+      await postgres.query("select name,number,email,id from users where Array"+contacts+" contains number")
     ).rows;
     res.send(result);
   } catch (err) {
