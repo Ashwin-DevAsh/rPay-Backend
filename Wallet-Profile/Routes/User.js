@@ -22,7 +22,7 @@ app.get("/getUsers", async (req, res) => {
  
 });
 
-app.get("/getUsersWithContacts", async (req, res) => {
+app.post("/getUsersWithContacts", async (req, res) => {
   console.log(req.body)
   var postgres = await pool.connect()
 
