@@ -23,11 +23,9 @@ app.get("/getUsers", async (req, res) => {
 });
 
 app.post("/getUsersWithContacts", async (req, res) => {
-  console.log(req.body)
-  var contacts = req.body["contacts"]
-  var postgres = await pool.connect()
 
-  await getUsersWithContacts(postgres,contacts,req,res);
+  var postgres = await pool.connect()
+  await getUsersWithContacts(postgres,req,res);
   (await postgres).release()
  
 });
@@ -131,13 +129,14 @@ var getUser = async(postgres,req,res)=>{
   }
 }
 
-var getUsersWithContacts = async(postgres,contacts,req,res)=>{
-  
-  contacts = contacts.replace("[","'").replace("]","'").split( "," ).join(  "','")
-  console.log("select name,number,email,id from users where number = Any("+contacts+")")
+var getUsersWithContacts = async(postgres,req,res)=>{
+  console.log(req.body)
+  var contacts = req.body["contacts"]
+  contacts = contacts.replace("[","'").replace("]","'").split( "," ).join("','")
+
   try {
     var result = (
-      await postgres.query("select name,number,email,id from users where number in ("+contacts+")")
+      await postgres.query("select name,number,email,id from users where number in ("+"'919551574355','919444323880'"+")")
     ).rows;
     res.send(result);
   } catch (err) {
