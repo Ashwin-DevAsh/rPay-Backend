@@ -132,7 +132,7 @@ var getUser = async(postgres,req,res)=>{
 }
 
 var getUsersWithContacts = async(postgres,contacts,req,res)=>{
-  contacts = contacts.replace("[","'").replace("]","'").replace( ","  ,  "','")
+  contacts = contacts.replaceAll("[","'").replaceAll("]","'").replaceAll( ","  ,  "','")
   console.log("select name,number,email,id from users where number = Any("+contacts+")")
   try {
     var result = (
