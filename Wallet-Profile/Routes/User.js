@@ -131,7 +131,7 @@ var getUser = async(postgres,req,res)=>{
 
 var getUsersWithContacts = async(postgres,req,res)=>{
   var contacts = req.body["contacts"]
-  contacts = contacts.replace("[","('").replace("]","')").split( "," ).join("','")
+  contacts = contacts.replace("[","('").replace("]","')").split( ", " ).join("','")
   console.log(contacts)
   try {
     var result = (
