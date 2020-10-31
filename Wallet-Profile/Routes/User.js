@@ -22,6 +22,15 @@ app.get("/getUsers", async (req, res) => {
  
 });
 
+app.get("/getUsersWithContacts", async (req, res) => {
+  console.log(req.body)
+  var postgres = await pool.connect()
+
+  await getUser(postgres,req,res);
+  (await postgres).release()
+ 
+});
+
 
 var addUser = async (postgres,req,res)=>{
   {
