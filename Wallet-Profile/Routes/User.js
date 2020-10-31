@@ -24,9 +24,10 @@ app.get("/getUsers", async (req, res) => {
 
 app.post("/getUsersWithContacts", async (req, res) => {
   console.log(req.body)
+  var contacts = req.body["contacts"]
   var postgres = await pool.connect()
 
-  await getUser(postgres,req,res);
+  await getUsersWithContacts(postgres,contacts,req,res);
   (await postgres).release()
  
 });
@@ -129,5 +130,18 @@ var getUser = async(postgres,req,res)=>{
     res.send([{ message: "failed" }]);
   }
 }
+
+var getUsersWithContacts = async(postgres,contacts,req,res)=>{
+  try {
+    var result = (
+      await postgres.query("select name,number,email,id from users where number = Any("+contacts+")")
+    ).rows;
+    res.send(result);
+  } catch (err) {
+    console.log(err);
+    res.send([{ message: "failed" }]);
+  }
+}
+
 
 module.exports = app;
