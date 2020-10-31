@@ -132,11 +132,11 @@ var getUser = async(postgres,req,res)=>{
 var getUsersWithContacts = async(postgres,req,res)=>{
   console.log(req.body)
   var contacts = req.body["contacts"]
-  contacts = contacts.replace("[","'").replace("]","'").split( "," ).join("','")
+  contacts = contacts.replace("[","('").replace("]","')").split( "," ).join("','")
 
   try {
     var result = (
-      await postgres.query("select name,number,email,id from users where number in ("+"'919551574355','919444323880'"+")")
+      await postgres.query("select name,number,email,id from users where number in "+contacts)
     ).rows;
     res.send(result);
   } catch (err) {
