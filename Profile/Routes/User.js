@@ -10,15 +10,15 @@ var pool = new Pool(clientDetails)
 
 app.post("/addUser", async (req, res) => {
   var postgres = await pool.connect()
-   await addUser(postgres,req,res)
-   ;(await postgres).release()
+   await addUser(postgres,req,res);
+   (await postgres).release()
 });
 
 app.get("/getUsers", async (req, res) => {
   var postgres = await pool.connect()
 
-  await getUser(postgres,req,res)
-  ;(await postgres).release()
+  await getUser(postgres,req,res);
+  (await postgres).release()
  
 });
 
@@ -132,7 +132,6 @@ var getUser = async(postgres,req,res)=>{
 var getUsersWithContacts = async(postgres,req,res)=>{
   var contacts = req.body["contacts"]
   contacts = contacts.replace("[","('").replace("]","')").split( ", " ).join("','")
-  console.log(contacts)
   try {
     var result = (
       await postgres.query("select name,number,email,id from users where number in "+contacts)

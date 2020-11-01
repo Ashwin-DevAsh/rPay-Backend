@@ -1,7 +1,6 @@
 -- users...
 
-create table users
-(
+create table users(
   name varchar,
   number varchar,
   email varchar,
@@ -10,14 +9,6 @@ create table users
   AccountInfo json[],
   qrCode varchar
 );
-
-create table otp(
-    number varchar primary key,
-    otp varchar,
-    verified Boolean
-);
-
--- merchants...
 
 create table merchants(
   name varchar,
@@ -31,26 +22,6 @@ create table merchants(
   status varchar
 );
 
-create table merchantsOtp(
-    number varchar primary key,
-    otp varchar,
-    verified Boolean
-);
-
--- mart --
-
-create table orders(
-  orederId bigserial,
-  status varchar,
-  amount bigint,
-  orderdBy json,
-  timestamp varchar,
-  products json[],
-  paymentMetadata json
-);
-
--- admin...
-
 create table admins(
   id varchar primary key,
   name varchar,
@@ -60,7 +31,19 @@ create table admins(
   permissions json[]
 );
 
--- recovery...
+-- otp
+
+create table otp(
+    number varchar primary key,
+    otp varchar,
+    verified Boolean
+);
+
+create table merchantsOtp(
+    number varchar primary key,
+    otp varchar,
+    verified Boolean
+);
 
 create table recoveryOtp(
     email varchar  primary key,
@@ -74,10 +57,22 @@ create table recoveryMerchantsOtp(
     verified Boolean
 );
 
+
+-- mart --
+
+create table orders(
+  orederId bigserial,
+  status varchar,
+  amount bigint,
+  orderdBy json,
+  timestamp varchar,
+  products json[],
+  paymentMetadata json
+);
+
 -- node
 
-create table info
-(
+create table info(
     id varchar primary key,
     fcmToken varchar,
     socketid varchar,
@@ -86,28 +81,19 @@ create table info
 
 -- assect
 
-create table amount
-(
+create table amount(
     id varchar primary key,
     balance int
 );
 
-create table transactions
-(
+create table transactions(
     transactionID bigserial,
     transactionTime varchar,
     fromMetadata json,
     toMetadata json,
     amount bigint,
     isGenerated boolean,
-    isWithdraw boolean
-);
-
-create table messages
-(
-    messageTime varchar,
-    fromMetadata json,
-    toMetadata json,
+    isWithdraw boolean,
     message varchar
 );
 

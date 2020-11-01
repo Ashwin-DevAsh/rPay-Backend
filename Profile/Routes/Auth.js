@@ -2,7 +2,7 @@ const app = require("express").Router();
 const jwt = require("jsonwebtoken");
 var api = require("clicksend");
 var smsMessage = new api.SmsMessage();
-const {  Pool} = require("pg");
+const {Pool} = require("pg");
 const clientDetails = require("../Database/ClientDetails")
 
 

@@ -6,65 +6,60 @@ services:
     ports:
       - 5432:5432
 
-  cache:
-    image: redis
-    ports:
-      - 6379:6379
-
-  wallet-block:
-    build: Wallet-Block
+  block:
+    build: Block
     depends_on: [cache, database]
     ports:
       - 9000:9000
     environment:
-        VIRTUAL_HOST: block.localhost
+      VIRTUAL_HOST: block.localhost
 
-  wallet-profile:
-    build: Wallet-Profile
-    depends_on: [database, wallet-block]
+  profile:
+    build: Profile
+    depends_on: [database, block]
     ports:
       - 8000:8000
     environment:
-        VIRTUAL_HOST: profile.localhost
+      VIRTUAL_HOST: profile.localhost
 
-  wallet-admin:
-    build: Wallet-Admin
+  admin:
+    build: Admin
     depends_on: [database]
     ports:
       - 4500:4500
     environment:
-        VIRTUAL_HOST: admin.ec2-3-17-161-20.us-east-2.compute.amazonaws.com
+      VIRTUAL_HOST: admin.ec2-3-17-161-20.us-east-2.compute.amazonaws.com
 
   mart:
     build: Mart
-    depends_on: [database, wallet-block]
+    depends_on: [database, block]
     ports:
       - 4600:4600
     environment:
-        VIRTUAL_HOST: mart.localhost
+      VIRTUAL_HOST: mart.localhost
 
-  wallet-sync:
-    build: Wallet-Sync
+  sync:
+    build: Sync
     depends_on: [database]
     ports:
       - 7000:7000
     environment:
-        VIRTUAL_HOST: sync.localhost
+      VIRTUAL_HOST: sync.localhost
 
-  wallet-transaction:
-    build: Wallet-Transaction
-    depends_on: [database, wallet-block]
+  transaction:
+    build: Transaction
+    depends_on: [database, block]
     ports:
-      - 10000:10000
+      - 9500:9500
     environment:
-        VIRTUAL_HOST: transaction.localhost
+      VIRTUAL_HOST: transaction.localhost
 
   nginx-proxy:
-      image: jwilder/nginx-proxy
-      ports:
-        - "80:80"
-        - "443:443"
-      volumes:
-        - /var/run/docker.sock:/tmp/docker.sock:ro
-      restart: always
-      privileged: true
+    image: jwilder/nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    restart: always
+    privileged: true
