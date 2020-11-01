@@ -3,6 +3,7 @@ const clientDetails = require("../Database/ClientDetails");
 var dateFormat = require("dateformat");
 var pool = new Pool(clientDetails);
 var axios = require("axios");
+var jwt = require("jsonwebtoken");
 
 app.post("/addMoney", async (req, res) => {
   var postgres = await pool.connect();
