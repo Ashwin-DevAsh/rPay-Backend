@@ -1,6 +1,5 @@
 require("dotenv").config(".env");
 const express = require("express");
-const bcrypt = require("bcrypt");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const pay = require("./Routes/pay");
