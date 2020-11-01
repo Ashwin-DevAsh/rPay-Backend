@@ -32,7 +32,7 @@ async function sendMessage(postgres, req, res) {
     return;
   }
 
-  if (!from || !amount || !to) {
+  if (!from || !message || !to) {
     console.log("invalid body");
     res.send({ message: "failed" });
     return;
