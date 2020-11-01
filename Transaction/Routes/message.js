@@ -58,6 +58,8 @@ async function sendMessage(postgres, req, res) {
 
     console.log(transactionID);
 
+    await postgres.query("commit");
+
     res.send({
       message: "done",
     });
