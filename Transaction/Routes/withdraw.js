@@ -1,21 +1,15 @@
-var app = require('express').Router()
+var app = require("express").Router();
+const { Pool } = require("pg");
 
-const clientDetails = require("../Database/ClientDetails")
+const clientDetails = require("../Database/ClientDetails");
 
+var pool = new Pool(clientDetails);
 
-var pool = new Pool(clientDetails)
+app.post("/withdraw", async (req, res) => {
+  var postgres = await pool.connect();
+  await withdraw(postgres, req, res)(await postgres).release();
+});
 
+async function withdraw(postgres, req, res) {}
 
-app.post("/withdraw",async (req,res)=>{
-    var postgres = await pool.connect()
-    await withdraw(postgres,req,res)   
-    (await postgres).release()  
-})
-
-
-
-async function withdraw(postgres,req,res){
-
-}
-
-module.exports = app
+module.exports = app;
