@@ -51,7 +51,7 @@ async function sendMessage(postgres, req, res) {
 					   amount,
 					   isGenerated,
 					   iswithdraw,message)
-				    values($1,$2,$3,$4,$5,$6) returning transactionID`,
+				    values($1,$2,$3,$4,$5,$6,$7) returning transactionID`,
         [transactionTime, from, to, 0, false, false, message]
       )
     ).rows[0]["transactionid"];
