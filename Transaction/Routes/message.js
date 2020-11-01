@@ -9,7 +9,7 @@ var pool = new Pool(clientDetails);
 
 app.post("/sendMessage", async (req, res) => {
   var postgres = await pool.connect();
-  await pay(postgres, req, res);
+  await sendMessage(postgres, req, res);
   (await postgres).release();
 });
 
