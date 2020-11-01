@@ -17,6 +17,7 @@ app.get("/getTransactions", async (req, res) => {
 });
 
 async function getTransactionsBetweenObjects(postgres, req, res) {
+  console.log("get transactions between objects..");
   var fromID = req.query.id1;
   var toID = req.query.id2;
   try {
