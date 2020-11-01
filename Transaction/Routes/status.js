@@ -4,21 +4,21 @@ const { Pool } = require("pg");
 
 var pool = new Pool(clientDetails);
 
-app.post("/getTransactionsBetweenObjects", async (req, res) => {
+app.get("/getTransactionsBetweenObjects", async (req, res) => {
   var postgres = await pool.connect();
   await getTransactionsBetweenObjects(postgres, req, res);
   (await postgres).release();
 });
 
-app.post("/getTransactions", async (req, res) => {
+app.get("/getTransactions", async (req, res) => {
   var postgres = await pool.connect();
   await getTransactions(postgres, req, res);
   (await postgres).release();
 });
 
 async function getTransactionsBetweenObjects(postgres, req, res) {
-  var fromID = req.body.fromID;
-  var toID = req.body.toID;
+  var fromID = req.query.id1;
+  var toID = req.query.id2;
   try {
     var id = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY).id;
   } catch (e) {
