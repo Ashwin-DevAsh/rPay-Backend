@@ -25,7 +25,7 @@ async function pay(postgres, req, res) {
 
   try {
     var decoded = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY);
-    if (decoded.id != to.id) {
+    if (decoded.id != from.id) {
       console.log(decoded.id, "!=", to.id);
       res.send({ message: "failed" });
       return;
