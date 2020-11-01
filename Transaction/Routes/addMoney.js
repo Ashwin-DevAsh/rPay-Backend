@@ -9,6 +9,7 @@ var jwt = require("jsonwebtoken");
 app.post("/addMoney", async (req, res) => {
   var postgres = await pool.connect();
   await addMoney(postgres, req, res)(await postgres).release();
+  await postgres.release();
 });
 
 async function addMoney(postgres, req, res) {
@@ -53,8 +54,9 @@ async function addMoney(postgres, req, res) {
       [amount, to.id]
     );
     var transactionTime = dateFormat(new Date(), "dd-mm-yyyy hh:MM:ss");
-    var transactionID = await postgres.query(
-      `insert
+    var transactionID = (
+      await postgres.query(
+        `insert
      into transactions(
         transactionTime,
         fromMetadata,
@@ -63,8 +65,9 @@ async function addMoney(postgres, req, res) {
         isGenerated,
         iswithdraw)
       values($1,$2,$3,$4,$5,$6) returning transactionID`,
-      [transactionTime, from, to, amount, true, false]
-    );
+        [transactionTime, from, to, amount, true, false]
+      )
+    ).rows[0]["transactionid"];
 
     console.log(transactionID);
 
