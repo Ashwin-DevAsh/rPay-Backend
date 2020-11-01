@@ -5,7 +5,7 @@ const cors = require("cors");
 const pay = require("./Routes/pay");
 const addMoney = require("./Routes/addMoney");
 const withdraw = require("./Routes/withdraw");
-const status = require("./Routes/withdraw");
+const status = require("./Routes/status");
 
 var corsOptions = {
   origin: "*",
