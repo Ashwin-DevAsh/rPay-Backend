@@ -1,0 +1,22 @@
+{
+  "name": "wallet-admin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.0",
+    "bcrypt": "^5.0.0",
+    "cors": "^2.8.5",
+    "dateformat": "^3.0.3",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "fcm-node": "^1.5.2",
+    "jsonwebtoken": "^8.5.1",
+    "pg": "^8.2.1"
+  }
+}
