@@ -42,8 +42,7 @@ async function getTransactionsBetweenObjects(postgres, req, res) {
 						   where 
 								(cast(fromMetadata->>'id' as varchar) = $1 or cast(fromMetadata->>'id' as varchar) = $2) 
 								     and 
-								(cast(toMetadata->>'id' as varchar) = $1 or cast(toMetadata->>'id' as varchar) = $2))
-						   order by TimeStamp`,
+								(cast(toMetadata->>'id' as varchar) = $1 or cast(toMetadata->>'id' as varchar) = $2))`,
         [fromID, toID]
       )
     ).rows;
