@@ -4,7 +4,7 @@ const { Pool } = require("pg");
 var jwt = require("jsonwebtoken");
 var axios = require("axios");
 var dateFormat = require("dateformat");
-
+var sendNotification = require("./fcm");
 var pool = new Pool(clientDetails);
 
 app.post("/pay", async (req, res) => {
@@ -106,6 +106,10 @@ async function pay(postgres, req, res) {
     if ((blockResult.data["message"] = "done")) {
       await postgres.query("commit");
       res.send({ message: "done" });
+      sendNotification(
+        to.id,
+        `receivedMoney,${from.name},${from.id},${amount},${from.email}`
+      );
     }
   } catch (e) {
     console.log(e);
