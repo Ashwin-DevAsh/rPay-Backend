@@ -1,4 +1,5 @@
-FROM node:alpine
+FROM node:8-alpine
+
 
 COPY ./package.json .
 
