@@ -27,12 +27,11 @@ async function getTransactionsBetweenObjects(postgres, req, res) {
     var transactions = (
       await postgres.query(
         `((select
-								 TransactionId as id,
-								 TransactionTime as time,
+								 TransactionId,
+								 TransactionTime,
 								 fromMetadata,
 								 toMetadata,
-								 null as message,
-								 amount as amount,
+								 amount,
 								 isGenerated,
                                  isWithdraw,
                                  message,
@@ -42,7 +41,8 @@ async function getTransactionsBetweenObjects(postgres, req, res) {
 						   where 
 								(cast(fromMetadata->>'id' as varchar) = $1 or cast(fromMetadata->>'id' as varchar) = $2) 
 								     and 
-								(cast(toMetadata->>'id' as varchar) = $1 or cast(toMetadata->>'id' as varchar) = $2))`,
+								(cast(toMetadata->>'id' as varchar) = $1 or cast(toMetadata->>'id' as varchar) = $2))
+						   order by TimeStamp`,
         [fromID, toID]
       )
     ).rows;
