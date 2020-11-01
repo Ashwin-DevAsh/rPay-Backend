@@ -63,7 +63,7 @@ async function sendMessage(postgres, req, res) {
     });
     sendNotification(
       to.id,
-      `message,${from.name},${from.id},${amount},${from.email}`
+      `message,${from.name},${from.id},${message},${from.email}`
     );
   } catch (e) {
     console.log(e);
