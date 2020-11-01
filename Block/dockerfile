@@ -2,7 +2,7 @@ FROM node:alpine
 
 COPY ./package.json .
 
-RUN npm install -g npm
+RUN npm cache clean --force
 RUN npm install
 
 COPY . .
