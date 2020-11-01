@@ -7,7 +7,7 @@ services:
       - 5432:5432
 
   block:
-    build: Wallet-Block
+    build: Block
     depends_on: [database]
     ports:
       - 9000:9000
