@@ -6,6 +6,7 @@ const pay = require("./Routes/pay");
 const addMoney = require("./Routes/addMoney");
 const withdraw = require("./Routes/withdraw");
 const status = require("./Routes/status");
+const message = require("./Routes/message");
 
 var corsOptions = {
   origin: "*",
@@ -24,6 +25,7 @@ app.use(pay);
 app.use(status);
 app.use(withdraw);
 app.use(addMoney);
+app.use(message);
 
 app.listen(PORT, () => {
   console.log("Listining on ", PORT);
