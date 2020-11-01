@@ -7,7 +7,8 @@ var pool = new Pool(clientDetails);
 
 app.post("/pay", async (req, res) => {
   var postgres = await pool.connect();
-  await pay(postgres, req, res)(await postgres).release();
+  await pay(postgres, req, res);
+  (await postgres).release();
 });
 
 async function pay(postgres, req, res) {
@@ -84,7 +85,7 @@ async function pay(postgres, req, res) {
     console.log(transactionID);
 
     var blockResult = await axios.post(
-      "http://wallet-block:9000/addTransactionBlock/",
+      "http://block:9000/addTransactionBlock/",
       {
         transactionID: transactionID,
         from: from,
