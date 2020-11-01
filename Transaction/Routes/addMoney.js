@@ -8,7 +8,7 @@ var jwt = require("jsonwebtoken");
 
 app.post("/addMoney", async (req, res) => {
   var postgres = await pool.connect();
-  await addMoney(postgres, req, res)(await postgres).release();
+  await addMoney(postgres, req, res);
   await postgres.release();
 });
 
