@@ -1,44 +1,52 @@
 const app = require("express").Router();
 const jwt = require("jsonwebtoken");
 const hash = require("object-hash");
-const {Pool} = require("pg");
-const clientDetails = require("../Database/ClientDetails")
+const { Pool } = require("pg");
+const clientDetails = require("../Database/ClientDetails");
 
-var pool = new Pool(clientDetails)
+var pool = new Pool(clientDetails);
 
+app.post("/addTransactionBlock", async (req, res) => {
+  var postgres = await pool.connect();
 
-app.post("/addTransactionBlock", async(req, res) => {
-  var postgres = await pool.connect()
-
-  await addBlock(postgres,res, req.body.transactionID, req.body, "Transaction");
-  (await postgres).release()
+  await addBlock(
+    postgres,
+    res,
+    req.body.transactionID,
+    req.body,
+    "Transaction"
+  );
+  (await postgres).release();
 });
 
-app.post("/addMoneyBlock", async(req, res) => {
-  var postgres =await pool.connect()
+app.post("/addMoneyBlock", async (req, res) => {
+  var postgres = await pool.connect();
 
-  await addBlock(postgres,res, req.body.transactionID, req.body, "Amount Generated");
-  (await postgres).release()
-
+  await addBlock(
+    postgres,
+    res,
+    req.body.transactionID,
+    req.body,
+    "Amount Generated"
+  );
+  (await postgres).release();
 });
 
 app.post("/addWithdrawBlock", async (req, res) => {
-  var postgres = await pool.connect()
+  var postgres = await pool.connect();
 
-  await addBlock(postgres,res, req.body.transactionID, req.body, "Withdraw");
-  (await postgres).release()
-
+  await addBlock(postgres, res, req.body.transactionID, req.body, "Withdraw");
+  (await postgres).release();
 });
 
 app.post("/addUserBlock", async (req, res) => {
-  var postgres = await pool.connect()
+  var postgres = await pool.connect();
 
-  await addBlock(postgres,res, req.body.id, req.body, "New User");
-  (await postgres).release()
-
+  await addBlock(postgres, res, req.body.id, req.body, "New User");
+  (await postgres).release();
 });
 
-const addBlock = async (postgres,res, refID, data, type) => {
+const addBlock = async (postgres, res, refID, data, type) => {
   try {
     var prevBlock = (
       await postgres.query(

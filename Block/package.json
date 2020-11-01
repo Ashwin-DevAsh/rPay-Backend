@@ -11,7 +11,6 @@
   "dependencies": {
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.9.28",
     "redis": "^3.0.2",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
