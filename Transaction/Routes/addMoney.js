@@ -5,6 +5,7 @@ const { Pool } = require("pg");
 var pool = new Pool(clientDetails);
 var axios = require("axios");
 var jwt = require("jsonwebtoken");
+var sendNotification = require("./fcm");
 
 app.post("/addMoney", async (req, res) => {
   var postgres = await pool.connect();
@@ -82,6 +83,10 @@ async function addMoney(postgres, req, res) {
     if ((blockResult.data["message"] = "done")) {
       await postgres.query("commit");
       res.send({ message: "done" });
+      sendNotification(
+        to.id,
+        `addedMoney,${from.name},${from.id},${amount},${from.emal}`
+      );
     }
   } catch (e) {
     console.log(e);
