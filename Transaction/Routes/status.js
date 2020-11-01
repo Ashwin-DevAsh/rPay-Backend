@@ -16,9 +16,9 @@ app.post("/getTransactions", async (req, res) => {
   (await postgres).release();
 });
 
-async function getTransactionsBetweenObjects(postgres, req, res) {}
-
-async function getTransactions(postgres, req, res) {
+async function getTransactionsBetweenObjects(postgres, req, res) {
+  var fromID = req.body.fromID;
+  var toID = req.body.toID;
   try {
     var id = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY).id;
   } catch (e) {
@@ -29,25 +29,34 @@ async function getTransactions(postgres, req, res) {
   try {
     var transactions = (
       await postgres.query(
-        `select TransactionId,
-								 TransactionTime,
+        `((select
+								 TransactionId as id,
+								 TransactionTime as time,
 								 fromMetadata,
 								 toMetadata,
-								 amount,
+								 null as message,
+								 amount as amount,
 								 isGenerated,
-								 isWithdraw,
+                                 isWithdraw,
+                                 message,
 								 to_timestamp(transactionTime , 'MM-DD-YYYY HH24:MI:SS') as TimeStamp 
 						   from 
 							   transactions 
 						   where 
-							   cast(fromMetadata->>'id' as varchar) = $1 or cast(toMetadata->>'id' as varchar) = $1`,
-        [id]
+								(cast(fromMetadata->>'id' as varchar) = $1 or cast(fromMetadata->>'id' as varchar) = $2) 
+								     and 
+								(cast(toMetadata->>'id' as varchar) = $1 or cast(toMetadata->>'id' as varchar) = $2))
+						   order by TimeStamp`,
+        [fromID, toID]
       )
     ).rows;
+    res.send({ message: "done", transactions });
   } catch (e) {
     console.log(e);
     res.send({ message: "failed" });
   }
 }
+
+async function getTransactions(postgres, req, res) {}
 
 module.exports = app;
