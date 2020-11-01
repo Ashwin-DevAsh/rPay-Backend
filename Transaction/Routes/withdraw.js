@@ -41,7 +41,7 @@ async function withdraw(postgres, req, res) {
     from.id,
   ]);
 
-  if (fromAmmount) {
+  if (!fromAmmount) {
     console.log("invalid users");
     res.send({ message: "failed" });
     return;
