@@ -68,17 +68,14 @@ async function addMoney(postgres, req, res) {
 
     console.log(transactionID);
 
-    var blockResult = await axios.post(
-      "http://wallet-block:9000/addMoneyBlock/",
-      {
-        transactionID: transactionID,
-        from: from,
-        to: to,
-        isGenerated: true,
-        isWithdraw: false,
-        amount: amount,
-      }
-    );
+    var blockResult = await axios.post("http://block:9000/addMoneyBlock/", {
+      transactionID: transactionID,
+      from: from,
+      to: to,
+      isGenerated: true,
+      isWithdraw: false,
+      amount: amount,
+    });
     if ((blockResult.data["message"] = "done")) {
       await postgres.query("commit");
       res.send({ message: "done" });
