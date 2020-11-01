@@ -5,19 +5,14 @@ const { Pool } = require("pg");
 var pool = new Pool(clientDetails);
 
 app.get("/getTransactionsBetweenObjects", async (req, res) => {
+  console.log("get transactions between objects..");
+
   var postgres = await pool.connect();
   await getTransactionsBetweenObjects(postgres, req, res);
   (await postgres).release();
 });
 
-app.get("/getTransactions", async (req, res) => {
-  var postgres = await pool.connect();
-  await getTransactions(postgres, req, res);
-  (await postgres).release();
-});
-
 async function getTransactionsBetweenObjects(postgres, req, res) {
-  console.log("get transactions between objects..");
   var fromID = req.query.id1;
   var toID = req.query.id2;
   try {
@@ -57,7 +52,5 @@ async function getTransactionsBetweenObjects(postgres, req, res) {
     res.send({ message: "failed" });
   }
 }
-
-async function getTransactions(postgres, req, res) {}
 
 module.exports = app;
