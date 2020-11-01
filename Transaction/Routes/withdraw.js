@@ -96,6 +96,10 @@ async function withdraw(postgres, req, res) {
     if ((blockResult.data["message"] = "done")) {
       await postgres.query("commit");
       res.send({ message: "done" });
+      sendNotification(
+        from.id,
+        `withdraw,${from.name},${from.id},${amount},${from.email}`
+      );
     }
   } catch (e) {
     console.log(e);
