@@ -26,7 +26,7 @@ async function getTransactionsBetweenObjects(postgres, req, res) {
   try {
     var transactions = (
       await postgres.query(
-        `((select
+        `select
 								 TransactionId,
 								 TransactionTime,
 								 fromMetadata,
