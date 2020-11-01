@@ -19,12 +19,6 @@ async function pay(postgres, req, res) {
   var to = body.to;
   var from = body.from;
 
-  if (!from || !amount || !to) {
-    console.log("invalid body");
-    res.send({ message: "failed" });
-    return;
-  }
-
   try {
     var decoded = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY);
     if (decoded.id != from.id) {
@@ -34,6 +28,12 @@ async function pay(postgres, req, res) {
     }
   } catch (e) {
     console.log(e);
+    res.send({ message: "failed" });
+    return;
+  }
+
+  if (!from || !amount || !to) {
+    console.log("invalid body");
     res.send({ message: "failed" });
     return;
   }
@@ -52,6 +52,12 @@ async function pay(postgres, req, res) {
     return;
   }
 
+  if (amount <= 0) {
+    console.log("invalid amount");
+    res.send({ message: "failed" });
+    return;
+  }
+
   if (fromAmmount < amount) {
     console.log("insufficient balance");
     res.send({ message: "failed" });
@@ -61,11 +67,11 @@ async function pay(postgres, req, res) {
   try {
     await postgres.query("begin");
     await postgres.query(
-      "update amount set balance = balance + $1 where id = $2",
+      "update amount set balance = balance - $1 where id = $2",
       [amount, from.id]
     );
     await postgres.query(
-      "update amount set balance = balance - $1 where id = $2",
+      "update amount set balance = balance + $1 where id = $2",
       [amount, to.id]
     );
     var transactionTime = dateFormat(new Date(), "mm-dd-yyyy hh:MM:ss");
