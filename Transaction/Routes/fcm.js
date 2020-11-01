@@ -1,4 +1,5 @@
 const FCM = require("fcm-node");
+const clientDetails = require("../Database/ClientDetails");
 
 const { Pool } = require("pg");
 var pool = new Pool(clientDetails);
