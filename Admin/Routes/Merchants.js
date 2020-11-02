@@ -29,11 +29,11 @@ var getMerchants = async (postgres, req, res) => {
   }
 };
 
-app.post("/updateMerchantStatus", (req, res) => {
+app.post("/updateMerchantStatus", async (req, res) => {
   var postgres = new Pool(clientDetails);
-  postgres.connect();
-  updateMerchantStatus(postgres, req, res);
-  postgres.end();
+  await postgres.connect();
+  await updateMerchantStatus(postgres, req, res);
+  await postgres.end();
 });
 
 var updateMerchantStatus = async (postgres, req, res) => {
