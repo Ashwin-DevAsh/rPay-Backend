@@ -24,39 +24,40 @@ const PORT = process.env.PORT || 4500;
 var rootId = `radmin@919876543210`;
 
 (async () => {
-  var postgres = new Pool(clientDetails);
+  let postgres = new Pool(clientDetails);
   await postgres.connect();
-  postgres
-    .query(`select * from admins where email = $1`, ["rootAdmin@rpay.com"])
-    .then((result) => {
-      var rootUser = result.rows;
-      if (rootUser.length == 0) {
-        bcrypt.hash(process.env.ROOT_ADMIN_PASSWORD, 10, async function (
-          err,
-          hash
-        ) {
-          if (err) {
-            console.log(err);
-            return;
-          }
+  var result = await postgres.query(`select * from admins where email = $1`, [
+    "rootAdmin@rpay.com",
+  ]);
 
-          await postgres.query(
-            "insert into admins(id,name,number,email,password,permissions) values($1,$2,$3,$4,$5,$6)",
-            [
-              rootId,
-              "root",
-              "919876543210",
-              "rootAdmin@rpay.com",
-              hash,
-              [{ all: true }],
-            ]
-          );
-          console.log("root user created....");
-        });
-      } else {
-        console.log("root user exist....");
+  var rootUser = result.rows;
+  if (rootUser.length == 0) {
+    bcrypt.hash(process.env.ROOT_ADMIN_PASSWORD, 10, async function (
+      err,
+      hash
+    ) {
+      if (err) {
+        console.log(err);
+        return;
       }
+
+      await postgres.query(
+        "insert into admins(id,name,number,email,password,permissions) values($1,$2,$3,$4,$5,$6)",
+        [
+          rootId,
+          "root",
+          "919876543210",
+          "rootAdmin@rpay.com",
+          hash,
+          [{ all: true }],
+        ]
+      );
+      console.log("root user created....");
     });
+  } else {
+    console.log("root user exist....");
+  }
+
   await postgres.end();
 })();
 
