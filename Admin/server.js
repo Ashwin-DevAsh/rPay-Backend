@@ -32,28 +32,19 @@ var rootId = `radmin@919876543210`;
 
   var rootUser = result.rows;
   if (rootUser.length == 0) {
-    bcrypt.hash(process.env.ROOT_ADMIN_PASSWORD, 10, async function (
-      err,
-      hash
-    ) {
-      if (err) {
-        console.log(err);
-        return;
-      }
-
-      await postgres.query(
-        "insert into admins(id,name,number,email,password,permissions) values($1,$2,$3,$4,$5,$6)",
-        [
-          rootId,
-          "root",
-          "919876543210",
-          "rootAdmin@rpay.com",
-          hash,
-          [{ all: true }],
-        ]
-      );
-      console.log("root user created....");
-    });
+    var hash = await bcrypt.hash(process.env.ROOT_ADMIN_PASSWORD, 10);
+    await postgres.query(
+      "insert into admins(id,name,number,email,password,permissions) values($1,$2,$3,$4,$5,$6)",
+      [
+        rootId,
+        "root",
+        "919876543210",
+        "rootAdmin@rpay.com",
+        hash,
+        [{ all: true }],
+      ]
+    );
+    console.log("root user created....");
   } else {
     console.log("root user exist....");
   }
