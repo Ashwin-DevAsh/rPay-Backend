@@ -2,39 +2,36 @@ const app = require("express").Router();
 const jwt = require("jsonwebtoken");
 var api = require("clicksend");
 var smsMessage = new api.SmsMessage();
-const {Pool} = require("pg");
-const clientDetails = require("../Database/ClientDetails")
+const { Pool } = require("pg");
+const clientDetails = require("../Database/ClientDetails");
 
+var pool = new Pool(clientDetails);
 
-var pool = new Pool(clientDetails)
-
-app.get("/getOtp", async(req, res) => {
-  var postgres = await pool.connect()
-  await sendOtp(postgres,req, res, "Otp", "aGok1vSGlpf");
-  (await postgres).release()  
+app.get("/getOtp", async (req, res) => {
+  var postgres = await pool.connect();
+  await sendOtp(postgres, req, res, "Otp", "TqUmly4458C");
+  (await postgres).release();
 });
 
 app.get("/getOtpMerchant", async function (req, res) {
-      var postgres = await pool.connect()
-      await sendOtp(postgres,req, res, "MerchantsOtp", "Uf4HyXRcQ7x");
-     (await postgres).release()
-  }
-);
+  var postgres = await pool.connect();
+  await sendOtp(postgres, req, res, "MerchantsOtp", "zqS2Zvk7BhK");
+  (await postgres).release();
+});
 
 app.post("/setOtp", async (req, res) => {
-  var postgres = await pool.connect()
-  await setOtp(postgres,req, res, "Otp", "users");
-  (await postgres).release()
+  var postgres = await pool.connect();
+  await setOtp(postgres, req, res, "Otp", "users");
+  (await postgres).release();
 });
 
 app.post("/setOtpMerchant", async (req, res) => {
-  var postgres = await pool.connect()
-  setOtp(postgres,req, res, "MerchantsOtp", "merchants", "rbusiness@");
-  (await postgres).release()
-
+  var postgres = await pool.connect();
+  setOtp(postgres, req, res, "MerchantsOtp", "merchants", "rbusiness@");
+  (await postgres).release();
 });
 
-var setOtp = async (postgres,req, res, otpTable, userTable, id = "rpay@") => {
+var setOtp = async (postgres, req, res, otpTable, userTable, id = "rpay@") => {
   var otpNumber = req.body["otpNumber"];
   var number = req.body["number"];
 
@@ -87,7 +84,7 @@ var setOtp = async (postgres,req, res, otpTable, userTable, id = "rpay@") => {
   }
 };
 
-var sendOtp = async (postgres,req, res, otpTable, appId) => {
+var sendOtp = async (postgres, req, res, otpTable, appId) => {
   var number = req.query["number"];
 
   if (!number) {
