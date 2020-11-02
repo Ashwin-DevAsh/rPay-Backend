@@ -44,7 +44,7 @@ var init = async (postgres, req, res) => {
              from 
                 transactions 
             where 
-                cast(fromMetadata->>'id' as varchar) = $1 or cast(toMetadata->>'id' as varchar) = $1 and amount >0`,
+                (cast(fromMetadata->>'id' as varchar) = $1 or cast(toMetadata->>'id' as varchar) = $1) and amount >0`,
         [id]
       )
     ).rows;
