@@ -1,56 +1,48 @@
 const app = require("express").Router();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const {Pool} = require("pg");
-const clientDetails = require("../Database/ClientDetails")
+const { Pool } = require("pg");
+const clientDetails = require("../Database/ClientDetails");
 
 app.post("/login", async (req, res) => {
-  var postgres = new Pool(clientDetails)
-  postgres.connect()
-  await login(postgres,req,res)
-  postgres.end()
+  var postgres = new Pool(clientDetails);
+  await postgres.connect();
+  await login(postgres, req, res);
+  await postgres.end();
 });
-
-
 
 app.post("/addAdmin", async (req, res) => {
-  var postgres = new Pool(clientDetails)
-  postgres.connect()
-  await addAdmin(postgres,req,res)
-  postgres.end()
-
+  var postgres = new Pool(clientDetails);
+  await postgres.connect();
+  await addAdmin(postgres, req, res);
+  await postgres.end();
 });
 
-app.get("/getAdmins", (req, res) => {
-  var postgres = new Pool(clientDetails)
-  postgres.connect()
-  await getAdmins(postgres,req,res)
-  postgres.end()
-
+app.get("/getAdmins", async (req, res) => {
+  var postgres = new Pool(clientDetails);
+  await postgres.connect();
+  await getAdmins(postgres, req, res);
+  await postgres.end();
 });
 
-var getAdmins = async(postgres,req,res)=>{
+var getAdmins = async (postgres, req, res) => {
+  try {
+    var decoded = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY);
+  } catch (e) {
+    console.log(e);
+    res.send({ message: "failed" });
+    return;
+  }
 
-  try{
-    var decoded = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY)
-   }catch(e){
-     console.log(e)
-     res.send({ message: "failed" });
-     return
-   }
+  try {
+    var users = (await postgres.query("select * from admins")).rows;
+    res.send(users);
+  } catch (err) {
+    res.send({ err });
+  }
+};
 
-   
-      try {
-        var users = (await postgres.query("select * from admins")).rows;
-        res.send(users);
-      } catch (err) {
-        res.send({ err });
-      }
- 
-}
-
-
-var addAdmin = async(postgres,req,res)=>{
+var addAdmin = async (postgres, req, res) => {
   var admin = req.body;
   console.log(admin);
   if (!admin.name || !admin.email || !admin.number || !admin.password) {
@@ -89,9 +81,9 @@ var addAdmin = async(postgres,req,res)=>{
     console.log(err);
     res.json({ message: "failed" });
   }
-}
+};
 
-var login = async(postgres,req,res)=>{
+var login = async (postgres, req, res) => {
   var email = req.body.email;
   var password = req.body.password;
   if (email && password) {
@@ -150,7 +142,6 @@ var login = async(postgres,req,res)=>{
       message: "missing username or password",
     });
   }
-}
-
+};
 
 module.exports = app;

@@ -1,25 +1,24 @@
 const app = require("express").Router();
 const FCM = require("fcm-node");
 const jwt = require("jsonwebtoken");
-const {Pool} = require("pg");
-const clientDetails = require("../Database/ClientDetails")
+const { Pool } = require("pg");
+const clientDetails = require("../Database/ClientDetails");
 
-app.get("/getMerchants", (req, res) => {
-  var postgres = new Pool(clientDetails)
-  postgres.connect()
-  await getMerchants(postgres,req,res)
-  postgres.end()
+app.get("/getMerchants", async (req, res) => {
+  var postgres = new Pool(clientDetails);
+  await postgres.connect();
+  await getMerchants(postgres, req, res);
+  await postgres.end();
 });
 
-
-var getMerchants = async(postgres,req,res)=>{
-  try{
-    var decoded = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY)
-   }catch(e){
-     console.log(e)
-     res.send({ message: "failed" });
-     return
-   }
+var getMerchants = async (postgres, req, res) => {
+  try {
+    var decoded = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY);
+  } catch (e) {
+    console.log(e);
+    res.send({ message: "failed" });
+    return;
+  }
 
   try {
     var users = (await postgres.query("select * from merchants")).rows;
@@ -28,25 +27,23 @@ var getMerchants = async(postgres,req,res)=>{
     console.log(err);
     res.send({ err });
   }
-}
+};
 
 app.post("/updateMerchantStatus", (req, res) => {
-  var postgres = new Pool(clientDetails)
-  postgres.connect()
-  updateMerchantStatus(postgres,req,res)
-  postgres.end()
+  var postgres = new Pool(clientDetails);
+  postgres.connect();
+  updateMerchantStatus(postgres, req, res);
+  postgres.end();
 });
 
-
-var updateMerchantStatus = async(postgres,req,res)=>{
-  try{
-    var decoded = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY)
-   }catch(e){
-     console.log(e)
-     res.send({ message: "failed" });
-     return
-   }
-
+var updateMerchantStatus = async (postgres, req, res) => {
+  try {
+    var decoded = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY);
+  } catch (e) {
+    console.log(e);
+    res.send({ message: "failed" });
+    return;
+  }
 
   var id = req.body.id;
   var status = req.body.status;
@@ -66,7 +63,7 @@ var updateMerchantStatus = async(postgres,req,res)=>{
   } catch (e) {
     res.send({ message: "error", e });
   }
-}
+};
 
 function sendNotificationToAll(id, isActive) {
   console.log("sending notification to all merchant");
@@ -74,7 +71,7 @@ function sendNotificationToAll(id, isActive) {
   var fcm = new FCM(serverKey);
   console.log(serverKey);
   var message = {
-    to:"/topics/all",
+    to: "/topics/all",
     data: {
       type: `merchantStatus,${id},${isActive}`,
     },

@@ -1,40 +1,37 @@
 const app = require("express").Router();
 const jwt = require("jsonwebtoken");
-const {Pool} = require("pg");
-const clientDetails = require("../Database/ClientDetails")
+const { Pool } = require("pg");
+const clientDetails = require("../Database/ClientDetails");
 
-
-app.get("/getTransactionStats/:days", (req, res) => {
-  var postgres = new Pool(clientDetails)
-  postgres.connect()
-   await doProcess(postgres,req, res, transactionStatsQuery);
-   postgres.end()
+app.get("/getTransactionStats/:days", async (req, res) => {
+  var postgres = new Pool(clientDetails);
+  await postgres.connect();
+  await doProcess(postgres, req, res, transactionStatsQuery);
+  await postgres.end();
 });
 
-app.get("/getNoTransactionStats/:days", (req, res) => {
-  var postgres = new Pool(clientDetails)
-  postgres.connect()
-  await doProcess(postgres,req, res, noTransactionStatsQuery);
-  postgres.end()
+app.get("/getNoTransactionStats/:days", async (req, res) => {
+  var postgres = new Pool(clientDetails);
+  await postgres.connect();
+  await doProcess(postgres, req, res, noTransactionStatsQuery);
+  await postgres.end();
 });
 
-app.get("/getGeneratedStats/:days", (req, res) => {
-  var postgres = new Pool(clientDetails)
-  postgres.connect()
-  await doProcess(postgres,req, res, generatedStatsQuery);
-  postgres.end()
+app.get("/getGeneratedStats/:days", async (req, res) => {
+  var postgres = new Pool(clientDetails);
+  await postgres.connect();
+  await doProcess(postgres, req, res, generatedStatsQuery);
+  await postgres.end();
 });
 
-app.get("/getWithdrawStats/:days", (req, res) => {
-  var postgres = new Pool(clientDetails)
-  postgres.connect()
-  await doProcess(postgres,req, res, withdrawStatsQuery);
-  postgres.end()
-
+app.get("/getWithdrawStats/:days", async (req, res) => {
+  var postgres = new Pool(clientDetails);
+  await postgres.connect();
+  await doProcess(postgres, req, res, withdrawStatsQuery);
+  await postgres.end();
 });
 
-async function doProcess(postgres,req, res, queryFunction) {
-
+async function doProcess(postgres, req, res, queryFunction) {
   if (!req.params.days) {
     res.send({ message: "error" });
     return;
@@ -49,37 +46,35 @@ async function doProcess(postgres,req, res, queryFunction) {
 
   console.log(days);
 
-  try{
-    var decoded = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY)
-   }catch(e){
-     console.log(e)
-     res.send({ message: "failed" });
-     return
-   }
+  try {
+    var decoded = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY);
+  } catch (e) {
+    console.log(e);
+    res.send({ message: "failed" });
+    return;
+  }
 
+  try {
+    var day = await postgres.query(queryFunction(days), ["day"]);
+    var week = await postgres.query(queryFunction(days), ["week"]);
+    var month = await postgres.query(queryFunction(days), ["month"]);
+    if (days == 1) {
+      var hour = await postgres.query(queryFunction(days), ["hour"]);
+    } else {
+      var hour = day;
+    }
 
-      try {
-        var day = await postgres.query(queryFunction(days), ["day"]);
-        var week = await postgres.query(queryFunction(days), ["week"]);
-        var month = await postgres.query(queryFunction(days), ["month"]);
-        if (days == 1) {
-          var hour = await postgres.query(queryFunction(days), ["hour"]);
-        } else {
-          var hour = day;
-        }
-
-        console.log(hour.rows);
-        res.send({
-          day,
-          week,
-          month,
-          hour,
-        });
-      } catch (e) {
-        console.error(e.stack);
-        res.send(e);
-      }
-  
+    console.log(hour.rows);
+    res.send({
+      day,
+      week,
+      month,
+      hour,
+    });
+  } catch (e) {
+    console.error(e.stack);
+    res.send(e);
+  }
 }
 
 function transactionStatsQuery(day) {
