@@ -1,44 +1,36 @@
 const app = require("express").Router();
 const jwt = require("jsonwebtoken");
-const {Pool} = require("pg");
-const clientDetails = require("../Database/ClientDetails")
+const { Pool } = require("pg");
+const clientDetails = require("../Database/ClientDetails");
 
-app.get("/getUsers", (req, res) => {
-
-  var postgres = new Pool(clientDetails)
-  postgres.connect()
-  await getUsers(postgres,req,res)
-  postgres.end()
-
+app.get("/getUsers", async (req, res) => {
+  var postgres = new Pool(clientDetails);
+  await postgres.connect();
+  await getUsers(postgres, req, res);
+  await postgres.end();
 });
 
-app.get("/getMyTransactions/:id", (req, res) => {
-
-  var postgres = new Pool(clientDetails)
-  postgres.connect()
-  await getMyTransactions(postgres,req,res)
-  postgres.end()
-
+app.get("/getMyTransactions/:id", async (req, res) => {
+  var postgres = new Pool(clientDetails);
+  await postgres.connect();
+  await getMyTransactions(postgres, req, res);
+  await postgres.end();
 });
 
-
-var getUsers = async(postgres,req,res)=>{
-
-  try{
-    var decoded = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY)
-   }catch(e){
-     console.log(e)
-     res.send({ message: "failed" });
-     return
-   }
+var getUsers = async (postgres, req, res) => {
+  try {
+    var decoded = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY);
+  } catch (e) {
+    console.log(e);
+    res.send({ message: "failed" });
+    return;
+  }
 
   var users = (await postgres.query("select * from users")).rows;
   res.send(users);
-}
+};
 
-
-var getMyTransactions = async(postgres,req,res)=>{
-
+var getMyTransactions = async (postgres, req, res) => {
   console.log("Getting Users");
 
   var id = req.params.id;
@@ -46,15 +38,13 @@ var getMyTransactions = async(postgres,req,res)=>{
     res.send({ message: "err" });
   }
 
-
-  try{
-    var decoded = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY)
-   }catch(e){
-     console.log(e)
-     res.send({ message: "failed" });
-     return
-   }
-
+  try {
+    var decoded = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY);
+  } catch (e) {
+    console.log(e);
+    res.send({ message: "failed" });
+    return;
+  }
 
   if (decoded.name) {
     postgres
@@ -79,8 +69,6 @@ var getMyTransactions = async(postgres,req,res)=>{
         res.send(e);
       });
   }
-
-
-}
+};
 
 module.exports = app;
