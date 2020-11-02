@@ -54,7 +54,7 @@ async function addMoney(postgres, req, res) {
       "update amount set balance = balance + $1 where id = $2",
       [amount, to.id]
     );
-    var transactionTime = dateFormat(new Date(), "dd-mm-yyyy hh:MM:ss");
+    var transactionTime = dateFormat(new Date(), "mm-dd-yyyy hh:MM:ss");
     var transactionID = (
       await postgres.query(
         `insert
