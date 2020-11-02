@@ -1,24 +1,31 @@
 const app = require("express").Router();
 const jwt = require("jsonwebtoken");
 
-const {Pool} = require("pg");
-const clientDetails = require("../Database/ClientDetails")
+const { Pool } = require("pg");
+const clientDetails = require("../Database/ClientDetails");
 
 app.get("/getNodes", async (req, res) => {
-  var postgres = new Pool(clientDetails)
-  await postgres.connect()
-  await getNodes(postgres,req,res)
-  await postgres.end()
+  var postgres = new Pool(clientDetails);
+  await postgres.connect();
+  await getNodes(postgres, req, res);
+  await postgres.end();
 });
 
-var getNodes = async(postgres,req,res)=>{
-  try{
-    var decoded = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY)
-   }catch(e){
-     console.log(e)
-     res.send({ message: "failed" });
-     return
-   }
+app.get("/getBlocks", async (req, res) => {
+  var postgres = new Pool(clientDetails);
+  await postgres.connect();
+  await getBlocks(postgres, req, res);
+  await postgres.end();
+});
+
+var getNodes = async (postgres, req, res) => {
+  try {
+    var decoded = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY);
+  } catch (e) {
+    console.log(e);
+    res.send({ message: "failed" });
+    return;
+  }
   if (decoded.name) {
     postgres
       .query("select * from info")
@@ -31,26 +38,16 @@ var getNodes = async(postgres,req,res)=>{
         res.send({ message: "error", e });
       });
   }
-}
+};
 
-app.get("/getBlocks", (req, res) => {
- 
-  var postgres = new Pool(clientDetails)
-  postgres.connect()
-  await getBlocks(postgres,req,res)
-  postgres.end()
-
-});
-
-
-var getBlocks = async(postgres,req,res)=>{
-  try{
-    var decoded = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY)
-   }catch(e){
-     console.log(e)
-     res.send({ message: "failed" });
-     return
-   }
+var getBlocks = async (postgres, req, res) => {
+  try {
+    var decoded = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY);
+  } catch (e) {
+    console.log(e);
+    res.send({ message: "failed" });
+    return;
+  }
 
   if (decoded.name) {
     postgres
@@ -63,6 +60,6 @@ var getBlocks = async(postgres,req,res)=>{
         res.send({ message: "error", e });
       });
   }
-}
+};
 
 module.exports = app;
