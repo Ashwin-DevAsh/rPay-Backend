@@ -9,7 +9,8 @@ const cors = require("cors");
 const transactions = require("./Routes/Transactions");
 const nodesAndBlocks = require("./Routes/nodesAndBlocks");
 const adminRoute = require("./Routes/Admin");
-const postgres = require("./Database/Connections/pgConnections");
+const { Pool } = require("pg");
+const clientDetails = require("../Database/ClientDetails");
 
 var corsOptions = {
   origin: "*",
@@ -22,6 +23,8 @@ const PORT = process.env.PORT || 4500;
 
 var rootId = `radmin@919876543210`;
 
+var postgres = new Pool(clientDetails);
+await postgres.connect();
 postgres
   .query(`select * from admins where email = $1`, ["rootAdmin@rpay.com"])
   .then((result) => {
@@ -53,6 +56,7 @@ postgres
       console.log("root user exist....");
     }
   });
+await postgres.end();
 
 app.use(cors(corsOptions));
 app.use(bodyParser.urlencoded({ extended: true }));
