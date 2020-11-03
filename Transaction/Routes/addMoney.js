@@ -151,7 +151,12 @@ async function verifyGateway(id, amount) {
   try {
     var paymentDetails = await instance.payments.fetch(id);
     console.log("Payment Details = ", paymentDetails);
-    console.log(id, paymentDetails.amount, amount / 1 + 0.02 * amount, id);
+    console.log(
+      id,
+      paymentDetails.amount / 100,
+      amount / 1 + 0.02 * amount,
+      id
+    );
     return (
       paymentDetails.status == "authorized" &&
       paymentDetails.amount / 100 == amount / 1 + 0.02 * amount
