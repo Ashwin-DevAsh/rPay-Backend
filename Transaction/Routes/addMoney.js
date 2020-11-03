@@ -40,10 +40,14 @@ async function addMoney(postgres, req, res) {
     return;
   }
 
-  if (from.name == "Upi transaction" && !verifyUPI(from.id)) {
-    console.log("Verification failed");
-    res.send({ message: "failed" });
-    return;
+  if (from.name == "Upi transaction") {
+    if (!(await verifyUPI(from.id))) {
+      console.log("Verification failed");
+      res.send({ message: "failed" });
+      return;
+    }
+  } else {
+    console.log("Razorpay");
   }
 
   var toAmmount = await postgres.query("select * from amount where id=$1", [
