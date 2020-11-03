@@ -17,6 +17,7 @@
     "fcm-node": "^1.5.2",
     "jsonwebtoken": "^8.5.1",
     "paytmchecksum": "^1.5.0",
-    "pg": "^8.2.1"
+    "pg": "^8.2.1",
+    "razorpay": "^2.0.6"
   }
 }

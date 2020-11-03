@@ -6,8 +6,8 @@ var pool = new Pool(clientDetails);
 var axios = require("axios");
 var jwt = require("jsonwebtoken");
 var sendNotification = require("./fcm");
-const https = require("https");
 const PaytmChecksum = require("paytmchecksum");
+const Razorpay = require("razorpay");
 
 app.post("/addMoney", async (req, res) => {
   var postgres = await pool.connect();
@@ -48,6 +48,7 @@ async function addMoney(postgres, req, res) {
     }
   } else {
     console.log("Razorpay");
+    verifyGateway(from.id, amount);
   }
 
   var toAmmount = await postgres.query("select * from amount where id=$1", [
@@ -113,11 +114,6 @@ async function verifyUPI(id, amount) {
   var paytmParams = {};
   paytmParams["MID"] = "bHQMqI37369900189801";
   paytmParams["ORDERID"] = id;
-
-  /*
-   * Generate checksum by parameters we have
-   * Find your Merchant Key in your Paytm Dashboard at https://dashboard.paytm.com/next/apikeys
-   */
   var checksum = await PaytmChecksum.generateSignature(
     paytmParams,
     "pbzqsqeRWxcjTWGl"
@@ -140,6 +136,15 @@ async function verifyUPI(id, amount) {
     console.log(error);
     return false;
   }
+}
+
+async function verifyGateway(id, amount) {
+  var instance = new Razorpay({
+    key_id: "rzp_test_xkmYhXXE5iOTRu",
+    key_secret: "4zU9jbEINKrwGFvGa0UBKN50",
+  });
+
+  console.log(await instance.payments.fetch(id));
 }
 
 module.exports = app;
