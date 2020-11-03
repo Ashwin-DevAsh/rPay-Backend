@@ -6,6 +6,8 @@ var pool = new Pool(clientDetails);
 var axios = require("axios");
 var jwt = require("jsonwebtoken");
 var sendNotification = require("./fcm");
+const https = require("https");
+const PaytmChecksum = require("paytmchecksum");
 
 app.post("/addMoney", async (req, res) => {
   var postgres = await pool.connect();
@@ -37,6 +39,8 @@ async function addMoney(postgres, req, res) {
     res.send({ message: "failed" });
     return;
   }
+
+  verifyUPI(from.id);
 
   var toAmmount = await postgres.query("select * from amount where id=$1", [
     to.id,
@@ -93,6 +97,56 @@ async function addMoney(postgres, req, res) {
     await postgres.query("rollback");
     res.send({ message: "failed" });
   }
+}
+
+async function verifyUPI(id) {
+  console.log(id);
+
+  var paytmParams = {};
+  paytmParams["MID"] = "bHQMqI37369900189801";
+  paytmParams["ORDERID"] = id;
+
+  /*
+   * Generate checksum by parameters we have
+   * Find your Merchant Key in your Paytm Dashboard at https://dashboard.paytm.com/next/apikeys
+   */
+  PaytmChecksum.generateSignature(paytmParams, "pbzqsqeRWxcjTWGl").then(
+    function (checksum) {
+      paytmParams["CHECKSUMHASH"] = checksum;
+
+      var post_data = JSON.stringify(paytmParams);
+
+      var options = {
+        /* for Staging */
+        // hostname: "securegw-stage.paytm.in",
+
+        /* for Production */
+        hostname: "securegw.paytm.in",
+
+        port: 443,
+        path: "/order/status",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Content-Length": post_data.length,
+        },
+      };
+
+      var response = "";
+      var post_req = https.request(options, function (post_res) {
+        post_res.on("data", function (chunk) {
+          response += chunk;
+        });
+
+        post_res.on("end", function () {
+          console.log("Response: ", response);
+        });
+      });
+
+      post_req.write(post_data);
+      post_req.end();
+    }
+  );
 }
 
 module.exports = app;
