@@ -135,7 +135,7 @@ async function verifyUPI(id, amount) {
       await axios.post("https://securegw.paytm.in/order/status", paytmParams)
     ).data;
     console.log(response);
-    return response.STATUS == "TXN_SUCCESS" && response.TXNTYPE == amount;
+    return response.STATUS == "TXN_SUCCESS" && response.TXNAMOUNT == amount;
   } catch (error) {
     console.log(error);
     return false;
