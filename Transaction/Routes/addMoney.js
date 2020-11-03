@@ -48,7 +48,11 @@ async function addMoney(postgres, req, res) {
     }
   } else {
     console.log("Razorpay");
-    verifyGateway(from.id, amount);
+    if (!(await verifyGateway(from.id, amount))) {
+      console.log("Verification failed");
+      res.send({ message: "failed" });
+      return;
+    }
   }
 
   var toAmmount = await postgres.query("select * from amount where id=$1", [
@@ -144,7 +148,15 @@ async function verifyGateway(id, amount) {
     key_secret: "4zU9jbEINKrwGFvGa0UBKN50",
   });
 
-  console.log(await instance.payments.fetch(id));
+  try {
+    var paymentDetails = await instance.payments.fetch(id);
+    console.log("Payment Details = ", paymentDetails);
+    return (
+      paymentDetails.status == "authorized" && paymentDetails.amount == amount
+    );
+  } catch (error) {
+    return false;
+  }
 }
 
 module.exports = app;
