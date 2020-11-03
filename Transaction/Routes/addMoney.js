@@ -40,7 +40,11 @@ async function addMoney(postgres, req, res) {
     return;
   }
 
-  verifyUPI(from.id);
+  if (from.name == "Upi transaction" && !verifyUPI(from.id)) {
+    console.log("Verification failed");
+    res.send({ message: "failed" });
+    return;
+  }
 
   var toAmmount = await postgres.query("select * from amount where id=$1", [
     to.id,
@@ -116,44 +120,22 @@ async function verifyUPI(id) {
   );
   paytmParams["CHECKSUMHASH"] = checksum;
 
-  var post_data = JSON.stringify(paytmParams);
-
-  // var options = {
   //   /* for Staging */
   //   // hostname: "securegw-stage.paytm.in",
 
   //   /* for Production */
   //   hostname: "securegw.paytm.in",
 
-  //   port: 443,
-  //   path: "/order/status",
-  //   method: "POST",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //     "Content-Length": post_data.length,
-  //   },
-  // };
-
-  var response = await axios.post(
-    "https://securegw.paytm.in/order/status",
-    paytmParams
-  );
-
-  console.log(response);
-
-  // var response = "";
-  // var post_req = https.request(options, function (post_res) {
-  //   post_res.on("data", function (chunk) {
-  //     response += chunk;
-  //   });
-
-  //   post_res.on("end", function () {
-  //     console.log("Response: ", response);
-  //   });
-  // });
-
-  // post_req.write(post_data);
-  // post_req.end();
+  try {
+    var response = (
+      await axios.post("https://securegw.paytm.in/order/status", paytmParams)
+    ).data;
+    console.log(response);
+    return response.STATUS == "TXN_SUCCESS";
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
 }
 
 module.exports = app;
