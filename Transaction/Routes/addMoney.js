@@ -41,7 +41,7 @@ async function addMoney(postgres, req, res) {
   }
 
   if (from.name == "Upi transaction") {
-    if (!(await verifyUPI(from.id))) {
+    if (!(await verifyUPI(from.id, amount))) {
       console.log("Verification failed");
       res.send({ message: "failed" });
       return;
@@ -107,7 +107,7 @@ async function addMoney(postgres, req, res) {
   }
 }
 
-async function verifyUPI(id) {
+async function verifyUPI(id, amount) {
   console.log(id);
 
   var paytmParams = {};
@@ -135,7 +135,7 @@ async function verifyUPI(id) {
       await axios.post("https://securegw.paytm.in/order/status", paytmParams)
     ).data;
     console.log(response);
-    return response.STATUS == "TXN_SUCCESS";
+    return response.STATUS == "TXN_SUCCESS" && response.TXNTYPE == amount;
   } catch (error) {
     console.log(error);
     return false;
