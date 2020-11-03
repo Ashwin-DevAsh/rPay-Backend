@@ -42,7 +42,7 @@ async function addMoney(postgres, req, res) {
 
   var idExistBefore = (
     await postgres.query(
-      `select * from transactions where isgenerated = true && cast(fromMetadata->>'id' as varchar) = $1`,
+      `select * from transactions where isgenerated = true and cast(fromMetadata->>'id' as varchar) = $1`,
       [from.id]
     )
   ).rows;
