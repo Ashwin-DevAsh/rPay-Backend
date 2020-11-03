@@ -110,43 +110,47 @@ async function verifyUPI(id) {
    * Generate checksum by parameters we have
    * Find your Merchant Key in your Paytm Dashboard at https://dashboard.paytm.com/next/apikeys
    */
-  PaytmChecksum.generateSignature(paytmParams, "pbzqsqeRWxcjTWGl").then(
-    function (checksum) {
-      paytmParams["CHECKSUMHASH"] = checksum;
-
-      var post_data = JSON.stringify(paytmParams);
-
-      var options = {
-        /* for Staging */
-        // hostname: "securegw-stage.paytm.in",
-
-        /* for Production */
-        hostname: "securegw.paytm.in",
-
-        port: 443,
-        path: "/order/status",
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Content-Length": post_data.length,
-        },
-      };
-
-      var response = "";
-      var post_req = https.request(options, function (post_res) {
-        post_res.on("data", function (chunk) {
-          response += chunk;
-        });
-
-        post_res.on("end", function () {
-          console.log("Response: ", response);
-        });
-      });
-
-      post_req.write(post_data);
-      post_req.end();
-    }
+  var checksum = await PaytmChecksum.generateSignature(
+    paytmParams,
+    "pbzqsqeRWxcjTWGl"
   );
+  paytmParams["CHECKSUMHASH"] = checksum;
+
+  var post_data = JSON.stringify(paytmParams);
+
+  // var options = {
+  //   /* for Staging */
+  //   // hostname: "securegw-stage.paytm.in",
+
+  //   /* for Production */
+  //   hostname: "securegw.paytm.in",
+
+  //   port: 443,
+  //   path: "/order/status",
+  //   method: "POST",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //     "Content-Length": post_data.length,
+  //   },
+  // };
+
+  var response = axios.post("securegw.paytm.in/order/status", paytmParams);
+
+  console.log(response);
+
+  // var response = "";
+  // var post_req = https.request(options, function (post_res) {
+  //   post_res.on("data", function (chunk) {
+  //     response += chunk;
+  //   });
+
+  //   post_res.on("end", function () {
+  //     console.log("Response: ", response);
+  //   });
+  // });
+
+  // post_req.write(post_data);
+  // post_req.end();
 }
 
 module.exports = app;
