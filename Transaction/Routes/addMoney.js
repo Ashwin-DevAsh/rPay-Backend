@@ -134,7 +134,10 @@ async function verifyUPI(id) {
   //   },
   // };
 
-  var response = axios.post("securegw.paytm.in/order/status", paytmParams);
+  var response = axios.post(
+    "https://securegw.paytm.in/order/status",
+    paytmParams
+  );
 
   console.log(response);
 
