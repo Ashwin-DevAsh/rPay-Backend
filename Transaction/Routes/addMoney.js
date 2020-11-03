@@ -40,6 +40,21 @@ async function addMoney(postgres, req, res) {
     return;
   }
 
+  var idExistBefore = (
+    await postgres.query(
+      `select * from transactions where isgenerated = true && (cast(fromMetadata->>'id' as varchar) = $1`,
+      [from.id]
+    )
+  ).rows;
+
+  console.log(idExistBefore);
+
+  if (idExistBefore.length != 0) {
+    console.log("ID exist before");
+    res.send({ message: "failed" });
+    return;
+  }
+
   if (from.name == "Upi transaction") {
     if (!(await verifyUPI(from.id, amount))) {
       console.log("Verification failed");
