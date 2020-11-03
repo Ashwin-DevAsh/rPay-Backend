@@ -152,7 +152,8 @@ async function verifyGateway(id, amount) {
     var paymentDetails = await instance.payments.fetch(id);
     console.log("Payment Details = ", paymentDetails);
     return (
-      paymentDetails.status == "authorized" && paymentDetails.amount == amount
+      paymentDetails.status == "authorized" &&
+      paymentDetails.amount == amount + 0.02 * amount
     );
   } catch (error) {
     return false;
