@@ -19,47 +19,46 @@ services:
     depends_on: [database, block]
     ports:
       - 8000:8000
-    environment:
-      VIRTUAL_HOST: profile.localhost
 
   admin:
     build: Admin
     depends_on: [database]
     ports:
       - 4500:4500
-    environment:
-      VIRTUAL_HOST: admin.ec2-3-17-161-20.us-east-2.compute.amazonaws.com
 
   mart:
     build: Mart
     depends_on: [database, block]
     ports:
       - 4600:4600
-    environment:
-      VIRTUAL_HOST: mart.localhost
 
   sync:
     build: Sync
     depends_on: [database]
     ports:
       - 7000:7000
-    environment:
-      VIRTUAL_HOST: sync.localhost
 
   transaction:
     build: Transaction
     depends_on: [database, block]
     ports:
       - 9500:9500
-    environment:
-      VIRTUAL_HOST: transaction.localhost
 
-  nginx-proxy:
-    image: jwilder/nginx-proxy
+  reverse-proxy:
+    build: nginx
+    depends_on: [profile, transaction, sync, mart, admin]
     ports:
-      - "80:80"
-      - "443:443"
+      - 80:80
+      - 443:443
+
     volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-    restart: always
-    privileged: true
+      - ./certbot/conf:/etc/nginx/ssl
+      - ./certbot/data:/var/www/certbot
+
+  # certbot:
+  #   image: certbot/certbot:latest
+  #   command: certonly --webroot --webroot-path=/var/www/certbot --email 2017ashwin@gmail.com --agree-tos --no-eff-email -d www.keyos.digital -d www.keyos.digital
+  #   volumes:
+  #     - ./certbot/conf:/etc/letsencrypt
+  #     - ./certbot/logs:/var/log/letsencrypt
+  #     - ./certbot/data:/var/www/certbot
