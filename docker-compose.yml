@@ -49,7 +49,7 @@ services:
     depends_on: [profile, transaction, sync, mart, admin]
     ports:
       - 80:80
-      - 443:443
+      # - 443:443
 
     volumes:
       - ./certbot/conf:/etc/nginx/ssl
