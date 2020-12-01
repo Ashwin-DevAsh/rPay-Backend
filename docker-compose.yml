@@ -53,7 +53,8 @@ services:
     depends_on: [database, block]
     ports:
       - 9500:9500
-    volumes: - ./env:./env
+    volumes:
+      - ./env:./env
 
   reverse-proxy:
     build: nginx
