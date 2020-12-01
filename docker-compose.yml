@@ -6,7 +6,7 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - ./env:./
+      - ./env:./env
 
   block:
     build: Block
@@ -14,7 +14,7 @@ services:
     ports:
       - 9000:9000
     volumes:
-      - ./env:./
+      - ./env:./env
 
   profile:
     build: Profile
@@ -22,7 +22,7 @@ services:
     ports:
       - 8000:8000
     volumes:
-      - ./env:./
+      - ./env:./env
 
   admin:
     build: Admin
@@ -30,7 +30,7 @@ services:
     ports:
       - 4500:4500
     volumes:
-      - ./env:./
+      - ./env:./env
 
   mart:
     build: Mart
@@ -38,7 +38,7 @@ services:
     ports:
       - 4600:4600
     volumes:
-      - ./env:./
+      - ./env:./env
 
   sync:
     build: Sync
@@ -46,15 +46,14 @@ services:
     ports:
       - 7000:7000
     volumes:
-      - ./env:./
+      - ./env:./env
 
   transaction:
     build: Transaction
     depends_on: [database, block]
     ports:
       - 9500:9500
-    volumes:
-      - ./env:./env
+    volumes: - ./env:./env
 
   reverse-proxy:
     build: nginx
