@@ -5,44 +5,49 @@ services:
     build: Database
     ports:
       - 5432:5432
+    volumes: ./env:./env
 
   block:
     build: Block
     depends_on: [database]
     ports:
       - 9000:9000
-    environment:
-      VIRTUAL_HOST: block.localhost
+    volumes: ./env:./env
 
   profile:
     build: Profile
     depends_on: [database, block]
     ports:
       - 8000:8000
+    volumes: ./env:./env
 
   admin:
     build: Admin
     depends_on: [database]
     ports:
       - 4500:4500
+    volumes: ./env:./env
 
   mart:
     build: Mart
     depends_on: [database, block]
     ports:
       - 4600:4600
+    volumes: ./env:./env
 
   sync:
     build: Sync
     depends_on: [database]
     ports:
       - 7000:7000
+    volumes: ./env:./env
 
   transaction:
     build: Transaction
     depends_on: [database, block]
     ports:
       - 9500:9500
+    volumes: ./env:./env
 
   reverse-proxy:
     build: nginx
