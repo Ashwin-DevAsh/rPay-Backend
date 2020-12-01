@@ -1,4 +1,4 @@
-require("dotenv").config("./env/.env");
+require("dotenv").config(".env");
 const express = require("express");
 const Users = require("./Routes/Users");
 const Stats = require("./Routes/Stats");

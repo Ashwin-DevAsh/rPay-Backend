@@ -1,4 +1,4 @@
-require("dotenv").config("./env/.env");
+require("dotenv").config(".env");
 
 const app = require("express")();
 const server = require("http").createServer(app);

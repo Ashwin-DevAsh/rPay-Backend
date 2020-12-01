@@ -1,5 +1,4 @@
-require("dotenv").config("./env/.env");
-
+require("dotenv").config(".env");
 const express = require("express");
 const transactionBlocks = require("./Routes/block");
 const bodyParser = require("body-parser");
