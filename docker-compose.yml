@@ -17,6 +17,11 @@ services:
       - ./env:/env
       - ./Database:/Database
 
+  console:
+    build: console
+    ports:
+      - 3000:80
+
   profile:
     build: Profile
     depends_on: [block]
