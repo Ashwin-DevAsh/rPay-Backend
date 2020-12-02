@@ -1,0 +1,263 @@
+<div class="main-container">
+  <div *ngIf="isLoading" class="spiner">
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+  <div class="profile-container">
+    <div class="profile-outer">
+      <div class="profile">
+        <div class="qr-container">
+          <canvas id="qrcode"></canvas>
+          <div>
+            <h6>Scan this Qrcode to Pay</h6>
+            <h3>{{ userTransactionsService.balance }} RC</h3>
+          </div>
+        </div>
+        <div class="info">
+          <div class="listtile">
+            <div class="avatar">
+              <img src="../../../assets/user_profile.svg" alt="" />
+            </div>
+            <div class="details">
+              <h4>Name</h4>
+              <h6>{{ userService.selectedUser.name }}</h6>
+            </div>
+          </div>
+        </div>
+
+        <div class="info">
+          <div class="listtile">
+            <div class="avatar">
+              <img src="../../../assets/user_mail.svg" alt="" />
+            </div>
+            <div class="details">
+              <h4>Email</h4>
+              <h6>{{ userService.selectedUser.email }}</h6>
+            </div>
+          </div>
+        </div>
+
+        <div class="info">
+          <div class="listtile">
+            <div class="avatar">
+              <img src="../../../assets/user_phone.svg" alt="" />
+            </div>
+            <div class="details">
+              <h4>Phone</h4>
+              <h6>+{{ userService.selectedUser.number }}</h6>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="transactions-container">
+      <!-- <div class="header">
+        <div class="input-containers">
+          <div class="search-inputs">
+            <input placeholder="Enter name or number" type="text" />
+          </div>
+        </div>
+        <button>Search</button>
+      </div> -->
+      <div class="transactions-table">
+        <div style="padding: 25px; width: 100%;">
+          <h1>Transaction</h1>
+          <h3 style="margin: 5px 0 0 5px;">History</h3>
+        </div>
+        <div
+          class="transaction"
+          *ngFor="let item of transactions; let index = index"
+          [class]="{ isSelected: selectedTransaction == index }"
+          (click)="selectTransaction(index)"
+        >
+          <div
+            [style]="{
+              background: item.number.includes('rbusiness')
+                ? '#02335E'
+                : getColor(item.number, index)
+            }"
+            [class]="{
+              avatar: true,
+              merchantAvatar: item.number.includes('rbusiness')
+            }"
+          >
+            <h1 #avatarText>{{ item.name[0] }}</h1>
+            <img
+              [class]="{ merchant: item.number.includes('rbusiness') }"
+              [src]="userService.convertToURL(item.number)"
+              #profile
+              (load)="
+                profile.style.visibility = 'visible';
+                avatarText.style.color = '#02335E'
+              "
+              (error)="profile.style.visibility = 'hidden'"
+            />
+          </div>
+          <div class="info-container">
+            <h5 class="name">
+              {{ item.isGenerated ? "Added to wallet" : item.name }}
+            </h5>
+            <h6 class="email">{{ item.number }}</h6>
+          </div>
+          <div
+            [class]="{
+              amount: true,
+              send: item.isSend,
+              received: !item.isSend,
+              generated: item.isGenerated,
+              withdraw: item.isWithdraw
+            }"
+          >
+            <h3>
+              {{ item.amount }}
+            </h3>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="selected-transaction-outer">
+      <div *ngIf="isSelectedTransactionLoading" class="spiner" id="mini">
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+
+      <div
+        *ngIf="
+          !isLoading && transactions.length > 0 && !isSelectedTransactionLoading
+        "
+        class="selected-transaction-view"
+      >
+        <div class="header">
+          <div
+            [style]="{
+              background: transactions[selectedTransaction].number.includes(
+                'rbusiness'
+              )
+                ? '#02335E'
+                : getColor(
+                    transactions[selectedTransaction].number,
+                    selectedTransaction
+                  )
+            }"
+            [class]="{
+              avatar: true,
+              merchantAvatar: transactions[selectedTransaction].number.includes(
+                'rbusiness'
+              )
+            }"
+          >
+            <h1 #avatarText>{{ transactions[selectedTransaction].name[0] }}</h1>
+            <img
+              [class]="{
+                merchant: transactions[selectedTransaction].number.includes(
+                  'rbusiness'
+                )
+              }"
+              [src]="
+                userService.convertToURL(
+                  transactions[selectedTransaction].number
+                )
+              "
+              #profile
+              (load)="
+                profile.style.visibility = 'visible';
+                avatarText.style.color = '#02335E'
+              "
+              (error)="profile.style.visibility = 'hidden'"
+            />
+          </div>
+
+          <h4 class="amount">
+            {{
+              transactions[selectedTransaction].amount
+                .replace("+", "")
+                .replace("-", "")
+            }}
+            RC
+          </h4>
+          <div class="basic-info">
+            <h5>
+              {{
+                transactions[selectedTransaction].isSend
+                  ? transactions[selectedTransaction].isWithdraw
+                    ? "Withdraw to"
+                    : "Paid to"
+                  : transactions[selectedTransaction].isGenerated
+                  ? "Added from"
+                  : "Received from"
+              }}
+            </h5>
+            <h4>{{ transactions[selectedTransaction].name }}</h4>
+          </div>
+        </div>
+        <div class="transaction-status">
+          <img src="../../../assets/done.svg" alt="" />
+          <div>
+            <h4>
+              {{
+                transactions[selectedTransaction].isSend
+                  ? transactions[selectedTransaction].isWithdraw
+                    ? "Withdraw Successfully !"
+                    : "Paid Successfully !"
+                  : transactions[selectedTransaction].isGenerated
+                  ? "Added Successfully !"
+                  : "Received Successfully !"
+              }}
+            </h4>
+            <h5>{{ transactions[selectedTransaction].transactiontime }}</h5>
+          </div>
+        </div>
+        <div class="transaction-info">
+          <div>
+            <h6>R pay Transaction ID</h6>
+            <h4>{{ transactions[selectedTransaction].transactionid }}</h4>
+          </div>
+          <div>
+            <h6>
+              To :
+              {{
+                transactions[selectedTransaction].isSend
+                  ? transactions[selectedTransaction].name
+                  : userService.selectedUser.name
+              }}
+            </h6>
+            <h4>
+              {{
+                transactions[selectedTransaction].isSend
+                  ? transactions[selectedTransaction].number
+                  : userService.selectedUser.id
+              }}
+            </h4>
+          </div>
+          <div *ngIf="!transactions[selectedTransaction].isGenerated">
+            <h6>
+              From :
+              {{
+                transactions[selectedTransaction].isSend
+                  ? userService.selectedUser.name
+                  : transactions[selectedTransaction].name
+              }}
+            </h6>
+            <h4>
+              {{
+                transactions[selectedTransaction].isSend
+                  ? userService.selectedUser.id
+                  : transactions[selectedTransaction].number
+              }}
+            </h4>
+          </div>
+
+          <div *ngIf="transactions[selectedTransaction].isGenerated">
+            <h6>{{ transactions[selectedTransaction].name }} ID</h6>
+            <h4>
+              {{ transactions[selectedTransaction].number }}
+            </h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

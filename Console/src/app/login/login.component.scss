@@ -1,0 +1,228 @@
+$primarycolorGradient: #0779e4;
+$primarycolor: #035aa6;
+
+$dimBackground: #f7f7f7;
+
+.container {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient($primarycolor, $primarycolorGradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.main-container {
+  width: 1000px;
+  height: 80vh;
+  display: grid;
+  position: relative;
+  grid-template-columns: 45% 55%;
+  background-color: white;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  border-radius: 2px;
+}
+
+.login-container {
+  width: 40%;
+  height: 110%;
+  left: 5%;
+  align-self: center;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  flex-direction: column;
+  justify-content: start;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  background-color: white;
+
+  div {
+    width: 90%;
+  }
+
+  h2 {
+    font-weight: 500;
+  }
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-top: 30px;
+  justify-content: start;
+  height: 70px;
+  img {
+    height: 30px;
+    width: 30px;
+  }
+  h2 {
+    margin-left: 20px;
+  }
+}
+
+.heading-container {
+  margin-bottom: 20px;
+  h4 {
+    opacity: 0.6;
+  }
+}
+
+.text-fields {
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  .input {
+    margin: 20px 0;
+  }
+  input {
+    border-radius: 5px;
+    border: none;
+    width: 100%;
+    background-color: rgba(3, 90, 166, 0.05);
+    transition: all 0.5s ease;
+    height: 50px;
+    padding: 0 20px;
+    margin-top: 10px;
+    outline-width: 0.01;
+    outline-color: rgba(3, 90, 166, 0.1);
+  }
+  h2 {
+    margin-bottom: 50px;
+  }
+  h4 {
+    opacity: 0.8;
+    line-height: 8px;
+    margin-top: 20px;
+  }
+}
+
+.footer {
+  display: flex;
+  width: 70%;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 50px;
+
+  .signin {
+    border: none;
+    background: $primarycolorGradient;
+    color: white;
+    border-radius: 2px;
+    padding: 5px 30px;
+    outline-width: 0;
+    transition: all 0.5s ease;
+  }
+
+  .signin:hover {
+    background-color: $primarycolor;
+  }
+}
+
+.image {
+  display: flex;
+  width: 55%;
+  height: 100%;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  position: absolute;
+  align-self: center;
+  right: 0px;
+  img {
+    height: 120px;
+    object-fit: scale-down;
+    width: 80%;
+  }
+
+  .content {
+    margin-top: 30px;
+    width: 80%;
+    p {
+      opacity: 0.6;
+    }
+    h4 {
+      margin-top: 80px;
+    }
+  }
+}
+
+.spiner {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.7);
+  z-index: 2;
+  top: 0px;
+  justify-content: center;
+}
+
+.text-fields {
+  .showError {
+    background-color: rgba(250, 173, 173, 0.5);
+  }
+}
+
+.signup {
+  display: flex;
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  a {
+    color: black;
+  }
+}
+
+@media (max-width: 1000px) {
+  .image {
+    display: none;
+  }
+
+  .main-container {
+    width: 400px;
+  }
+
+  .login-container {
+    width: 400px;
+    left: 0;
+  }
+}
+
+@media (max-width: 500px) {
+  .main-container {
+    width: 100%;
+    height: 100%;
+  }
+
+  .login-container {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+//     <color name="colorPrimary">#F7F7F7</color>
+//     <color name="colorPrimaryDark">#F7F7F7</color>
+//     <color name="colorAccent">#023b6e</color>
+//     <color name="buttonColor">#1E2238</color>
+//     <color name="textHighlight">#00909e</color>
+//     <color name="textColor">#000000</color>
+//     <color name="textNormal">#757575</color>
+//     <color name="highlightButton">#035aa6</color>
+//     <color name="keyboardColor">#171E21</color>
+//     <color name="transparentBlack">#1A000000</color>
+//     <color name="containerColor">#95ffffff</color>
+//     <color name="lightbackground">#10035aa6</color>
+//     <color name="textDark">#02335E</color>
+//     <color name="red">@android:color/holo_red_dark</color>

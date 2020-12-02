@@ -1,0 +1,136 @@
+<div class="main-container">
+  <nav>
+    <div class="left">
+      <div class="menu" (click)="toggleDrawer()">
+        <img src="../../assets/menu.svg" alt="" />
+      </div>
+    </div>
+
+    <div class="right">
+      <div
+        (click)="profileCard.classList.toggle('profile-card-open')"
+        class="user-container"
+      >
+        <img src="../../assets/profile.svg" alt="" />
+
+        <h3>
+          {{ userName }}
+        </h3>
+      </div>
+    </div>
+    <div #profileCard class="profile-card">
+      <div class="profile-heading">
+        <img src="../../assets/RLogo (5).png" />
+        <div>
+          <h4>{{ loginService.userName }}</h4>
+          <h6>radmin@{{ loginService.phoneNumber }}</h6>
+        </div>
+      </div>
+      <div class="info">
+        <div class="listtile">
+          <img src="../../assets/phone.svg" />
+          <h6>+{{ loginService.phoneNumber }}</h6>
+        </div>
+        <div class="listtile">
+          <img src="../../assets/mail.svg" />
+          <h6>{{ loginService.email }}</h6>
+        </div>
+        <div class="divider"></div>
+
+        <div (click)="logout()" class="listtile" style="margin-bottom: 12px;">
+          <img src="../../assets/power.svg" />
+          <h6>Logout</h6>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div
+    [ngClass]="{ 'drawer-cover': true, 'drawer-cover-open': drawerOpen }"
+    (click)="toggleDrawer()"
+  >
+    <div [ngClass]="{ drawer: true, 'drawer-open': drawerOpen }">
+      <div style="height: 50px; width: 100%;">
+        <div class="logo">
+          <img src="../../assets/RLogo (5).png" alt="" />
+          <h2>pay</h2>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div
+        [ngClass]="{ options: true, selected: isCurrentPage('Overview') }"
+        (click)="selectPage('Overview')"
+      >
+        <img src="../../assets/overview.svg" alt="" />
+        <h4>Overview</h4>
+      </div>
+
+      <div
+        [ngClass]="{ options: true, selected: isCurrentPage('Transactions') }"
+        (click)="selectPage('Transactions')"
+      >
+        <img src="../../assets/transfer.svg" alt="" />
+        <h4>Transactions</h4>
+      </div>
+
+      <div class="divider"></div>
+
+      <div
+        [ngClass]="{ options: true, selected: isCurrentPage('Nodes') }"
+        (click)="selectPage('Nodes')"
+      >
+        <img src="../../assets/nodes.svg" alt="" />
+        <h4>Nodes</h4>
+      </div>
+
+      <div
+        [ngClass]="{ options: true, selected: isCurrentPage('Blocks') }"
+        (click)="selectPage('Blocks')"
+      >
+        <img src="../../assets/blocks.svg" alt="" />
+        <h4>Blocks</h4>
+      </div>
+
+      <div class="divider"></div>
+
+      <div
+        [ngClass]="{ options: true, selected: isCurrentPage('AllUsers') }"
+        (click)="selectPage('AllUsers')"
+      >
+        <img src="../../assets/users.svg" alt="" />
+        <h4>Users</h4>
+      </div>
+
+      <div
+        [ngClass]="{ options: true, selected: isCurrentPage('AllMerchants') }"
+        (click)="selectPage('AllMerchants')"
+      >
+        <img src="../../assets/merchants.svg" alt="" />
+        <h4>Merchants</h4>
+      </div>
+
+      <div
+        [ngClass]="{ options: true, selected: isCurrentPage('AllAdmins') }"
+        (click)="selectPage('AllAdmins')"
+      >
+        <img src="../../assets/admin.svg" alt="" />
+        <h4>Admins</h4>
+      </div>
+      <div class="divider"></div>
+
+      <div
+        [ngClass]="{ options: true, selected: isCurrentPage('MyAccount') }"
+        (click)="selectPage('MyAccount')"
+      >
+        <img src="../../assets/myAccount.svg" alt="" />
+        <h4>My Account</h4>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-container">
+    <router-outlet></router-outlet>
+  </div>
+</div>

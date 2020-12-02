@@ -1,0 +1,72 @@
+<div class="container">
+  <div class="main-container">
+    <div class="login-container">
+      <div class="nav">
+        <img src="../../assets/RLogo (5).png" alt="" />
+        <h2>pay</h2>
+      </div>
+      <div class="text-fields">
+        <!-- <div class="heading-container">
+          <h2>Admin Login</h2>
+        </div> -->
+
+        <div *ngIf="isLoading" class="spiner">
+          <mat-spinner [diameter]="40"></mat-spinner>
+        </div>
+
+        <div class="input">
+          <h5>Email</h5>
+          <input
+            [value]="email"
+            [class.showError]="invalidEmail"
+            (input)="email = $event.target.value"
+            placeholder="yourname@rajalakshmi.edu.in"
+          />
+        </div>
+
+        <div class="input">
+          <h5>Password</h5>
+          <input
+            [class.showError]="invalidPassword"
+            (input)="password = $event.target.value"
+            type="password"
+            placeholder="Password"
+          />
+        </div>
+
+        <div class="footer">
+          <a href="#"><h5>Forget Password ?</h5></a>
+          <button class="signin" (click)="login()">Login</button>
+        </div>
+
+        <div class="signup">
+          <a href="#">
+            <h5>Need Help ?</h5>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="image">
+      <img src="../../assets/demo.png" />
+
+      <div class="content">
+        <p>
+          Create customised payment pages for your customers to come and pay.
+          With zero coding, take your page online and start accepting payments
+          instantly and securely.
+        </p>
+
+        <h4 style="margin-bottom: 20px;">
+          Introducing GST compliant Invoices
+        </h4>
+        <p>
+          Create customised payment pages for your customers to come and pay.
+          With zero coding, take your page online and start accepting payments
+          instantly and securely.Create customised payment pages for your
+          customers to come and pay. With zero coding, take your page online and
+          start accepting payments instantly and securely.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

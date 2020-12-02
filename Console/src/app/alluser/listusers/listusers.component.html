@@ -1,0 +1,116 @@
+<div class="main-container">
+  <div *ngIf="isLoading" class="spiner">
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+  <div class="users-container">
+    <div class="header">
+      <div class="input-containers">
+        <div class="search-inputs">
+          <div class="dropdown">
+            <button
+              class="btn dropdown-toggle"
+              type="button"
+              id="dropdownMenuButton"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <div style="display: flex;">
+                <img
+                  class="dropdown-image"
+                  src="../../assets/dropdown.svg"
+                  alt=""
+                />
+              </div>
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <div
+                (click)="searchMode = item"
+                class="dropdown-item"
+                *ngFor="let item of searchModes"
+              >
+                {{ item }}
+              </div>
+            </div>
+          </div>
+          <input #query [placeholder]="searchMode" type="text" />
+        </div>
+        <!-- <div class="search-inputs">
+          <input placeholder="From" type="text" />
+        </div>
+        <div class="search-inputs">
+          <input placeholder="To" type="text" />
+        </div> -->
+      </div>
+      <button (click)="filter(query.value)">Search</button>
+    </div>
+    <div class="users-table">
+      <div
+        class="user"
+        *ngFor="let item of users; let index = index"
+        [class]="{ odd: index % 2 != 0 }"
+        (click)="openUsersProfile(item)"
+      >
+        <div
+          [style]="{ background: colors[index % colors.length] }"
+          class="avatar"
+        >
+          <h1 #avatarText>{{ item.name[0] }}</h1>
+          <img
+            [src]="userService.convertToURL(item.id)"
+            #profile
+            (load)="
+              profile.style.visibility = 'visible';
+              avatarText.style.color = '#02335E'
+            "
+            (error)="profile.style.visibility = 'hidden'"
+          />
+        </div>
+
+        <div class="info-container">
+          <h5 class="name">{{ item.name }}</h5>
+          <h6 class="email">{{ item.email }}</h6>
+        </div>
+      </div>
+      <div class="footer">
+        <div>
+          <h6>
+            {{ pageStatus }}
+          </h6>
+        </div>
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            <li
+              (click)="nav(false)"
+              class="page-item"
+              *ngIf="users[0].index != 1"
+            >
+              <a
+                class="page-link"
+                style="cursor: pointer;"
+                aria-label="Previous"
+              >
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+              </a>
+            </li>
+            <li
+              (click)="nav()"
+              class="page-item"
+              *ngIf="
+                users[users.length - 1].index != userService.allUsers.length
+              "
+            >
+              <a class="page-link" style="cursor: pointer;" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>

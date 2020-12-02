@@ -1,0 +1,13 @@
+<svg width="8.4666665" height="8.4666669" xmlns="http://www.w3.org/2000/svg">
+
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="402" width="582" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <path clip-rule="nonzero" fill="#f19a5e" fill-rule="nonzero" stroke-width="0.529167" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="4" stroke-dashoffset="0" id="path831" d="m3.43622,1.054715c0,0.13212 0.03593,0.25563 0.09406,0.36587c0.2244,-0.0623 0.45955,-0.0982 0.70331,-0.0982c0.24097,0 0.47338,0.0352 0.69557,0.0961c0.05742,-0.10976 0.09302,-0.23246 0.09301,-0.3638c0,-0.43524 -0.35747,-0.79324 -0.79271,-0.79323c-0.43524,0.00002 -0.79323,0.35802 -0.79324,0.79326z"/>
+  <path clip-rule="nonzero" fill="#f19a5e" fill-rule="nonzero" stroke-width="0.529167" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="4" stroke-dashoffset="0" id="path833" d="m4.23359,1.588015c-1.31464,0 -2.38125,1.0661 -2.38125,2.38073c0,0.68584 -0.00311,1.52853 -0.32453,2.38693l5.41311,0c-0.32142,-0.8584 -0.32453,-1.70109 -0.32453,-2.38693c0,-1.31463 -1.06816,-2.38073 -2.3828,-2.38073z"/>
+  <path clip-rule="nonzero" fill="#f19a5e" fill-rule="nonzero" stroke-width="0.529167" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="4" stroke-dashoffset="0" id="rect835" d="m1.58879,6.615095c-0.43516,0 -0.79478,0.35807 -0.79478,0.79323c0,0.43516 0.35962,0.79479 0.79478,0.79479l5.29115,0c0.43516,0 0.79272,-0.35963 0.79272,-0.79479c0,-0.43516 -0.35756,-0.79323 -0.79272,-0.79323l-5.29115,0z"/>
+ </g>
+</svg>

@@ -1,0 +1,224 @@
+<div class="main-container">
+  <div *ngIf="isLoading.length != 4" class="spiner">
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+  <!-- <div class="top-banner">
+    <div class="currency-container-bg"></div>
+    <div class="currency-container"></div>
+  </div> -->
+  <div class="banner">
+    <img class="top-bg" src="../../assets/top_bg.png" alt="" />
+    <img class="bottom-bg" src="../../assets/bottom_bg.png" alt="" />
+    <img class="onbording" src="../../assets/onboarding.svg" alt="" />
+  </div>
+  <div class="calender">
+    <div class="dropdown">
+      <button
+        class="btn dropdown-toggle"
+        type="button"
+        id="dropdownMenuButton"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        <div>
+          <img src="../../assets/calender.svg" alt="" />
+          <h5>{{ overviewService.graphTimeLine }}</h5>
+          <img class="dropdown-image" src="../../assets/dropdown.svg" alt="" />
+        </div>
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <div
+          class="dropdown-item"
+          (click)="selectTimeLine(item)"
+          *ngFor="let item of overviewService.graphTimeLines"
+        >
+          {{ item }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cards">
+    <div
+      [class]="{ card: true, 'card-selected': overviewService.graphMode == 0 }"
+      (click)="selectGraphMode(0)"
+    >
+      <div class="currency">
+        <h2>
+          {{ nFormatter(overviewService.transactionsVolume[interval].total) }}
+        </h2>
+        <h3>RC</h3>
+      </div>
+      <h5>Transactions Volume</h5>
+      <img
+        [class]="{
+          'dropdown-icon': true,
+          isSelected: overviewService.graphMode == 0
+        }"
+        src="../../assets/dropdownblue.svg"
+        alt=""
+      />
+      <div class="myChart-outer">
+        <canvas
+          #mychart
+          class="myChart"
+          id="myChartPayments"
+          width="100%"
+          height="20px"
+        ></canvas>
+      </div>
+    </div>
+    <div
+      [class]="{ card: true, 'card-selected': overviewService.graphMode == 1 }"
+      (click)="selectGraphMode(1)"
+    >
+      <div class="currency">
+        <h2>{{ nFormatter(overviewService.generated[interval].total) }}</h2>
+        <h3>RC</h3>
+      </div>
+      <h5>Amount Generated</h5>
+      <div class="myChart-outer">
+        <canvas
+          class="myChart"
+          id="myChartCashIn"
+          width="100%"
+          height="20px"
+        ></canvas>
+      </div>
+
+      <img
+        [class]="{
+          'dropdown-icon': true,
+          isSelected: overviewService.graphMode == 1
+        }"
+        src="../../assets/dropdownblue.svg"
+        alt=""
+      />
+    </div>
+    <div
+      [class]="{ card: true, 'card-selected': overviewService.graphMode == 2 }"
+      (click)="selectGraphMode(2)"
+    >
+      <div class="currency">
+        <h2>
+          {{ nFormatter(overviewService.noTransactions[interval].total) }}
+        </h2>
+      </div>
+      <h5>Number of Transactions</h5>
+      <div class="myChart-outer">
+        <canvas
+          class="myChart"
+          id="myChartTransactions"
+          width="100%"
+          height="20px"
+        ></canvas>
+      </div>
+
+      <img
+        [class]="{
+          'dropdown-icon': true,
+          isSelected: overviewService.graphMode == 2
+        }"
+        src="../../assets/dropdownblue.svg"
+        alt=""
+      />
+    </div>
+    <div
+      [class]="{ card: true, 'card-selected': overviewService.graphMode == 3 }"
+      (click)="selectGraphMode(3)"
+    >
+      <div class="currency">
+        <h2>{{ nFormatter(overviewService.withdraw[interval].total) }}</h2>
+        <h3>RC</h3>
+      </div>
+      <h5>Withdraw Volume</h5>
+      <div class="myChart-outer">
+        <canvas
+          class="myChart"
+          id="myChartWithdraw"
+          width="100%"
+          height="20px"
+        ></canvas>
+      </div>
+      <img
+        [class]="{
+          'dropdown-icon': true,
+          isSelected: overviewService.graphMode == 3
+        }"
+        src="../../assets/dropdownblue.svg"
+        alt=""
+      />
+    </div>
+  </div>
+
+  <div class="graph-container">
+    <div class="topbar">
+      <div class="intervals">
+        <div
+          (click)="
+            overviewService.getDays() == 1 && selectIntervalMode(3, 'hourly')
+          "
+          [class]="{
+            interval: true,
+            noClick: overviewService.getDays() != 1,
+            isInterval: overviewService.intervalMode == 3
+          }"
+        >
+          <h5>Hourly</h5>
+        </div>
+        <div
+          (click)="selectIntervalMode(0, 'daily')"
+          [class]="{
+            interval: true,
+            isInterval: overviewService.intervalMode == 0
+          }"
+        >
+          <h5>Daily</h5>
+        </div>
+        <div
+          (click)="selectIntervalMode(1, 'weekly')"
+          [class]="{
+            interval: true,
+            isInterval: overviewService.intervalMode == 1
+          }"
+        >
+          <h5>Weekly</h5>
+        </div>
+        <div
+          (click)="selectIntervalMode(2, 'monthly')"
+          [class]="{
+            interval: true,
+            isInterval: overviewService.intervalMode == 2
+          }"
+        >
+          <h5>Monthly</h5>
+        </div>
+
+        <div (click)="downloadReport()" class="download">
+          <img src="../../assets/download.svg" alt="" />
+        </div>
+      </div>
+    </div>
+
+    <div class="graph">
+      <div class="main-graph-container">
+        <canvas id="mainGraph" width="200" height="55"></canvas>
+      </div>
+      <div class="graph-footer">
+        <div
+          style="
+            height: 10px;
+            width: 10px;
+            border-radius: 5px;
+            background-color: orange;
+            margin-right: 10px;
+          "
+        ></div>
+        <h5>{{ graphStatus }}</h5>
+      </div>
+    </div>
+  </div>
+</div>

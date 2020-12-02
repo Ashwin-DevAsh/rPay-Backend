@@ -1,0 +1,140 @@
+<div class="main-container">
+  <div *ngIf="isLoading" class="spiner">
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+  <div class="banner">
+    <div class="background-pattern"></div>
+    <div class="background-pattern2"></div>
+    <img class="onbording" src="../../assets/blockbackground.svg" alt="" />
+  </div>
+  <div class="merchant-container">
+    <div class="header">
+      <div class="input-containers">
+        <div class="search-inputs">
+          <div class="dropdown">
+            <button
+              class="btn dropdown-toggle"
+              type="button"
+              id="dropdownMenuButton"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <div style="display: flex;">
+                <img
+                  class="dropdown-image"
+                  src="../../assets/dropdown.svg"
+                  alt=""
+                />
+              </div>
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <div class="dropdown-item">
+                {{ "Block ID" }}
+              </div>
+            </div>
+          </div>
+          <input #query placeholder="Block ID" type="text" />
+        </div>
+        <!-- <div class="search-inputs">
+          <input placeholder="From" type="text" />
+        </div>
+        <div class="search-inputs">
+          <input placeholder="To" type="text" />
+        </div> -->
+      </div>
+      <button (click)="filter(query.value)">Search</button>
+    </div>
+
+    <div class="transactions-table">
+      <div class="transactions-heading transaction">
+        <div>
+          <h4>Block ID</h4>
+        </div>
+        <div>
+          <h4>Type</h4>
+        </div>
+        <div>
+          <h4>Prev. Hash</h4>
+        </div>
+        <div>
+          <h4>Verified By</h4>
+        </div>
+        <div>
+          <h4>Timestamp</h4>
+        </div>
+      </div>
+
+      <div
+        class="transaction"
+        *ngFor="let item of blocks; let index = index"
+        [class]="{ odd: index % 2 != 0 }"
+      >
+        <div>
+          <h4 style="color: #0779e4;">{{ item.blockid }}</h4>
+        </div>
+        <div
+          [class]="{
+            newUser: item.type == 'New User',
+            amountGenerated: item.type == 'Amount Generated',
+            transactions: item.type == 'Transaction',
+            withdraw: item.type == 'Withdraw'
+          }"
+        >
+          <h4>{{ item.type }}</h4>
+          <h6></h6>
+        </div>
+        <div>
+          <h4>{{ item.data.prevHash }}</h4>
+        </div>
+        <div>
+          <div>
+            <h4>{{ item.verifiedby }}</h4>
+          </div>
+        </div>
+        <div>
+          <h4>{{ item.timestamp }}</h4>
+        </div>
+      </div>
+      <div class="footer">
+        <div>
+          <h6>
+            {{ pageStatus }}
+          </h6>
+        </div>
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            <li
+              (click)="nav(false)"
+              class="page-item"
+              *ngIf="blocks[0].index != 1"
+            >
+              <a
+                class="page-link"
+                style="cursor: pointer;"
+                aria-label="Previous"
+              >
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+              </a>
+            </li>
+            <li
+              (click)="nav()"
+              class="page-item"
+              *ngIf="
+                blocks[blocks.length - 1].index != blockService.allBlocks.length
+              "
+            >
+              <a class="page-link" style="cursor: pointer;" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>

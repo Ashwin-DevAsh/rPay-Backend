@@ -1,0 +1,148 @@
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@import "~@angular/material/theming";
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+// @include mat-core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$Rec-Wallet-Admin-primary: mat-palette($mat-indigo);
+$Rec-Wallet-Admin-accent: mat-palette($mat-pink, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$Rec-Wallet-Admin-warn: mat-palette($mat-red);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$Rec-Wallet-Admin-theme: mat-light-theme(
+  (
+    color: (
+      primary: $Rec-Wallet-Admin-primary,
+      accent: $Rec-Wallet-Admin-accent,
+      warn: $Rec-Wallet-Admin-warn,
+    ),
+  )
+);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include angular-material-theme($Rec-Wallet-Admin-theme);
+
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap");
+
+$primarycolor: #035aa6;
+
+* {
+  padding: 0;
+  margin: 0;
+  scrollbar-width: none;
+  font-family: "Poppins", sans-serif;
+}
+html,
+body,
+#fullheight {
+  min-height: 100% !important;
+  height: 100%;
+}
+
+input {
+  color: black;
+}
+
+a {
+  text-decoration: none;
+  size: 0.5rem;
+  color: #0779e4;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.spiner {
+  top: 0;
+  position: fixed;
+  width: 100vw;
+
+  height: 100%;
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.7);
+
+  z-index: 2;
+  justify-content: center;
+}
+
+@keyframes spinner-border {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.spinner-border {
+  display: inline-block;
+  width: 3.5rem;
+  height: 3.5rem;
+  vertical-align: text-bottom;
+  border: 0.26em solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  -webkit-animation: spinner-border 0.75s linear infinite;
+  animation: spinner-border 0.75s linear infinite;
+  color: $primarycolor;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgba($color: #000000, $alpha: 0.4);
+  border-radius: 0px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: white;
+  border-radius: 0px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba($color: #000000, $alpha: 0.3);
+}

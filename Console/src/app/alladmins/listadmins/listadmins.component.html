@@ -1,0 +1,206 @@
+<div class="main-container">
+  <div *ngIf="isLoading" class="spiner">
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+  <div class="banner">
+    <div class="background-pattern"></div>
+    <div class="background-pattern2"></div>
+    <img class="onbording" src="../../assets/smart_collect.svg" alt="" />
+  </div>
+  <div class="merchant-container">
+    <div class="header">
+      <div class="input-containers">
+        <div class="search-inputs">
+          <div class="dropdown">
+            <button
+              class="btn dropdown-toggle"
+              type="button"
+              id="dropdownMenuButton"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <div style="display: flex;">
+                <img
+                  class="dropdown-image"
+                  src="../../assets/dropdown.svg"
+                  alt=""
+                />
+              </div>
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <div
+                (click)="searchMode = item"
+                class="dropdown-item"
+                *ngFor="let item of searchModes"
+              >
+                {{ item }}
+              </div>
+            </div>
+          </div>
+          <input #query [placeholder]="searchMode" type="text" />
+        </div>
+        <!-- <div class="search-inputs">
+          <input placeholder="From" type="text" />
+        </div>
+        <div class="search-inputs">
+          <input placeholder="To" type="text" />
+        </div> -->
+      </div>
+      <div>
+        <button style="margin-right: 20px;" (click)="filter(query.value)">
+          Search
+        </button>
+        <button style="background-color: red;" (click)="addAdmin = true">
+          Add Admin
+        </button>
+      </div>
+    </div>
+    <div class="transactions-table">
+      <div class="transactions-heading transaction">
+        <div>
+          <h4>ID</h4>
+        </div>
+        <div>
+          <h4>Name</h4>
+        </div>
+        <div>
+          <h4>Phone Number</h4>
+        </div>
+        <div>
+          <h4>Email</h4>
+        </div>
+        <div class="status-heading">
+          <h4>Access to</h4>
+        </div>
+      </div>
+      <div
+        class="transaction"
+        *ngFor="let item of admins; let index = index"
+        [class]="{ odd: index % 2 != 0 }"
+      >
+        <div>
+          <h4 style="color: #0779e4;">{{ item.id }}</h4>
+        </div>
+        <div>
+          <h4>{{ item.name }}</h4>
+          <h6></h6>
+        </div>
+        <div>
+          <h4>+{{ item.number }}</h4>
+        </div>
+        <div>
+          <h4>{{ item.email }}</h4>
+        </div>
+        <div class="status-heading">
+          <h4>{{ item.permissions[0].all ? "All" : "" }}</h4>
+        </div>
+        <div>
+          <h4>{{ item.accessto }}</h4>
+        </div>
+      </div>
+      <div class="footer">
+        <div>
+          <h6>
+            {{ pageStatus }}
+          </h6>
+        </div>
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            <li (click)="nav(false)" class="page-item" *ngIf="false">
+              <a
+                class="page-link"
+                style="cursor: pointer;"
+                aria-label="Previous"
+              >
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+              </a>
+            </li>
+            <li
+              (click)="nav()"
+              class="page-item"
+              *ngIf="
+                admins[admins.length - 1].index != adminService.admins.length
+              "
+            >
+              <a class="page-link" style="cursor: pointer;" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <div class="container" [class]="{ addAdmin: addAdmin }">
+    <div class="form">
+      <div (click)="addAdmin = false" class="close">
+        <img src="../../../assets/close.svg" alt="" />
+      </div>
+      <div class="logo">
+        <img src="../../assets/RLogo (5).png" alt="" />
+        <h2>pay</h2>
+      </div>
+
+      <div class="input-field">
+        <h5>UserName</h5>
+        <input
+          (input)="name = $event.target.value"
+          [class]="{ showError: invalidName }"
+          placeholder="UserName"
+        />
+      </div>
+      <div class="input-field" style="margin-top: 30px;">
+        <h5>Email</h5>
+        <input
+          (input)="email = $event.target.value"
+          [class]="{ showError: invalidEmail }"
+          placeholder="Email"
+        />
+      </div>
+      <div class="input-field" style="margin-top: 30px;">
+        <h5>Number</h5>
+        <input
+          maxlength="10"
+          [class]="{ showError: invalidNumber }"
+          (input)="number = $event.target.value"
+          placeholder="PhoneNumber"
+        />
+      </div>
+      <div class="input-field" style="margin-top: 30px; margin-bottom: 50px;">
+        <h5>Password</h5>
+        <input
+          [class]="{ showError: invalidPassword }"
+          (input)="password = $event.target.value"
+          type="password"
+          placeholder="Password"
+        />
+      </div>
+
+      <div
+        *ngIf="showError || showMessage"
+        class="alert"
+        [class]="{ 'alert-danger': showError, 'alert-success': showMessage }"
+        role="alert"
+      >
+        <div
+          style="
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          "
+        >
+          <h5>{{ message }}</h5>
+        </div>
+      </div>
+      <button (click)="createAccount()">Create Account</button>
+    </div>
+  </div>
+</div>

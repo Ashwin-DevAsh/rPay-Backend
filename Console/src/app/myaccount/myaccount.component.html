@@ -1,0 +1,55 @@
+<div class="main-container">
+  <div *ngIf="!isLoading" class="spiner">
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+  <div class="profile-container">
+    <div class="profile-outer">
+      <div style="width: 100%;">
+        <h1 style="margin: 20px 0 0 20px;">My Account</h1>
+      </div>
+
+      <div class="profile">
+        <div class="qr-container">
+          <img src="../../assets/avatar.jpg" alt="" />
+        </div>
+        <div class="info">
+          <div class="listtile">
+            <div class="avatar">
+              <img src="../../../assets/user_profile.svg" alt="" />
+            </div>
+            <div class="details">
+              <h4>Name</h4>
+              <h6>{{ userName }}</h6>
+            </div>
+          </div>
+        </div>
+
+        <div class="info">
+          <div class="listtile">
+            <div class="avatar">
+              <img src="../../../assets/user_mail.svg" alt="" />
+            </div>
+            <div class="details">
+              <h4>Email</h4>
+              <h6>{{ email }}</h6>
+            </div>
+          </div>
+        </div>
+
+        <div class="info">
+          <div class="listtile">
+            <div class="avatar">
+              <img src="../../../assets/user_phone.svg" alt="" />
+            </div>
+            <div class="details">
+              <h4>Phone</h4>
+              <h6>+{{ number }}</h6>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
