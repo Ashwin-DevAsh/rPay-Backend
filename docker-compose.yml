@@ -7,6 +7,7 @@ services:
       - 5432:5432
     volumes:
       - ./env:/env
+      - ./Database:/Database
 
   block:
     build: Block
@@ -15,6 +16,7 @@ services:
       - 9000:9000
     volumes:
       - ./env:/env
+      - ./Database:/Database
 
   profile:
     build: Profile
@@ -23,6 +25,7 @@ services:
       - 8000:8000
     volumes:
       - ./env:/env
+      - ./Database:/Database
 
   admin:
     build: Admin
@@ -31,6 +34,7 @@ services:
       - 4500:4500
     volumes:
       - ./env:/env
+      - ./Database:/Database
 
   mart:
     build: Mart
@@ -39,6 +43,7 @@ services:
       - 4600:4600
     volumes:
       - ./env:/env
+      - ./Database:/Database
 
   sync:
     build: Sync
@@ -47,6 +52,7 @@ services:
       - 7000:7000
     volumes:
       - ./env:/env
+      - ./Database:/Database
 
   transaction:
     build: Transaction
@@ -55,6 +61,7 @@ services:
       - 9500:9500
     volumes:
       - ./env:/env
+      - ./Database:/Database
 
   reverse-proxy:
     build: nginx
