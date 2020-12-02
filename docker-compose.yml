@@ -25,6 +25,7 @@ services:
     volumes:
       - ./env:/env
       - ./Database:/Database
+    network_mode: host
 
   admin:
     build: Admin
@@ -33,6 +34,7 @@ services:
     volumes:
       - ./env:/env
       - ./Database:/Database
+    network_mode: host
 
   mart:
     build: Mart
@@ -42,6 +44,7 @@ services:
     volumes:
       - ./env:/env
       - ./Database:/Database
+    network_mode: host
 
   sync:
     build: Sync
@@ -50,6 +53,7 @@ services:
     volumes:
       - ./env:/env
       - ./Database:/Database
+    network_mode: host
 
   transaction:
     build: Transaction
@@ -59,6 +63,7 @@ services:
     volumes:
       - ./env:/env
       - ./Database:/Database
+    network_mode: host
 
   reverse-proxy:
     build: nginx
