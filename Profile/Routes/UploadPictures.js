@@ -5,12 +5,6 @@ const jwt = require("jsonwebtoken");
 const app = require("express").Router();
 const FCM = require("fcm-node");
 
-// aws.config.update({
-//   secretAccessKey: process.env.AWS_SEC_KEY,
-//   accessKeyId: process.env.AWS_ID,
-//   region: "us-east-2",
-// });
-
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "../profilePictures/");
@@ -22,25 +16,16 @@ var storage = multer.diskStorage({
 });
 
 var upload = multer({
-  // dest: "../profilePictures",
   storage: storage,
-  // storage: multerS3({
-  //   s3: new aws.S3(),
-  //   acl: "public-read",
-  //   bucket: "rec-wallet-profile-pictures",
-  //   key: function (req, file, cb) {
-  //     var extension = file.originalname.split(".")[
-  //       file.originalname.split(".").length - 1
-  //     ];
-  //     var id = req.params.id;
-  //     var imageName = id + "." + extension;
-  //     cb(null, imageName);
-  //   },
-  // }),
 }).single("profilePicture");
 
 app.post("/addProfilePicture/:id", async (req, res) => {
   await addProfilePicture(req, res);
+});
+
+app.get("/getProfilePicture/:imageName", async (req, res) => {
+  var imageName = req.params.imageName;
+  res.sendFile("../profilePictures/." + imageName);
 });
 
 var addProfilePicture = async (req, res) => {
