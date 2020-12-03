@@ -30,6 +30,7 @@ services:
     volumes:
       - ./env:/env
       - ./Database:/Database
+      - ./profilePictures:/profilePictures
 
   admin:
     build: Admin
@@ -67,7 +68,7 @@ services:
 
   reverse-proxy:
     build: nginx
-    depends_on: [profile, transaction, sync, admin, console]
+    depends_on: [profile, transaction, sync, mart, admin, console]
     ports:
       - 80:80
       - 443:443

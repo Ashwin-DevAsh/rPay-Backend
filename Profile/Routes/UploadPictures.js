@@ -12,19 +12,20 @@ aws.config.update({
 });
 
 var upload = multer({
-  storage: multerS3({
-    s3: new aws.S3(),
-    acl: "public-read",
-    bucket: "rec-wallet-profile-pictures",
-    key: function (req, file, cb) {
-      var extension = file.originalname.split(".")[
-        file.originalname.split(".").length - 1
-      ];
-      var id = req.params.id;
-      var imageName = id + "." + extension;
-      cb(null, imageName);
-    },
-  }),
+  dest: "../profilePictures",
+  // storage: multerS3({
+  //   s3: new aws.S3(),
+  //   acl: "public-read",
+  //   bucket: "rec-wallet-profile-pictures",
+  //   key: function (req, file, cb) {
+  //     var extension = file.originalname.split(".")[
+  //       file.originalname.split(".").length - 1
+  //     ];
+  //     var id = req.params.id;
+  //     var imageName = id + "." + extension;
+  //     cb(null, imageName);
+  //   },
+  // }),
 }).single("profilePicture");
 
 app.post("/addProfilePicture/:id", async (req, res) => {
