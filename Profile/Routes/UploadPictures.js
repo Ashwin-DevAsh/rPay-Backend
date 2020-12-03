@@ -25,7 +25,7 @@ app.post("/addProfilePicture/:id", async (req, res) => {
 
 app.get("/getProfilePicture/:imageName", async (req, res) => {
   var imageName = req.params.imageName;
-  res.sendFile("../profilePictures/." + imageName);
+  res.sendFile("../profilePictures/" + imageName);
 });
 
 var addProfilePicture = async (req, res) => {
