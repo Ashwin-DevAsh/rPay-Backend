@@ -16,7 +16,8 @@ var storage = multer.diskStorage({
     cb(null, "../profilePictures/");
   },
   filename: function (req, file, cb) {
-    cb(null, "uuid.v4()");
+    var id = req.params.id;
+    cb(null, `${id}.jpg`);
   },
 });
 
