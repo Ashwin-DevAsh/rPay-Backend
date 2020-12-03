@@ -1,15 +1,15 @@
-const aws = require("aws-sdk");
-const multerS3 = require("multer-s3");
+// const aws = require("aws-sdk");
+// const multerS3 = require("multer-s3");
 const multer = require("multer");
 const jwt = require("jsonwebtoken");
 const app = require("express").Router();
 const FCM = require("fcm-node");
 
-aws.config.update({
-  secretAccessKey: process.env.AWS_SEC_KEY,
-  accessKeyId: process.env.AWS_ID,
-  region: "us-east-2",
-});
+// aws.config.update({
+//   secretAccessKey: process.env.AWS_SEC_KEY,
+//   accessKeyId: process.env.AWS_ID,
+//   region: "us-east-2",
+// });
 
 var upload = multer({
   dest: "../profilePictures",
