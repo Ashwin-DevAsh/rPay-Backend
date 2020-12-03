@@ -11,8 +11,18 @@ const FCM = require("fcm-node");
 //   region: "us-east-2",
 // });
 
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "../profilePictures/");
+  },
+  filename: function (req, file, cb) {
+    cb(null, uuid.v4() + path.extname(file.originalname));
+  },
+});
+
 var upload = multer({
-  dest: "../profilePictures",
+  // dest: "../profilePictures",
+  storage: storage,
   // storage: multerS3({
   //   s3: new aws.S3(),
   //   acl: "public-read",
