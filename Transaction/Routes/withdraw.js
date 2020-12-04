@@ -37,7 +37,7 @@ async function withdraw(postgres, req, res) {
     return;
   }
 
-  var fromAmmount = await postgres.query("select * from amount where id=$1", [
+  var fromAmmount = await postgres.query("select * from users where id=$1", [
     from.id,
   ]);
 
@@ -62,7 +62,7 @@ async function withdraw(postgres, req, res) {
   try {
     await postgres.query("begin");
     await postgres.query(
-      "update amount set balance = balance - $1 where id = $2",
+      "update users set balance = balance - $1 where id = $2",
       [amount, from.id]
     );
 

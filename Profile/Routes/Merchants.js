@@ -57,7 +57,7 @@ var addMerchant = async (postgres, req, res) => {
 
     var testUser = (
       await postgres.query(
-        "select * from merchants where id = $1  or number = $2 or email = $3 ",
+        "select * from users where (id = $1  or number = $2 or email = $3) and isMerchantAccount = true",
         [userID, user.number, user.email]
       )
     ).rows;
@@ -66,15 +66,6 @@ var addMerchant = async (postgres, req, res) => {
       res.json([{ message: "User already exist" }]);
       return;
     }
-    await postgres.query("delete from info where id=$1;", [userID]);
-    await postgres.query("delete from amount where id=$1;", [userID]);
-    await postgres.query("insert into info values($1,$2,null,null)", [
-      userID,
-      user.fcmToken,
-    ]);
-    await postgres.query("insert into amount(id,balance) values($1,0)", [
-      userID,
-    ]);
 
     var token = jwt.sign(
       {
@@ -93,15 +84,29 @@ var addMerchant = async (postgres, req, res) => {
 
     if ((blockResult.data["message"] = "done")) {
       await postgres.query(
-        `insert into merchants(name,number,email,password,id,qrCode,storeName,status) values($1,$2,$3,$4,$5,$6,$7,'pending')`,
+        `insert into users(
+           accounname,
+           ownername,
+           number,
+           email,
+           password,
+           id,
+           qrCode,
+           isMerchantAccount,
+           status,
+           fcmToken,balance
+          ) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,0)`,
         [
+          user.storeName,
           user.name,
           user.number,
           user.email,
           user.password,
           userID,
           user.qrCode,
-          user.storeName,
+          true,
+          "pending",
+          user.fcmToken,
         ]
       );
       res.json([{ message: "done", token }]);
@@ -119,7 +124,7 @@ var getMerchants = async (postgres, req, res) => {
   try {
     var result = (
       await postgres.query(
-        "select name,number,email,id,storeName from merchants where status='active'"
+        "select name,number,email,id,storeName from merchants where status='active' and isMerchantAccount=true"
       )
     ).rows;
     res.send(result);
@@ -133,7 +138,7 @@ var getMerchant = async (postgres, req, res) => {
   if (req.query.id) {
     var rows = (
       await postgres.query(
-        "select name,number,email,id,storeName,status from merchants where id=$1",
+        "select name,number,email,id,storeName,status from users where id=$1 and isMerchantAccount=true",
         [req.query.id]
       )
     ).rows[0];

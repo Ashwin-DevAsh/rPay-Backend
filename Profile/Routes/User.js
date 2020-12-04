@@ -58,7 +58,8 @@ var addUser = async (postgres, req, res) => {
 
       var testUser = (
         await postgres.query(
-          "select * from users where id = $1 or number = $2 or email = $3 ",
+          "select * from users where (id = $1  or number = $2 or email = $3) and isMerchantAccount = false",
+
           [userID, user.number, user.email]
         )
       ).rows;
@@ -94,14 +95,30 @@ var addUser = async (postgres, req, res) => {
 
       if ((blockResult.data["message"] = "done")) {
         await postgres.query(
-          `insert into users(name,number,email,password,id,qrCode) values($1,$2,$3,$4,$5,$6)`,
+          `insert into users(
+           accounname,
+           ownername,
+           number,
+           email,
+           password,
+           id,
+           qrCode,
+           isMerchantAccount,
+           status,
+           fcmToken,
+           balance
+          ) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,0)`,
           [
+            user.name,
             user.name,
             user.number,
             user.email,
             user.password,
             userID,
             user.qrCode,
+            false,
+            "active",
+            user.fcmToken,
           ]
         );
         res.json([{ message: "done", token }]);
@@ -119,7 +136,9 @@ var addUser = async (postgres, req, res) => {
 var getUser = async (postgres, req, res) => {
   try {
     var result = (
-      await postgres.query("select name,number,email,id from users")
+      await postgres.query(
+        "select name,number,email,id from users where isMerchantAccount=false"
+      )
     ).rows;
     res.send(result);
   } catch (err) {
@@ -138,7 +157,8 @@ var getUsersWithContacts = async (postgres, req, res) => {
   try {
     var result = (
       await postgres.query(
-        "select name,number,email,id from users where number in " + contacts
+        "select name,number,email,id from users where isMerchantAccount=false and number in " +
+          contacts
       )
     ).rows;
     res.send(result);

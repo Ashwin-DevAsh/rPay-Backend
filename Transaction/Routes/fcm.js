@@ -7,7 +7,7 @@ var pool = new Pool(clientDetails);
 module.exports = async function sendNotificationToAll(userID, data) {
   var postgres = await pool.connect();
   var fcmToken = (
-    await postgres.query("select fcmtoken from info where id = $1", [userID])
+    await postgres.query("select fcmtoken from users where id = $1", [userID])
   ).rows[0].fcmtoken;
   await postgres.release();
 

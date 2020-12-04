@@ -1,25 +1,16 @@
--- users...
-
 create table users(
-  name varchar,
+  accounname varchar,
+  ownername varchar,
   number varchar,
   email varchar,
   password varchar,
   id varchar primary key,
   AccountInfo json[],
-  qrCode varchar
-);
-
-create table merchants(
-  name varchar,
-  number varchar,
-  email varchar,
-  password varchar,
-  id varchar primary key,
   qrCode varchar,
-  accountInfo json[],
-  storeName varchar,
-  status varchar
+  isMerchantAccount boolean,
+  status varchar,
+  fcmToken varchar,
+  balance bigint
 );
 
 create table admins(
@@ -68,22 +59,6 @@ create table orders(
   timestamp varchar,
   products json[],
   paymentMetadata json
-);
-
--- node
-
-create table info(
-    id varchar primary key,
-    fcmToken varchar,
-    socketid varchar,
-    isonline boolean
-);
-
--- assect
-
-create table amount(
-    id varchar primary key,
-    balance int
 );
 
 create table transactions(

@@ -70,7 +70,7 @@ async function addMoney(postgres, req, res) {
     }
   }
 
-  var toAmmount = await postgres.query("select * from amount where id=$1", [
+  var toAmmount = await postgres.query("select * from users where id=$1", [
     to.id,
   ]);
 
@@ -83,7 +83,7 @@ async function addMoney(postgres, req, res) {
   try {
     await postgres.query("begin");
     await postgres.query(
-      "update amount set balance = balance + $1 where id = $2",
+      "update users set balance = balance + $1 where id = $2",
       [amount, to.id]
     );
     var transactionTime = dateFormat(new Date(), "mm-dd-yyyy hh:MM:ss");

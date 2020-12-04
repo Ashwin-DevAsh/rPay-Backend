@@ -1,14 +1,6 @@
 version: "3"
 
 services:
-  # database:
-  #   build: Database
-  #   ports:
-  #     - 5432:5432
-  #   volumes:
-  #     - ./env:/env
-  #     - ./Database:/Database
-
   block:
     build: Block
     ports:
@@ -76,11 +68,3 @@ services:
     volumes:
       - ./certbot/conf:/etc/nginx/ssl
       - ./certbot/data:/var/www/certbot
-
-  # certbot:
-  #   image: certbot/certbot:latest
-  #   command: certonly --webroot --webroot-path=/var/www/certbot --email 2017ashwin@gmail.com --agree-tos --no-eff-email -d www.r-pay.live -d www.r-pay.live
-  #   volumes:
-  #     - ./certbot/conf:/etc/letsencrypt
-  #     - ./certbot/logs:/var/log/letsencrypt
-  #     - ./certbot/data:/var/www/certbot
