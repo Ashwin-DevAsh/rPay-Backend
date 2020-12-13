@@ -19,14 +19,16 @@ app.get("/getMyTransactions/:id", async (req, res) => {
 
 var getUsers = async (postgres, req, res) => {
   try {
-    var decoded = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY);
+    await jwt.verify(req.get("token"), process.env.PRIVATE_KEY);
   } catch (e) {
     console.log(e);
     res.send({ message: "failed" });
     return;
   }
 
-  var users = (await postgres.query("select * from users")).rows;
+  var users = (
+    await postgres.query("select * from users where ismerchantaccount=false")
+  ).rows;
   res.send(users);
 };
 

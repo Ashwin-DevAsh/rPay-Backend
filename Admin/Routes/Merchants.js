@@ -54,7 +54,7 @@ var updateMerchantStatus = async (postgres, req, res) => {
   }
 
   try {
-    await postgres.query("update merchants set status = $2 where id=$1", [
+    await postgres.query("update users set status = $2 where id=$1", [
       id,
       status,
     ]);
