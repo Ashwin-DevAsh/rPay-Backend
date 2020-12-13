@@ -56,7 +56,7 @@ var getMyTransactions = async (postgres, req, res) => {
       )
       .then((datas) => {
         postgres
-          .query(`select balance from amount where id=$1`, [id])
+          .query(`select balance from users where id=$1`, [id])
           .then((myBalance) => {
             console.log(datas.rows[0]);
             res.send({ ...datas, balance: myBalance.rows[0].balance });
