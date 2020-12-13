@@ -64,6 +64,8 @@ var setOtp = async (postgres, req, res, otpTable, userTable, id = "rpay@") => {
       ])
     ).rows;
 
+    console.log(user);
+
     if (user.length == 0) {
       res.json([{ message: "verified", user: null }]);
       return;
