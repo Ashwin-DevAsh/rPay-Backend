@@ -28,7 +28,7 @@ var init = async (postgres, req, res) => {
 
   try {
     var balance = (
-      await postgres.query("select * from amount where id=$1", [id])
+      await postgres.query("select * from users where id=$1", [id])
     ).rows[0].balance;
 
     var transactions = (
@@ -51,7 +51,7 @@ var init = async (postgres, req, res) => {
 
     var merchants = (
       await postgres.query(
-        "select name,number,email,id,storeName from merchants where status='active'"
+        "select accountname,number,email,id,storeName from users where isMerchantAccount = true status='active'"
       )
     ).rows;
 
