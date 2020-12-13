@@ -46,7 +46,7 @@ export class MerchantService {
     this.allMerchants = [];
     for (var i = 0; i < this.allMerchantsTemp.length; i++) {
       if (
-        this.allMerchantsTemp[i].name
+        this.allMerchantsTemp[i].ownername
           .toLowerCase()
           .includes(query.toLowerCase())
       ) {
@@ -89,7 +89,7 @@ export class MerchantService {
     this.allMerchants = [];
     for (var i = 0; i < this.allMerchantsTemp.length; i++) {
       if (
-        this.allMerchantsTemp[i].storeName
+        this.allMerchantsTemp[i].accountname
           .toLowerCase()
           .includes(query.toLowerCase())
       ) {

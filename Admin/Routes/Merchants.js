@@ -21,7 +21,9 @@ var getMerchants = async (postgres, req, res) => {
   }
 
   try {
-    var users = (await postgres.query("select * from merchants")).rows;
+    var users = (
+      await postgres.query("select * from users where ismerchantaccount = true")
+    ).rows;
     res.send(users);
   } catch (err) {
     console.log(err);

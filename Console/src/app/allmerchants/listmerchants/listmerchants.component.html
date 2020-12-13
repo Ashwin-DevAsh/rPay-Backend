@@ -17,7 +17,7 @@
               aria-haspopup="true"
               aria-expanded="false"
             >
-              <div style="display: flex;">
+              <div style="display: flex">
                 <img
                   class="dropdown-image"
                   src="../../assets/dropdown.svg"
@@ -71,10 +71,10 @@
         [class]="{ odd: index % 2 != 0 }"
       >
         <div (click)="openMerchantProfile(item)">
-          <h4 style="color: #0779e4;">{{ item.storename }}</h4>
+          <h4 style="color: #0779e4">{{ item.accountname }}</h4>
         </div>
         <div (click)="openMerchantProfile(item)">
-          <h4>{{ item.name }}</h4>
+          <h4>{{ item.ownername }}</h4>
           <h6></h6>
         </div>
         <div (click)="openMerchantProfile(item)">
@@ -115,7 +115,7 @@
             >
               <a
                 class="page-link"
-                style="cursor: pointer;"
+                style="cursor: pointer"
                 aria-label="Previous"
               >
                 <span aria-hidden="true">&laquo;</span>
@@ -130,7 +130,7 @@
                 merchantService.allMerchants.length
               "
             >
-              <a class="page-link" style="cursor: pointer;" aria-label="Next">
+              <a class="page-link" style="cursor: pointer" aria-label="Next">
                 <span aria-hidden="true">&raquo;</span>
                 <span class="sr-only">Next</span>
               </a>

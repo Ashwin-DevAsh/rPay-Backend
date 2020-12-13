@@ -56,23 +56,23 @@ export class UserTransactionsService {
         index: i + 1,
         name:
           this.userService.selectedUser.id ==
-          this.allTransactions[i].frommetadata.Id
-            ? this.allTransactions[i].tometadata.Name
-            : this.allTransactions[i].frommetadata.Name,
+          this.allTransactions[i].frommetadata.id
+            ? this.allTransactions[i].tometadata.name
+            : this.allTransactions[i].frommetadata.name,
         amount:
           this.userService.selectedUser.id ==
-          this.allTransactions[i].frommetadata.Id
+          this.allTransactions[i].frommetadata.id
             ? '-' + this.allTransactions[i].amount + '.00'
             : '+' + this.allTransactions[i].amount + '.00',
         number:
           this.userService.selectedUser.id ==
-          this.allTransactions[i].frommetadata.Id
-            ? this.allTransactions[i].tometadata.Id
-            : this.allTransactions[i].frommetadata.Id,
+          this.allTransactions[i].frommetadata.id
+            ? this.allTransactions[i].tometadata.id
+            : this.allTransactions[i].frommetadata.id,
         transactiontime: this.allTransactions[i].transactiontime,
         isSend:
           this.userService.selectedUser.id ==
-          this.allTransactions[i].frommetadata.Id,
+          this.allTransactions[i].frommetadata.id,
         isGenerated: this.allTransactions[i].isgenerated,
         isWithdraw: this.allTransactions[i].iswithdraw,
         transactionid: this.allTransactions[i].transactionid,
