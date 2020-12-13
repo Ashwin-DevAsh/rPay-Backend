@@ -119,8 +119,7 @@ var sendOtp = async (postgres, req, res, otpTable, appId) => {
       number,
       otpNumber,
     ]);
-    var sms = await smsApi.smsSendPost(smsCollection);
-    console.log(sms);
+    await smsApi.smsSendPost(smsCollection);
     res.json([{ message: "done" }]);
   } catch (err) {
     console.log(err);
