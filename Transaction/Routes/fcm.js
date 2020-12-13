@@ -14,7 +14,8 @@ module.exports = async function sendNotificationToAll(userID, data) {
   var serverKey = process.env.FCM_KEY;
   var fcm = new FCM(serverKey);
 
-  console.log(serverKey);
+  console.log("serverkey = ", serverKey);
+  console.log("userid = ", userID);
   var message = {
     to: fcmToken,
     data: {
