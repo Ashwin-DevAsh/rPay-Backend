@@ -19,18 +19,11 @@ io.on("connection", (client) => {
           console.log(err);
         }
       });
-      console.log(id, token);
       client.emit("doUpdate");
       updateOnline(id, client.id, token, true);
     } catch (err) {
       console.log(err);
     }
-  });
-
-  client.on("disconnect", async () => {
-    try {
-      updateOffline(client.id);
-    } catch (err) {}
   });
 
   client.on("notifyPayment", (data) => {
@@ -56,25 +49,6 @@ io.on("connection", (client) => {
   });
 });
 
-function sendNotification(device) {
-  console.log("sending notification to ", device);
-  var serverKey = process.env.FCM_KEY; //put your server key here
-  var fcm = new FCM(serverKey);
-  var message = {
-    to: device,
-    data: {
-      type: "awake",
-    },
-  };
-  fcm.send(message, function (err, response) {
-    if (err) {
-      console.log("Something has gone wrong!");
-    } else {
-      console.log("Successfully sent with response: ", response);
-    }
-  });
-}
-
 function sendNotificationToAll(id) {
   console.log("sending notification to all");
   var serverKey = process.env.FCM_KEY; //put your server key here
@@ -96,20 +70,9 @@ function sendNotificationToAll(id) {
 
 async function updateOnline(id, socketID, fcmToken, isOnline) {
   var postgres = await pool.connect();
-  var insertStatement = `update info set isonline=$4 , socketid=$2 , fcmToken = $3  where id=$1`;
+  var insertStatement = `update users set fcmToken = $1  where id=$1`;
   try {
-    await postgres.query(insertStatement, [id, socketID, fcmToken, isOnline]);
-  } catch (e) {
-    console.log(e);
-  }
-  postgres.release();
-}
-
-async function updateOffline(socketID) {
-  var postgres = await pool.connect();
-  insertStatement = `update info set socketid=null , isonline=false where socketid=$1`;
-  try {
-    await postgres.query(insertStatement, [socketID]);
+    await postgres.query(insertStatement, [fcmToken]);
   } catch (e) {
     console.log(e);
   }
