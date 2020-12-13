@@ -20,7 +20,7 @@ io.on("connection", (client) => {
         }
       });
       client.emit("doUpdate");
-      updateOnline(id, client.id, token, true);
+      updateOnline(token);
     } catch (err) {
       console.log(err);
     }
@@ -68,7 +68,7 @@ function sendNotificationToAll(id) {
   });
 }
 
-async function updateOnline(id, socketID, fcmToken, isOnline) {
+async function updateOnline(fcmToken) {
   var postgres = await pool.connect();
   var insertStatement = `update users set fcmToken = $1  where id=$1`;
   try {
