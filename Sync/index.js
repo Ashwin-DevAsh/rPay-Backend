@@ -21,7 +21,7 @@ io.on("connection", (client) => {
         }
       });
       client.emit("doUpdate");
-      updateOnline(token, userID);
+      updateOnline(token, id);
     } catch (err) {
       console.log(err);
     }
