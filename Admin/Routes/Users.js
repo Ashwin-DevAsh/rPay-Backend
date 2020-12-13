@@ -51,7 +51,7 @@ var getMyTransactions = async (postgres, req, res) => {
   if (decoded.name) {
     postgres
       .query(
-        `select * from transactions where cast(frommetadata->>'Id' as varchar)=$1 or cast(tometadata->>'Id' as varchar)=$1`,
+        `select * from transactions where cast(frommetadata->>'id' as varchar)=$1 or cast(tometadata->>'id' as varchar)=$1`,
         [id]
       )
       .then((datas) => {

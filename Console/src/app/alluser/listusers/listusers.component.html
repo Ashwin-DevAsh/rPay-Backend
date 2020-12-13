@@ -17,7 +17,7 @@
               aria-haspopup="true"
               aria-expanded="false"
             >
-              <div style="display: flex;">
+              <div style="display: flex">
                 <img
                   class="dropdown-image"
                   src="../../assets/dropdown.svg"
@@ -57,7 +57,7 @@
           [style]="{ background: colors[index % colors.length] }"
           class="avatar"
         >
-          <h1 #avatarText>{{ item.name[0] }}</h1>
+          <h1 #avatarText>{{ item.accountname[0] }}</h1>
           <img
             [src]="userService.convertToURL(item.id)"
             #profile
@@ -70,7 +70,7 @@
         </div>
 
         <div class="info-container">
-          <h5 class="name">{{ item.name }}</h5>
+          <h5 class="name">{{ item.accountname }}</h5>
           <h6 class="email">{{ item.email }}</h6>
         </div>
       </div>
@@ -89,7 +89,7 @@
             >
               <a
                 class="page-link"
-                style="cursor: pointer;"
+                style="cursor: pointer"
                 aria-label="Previous"
               >
                 <span aria-hidden="true">&laquo;</span>
@@ -103,7 +103,7 @@
                 users[users.length - 1].index != userService.allUsers.length
               "
             >
-              <a class="page-link" style="cursor: pointer;" aria-label="Next">
+              <a class="page-link" style="cursor: pointer" aria-label="Next">
                 <span aria-hidden="true">&raquo;</span>
                 <span class="sr-only">Next</span>
               </a>
