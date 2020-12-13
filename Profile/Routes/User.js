@@ -148,7 +148,7 @@ var getUsersWithContacts = async (postgres, req, res) => {
   try {
     var result = (
       await postgres.query(
-        "select name,number,email,id from users where isMerchantAccount=false and number in " +
+        "select accountname,number,email,id from users where isMerchantAccount=false and number in " +
           contacts
       )
     ).rows;
