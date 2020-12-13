@@ -85,7 +85,7 @@ var addMerchant = async (postgres, req, res) => {
     if ((blockResult.data["message"] = "done")) {
       await postgres.query(
         `insert into users(
-           accounname,
+           accountname,
            ownername,
            number,
            email,
