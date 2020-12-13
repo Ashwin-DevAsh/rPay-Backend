@@ -14,6 +14,7 @@ io.on("connection", (client) => {
     try {
       var id = data["id"];
       var token = data["fcmToken"];
+      console.log("token =", token);
       client.join(id, (err) => {
         if (err) {
           console.log(err);
