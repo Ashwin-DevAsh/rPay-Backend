@@ -68,15 +68,6 @@ var addUser = async (postgres, req, res) => {
         res.json([{ message: "User already exist" }]);
         return;
       }
-      await postgres.query("delete from info where id=$1;", [userID]);
-      await postgres.query("delete from amount where id=$1;", [userID]);
-      await postgres.query("insert into info values($1,$2,null,null)", [
-        userID,
-        user.fcmToken,
-      ]);
-      await postgres.query("insert into amount(id,balance) values($1,0)", [
-        userID,
-      ]);
 
       var token = jwt.sign(
         {

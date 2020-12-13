@@ -77,8 +77,7 @@ async function pay(postgres, req, res) {
     var transactionTime = dateFormat(new Date(), "mm-dd-yyyy hh:MM:ss");
     var transactionID = (
       await postgres.query(
-        `insert
-		           into transactions(
+        `insert into transactions(
 					   transactionTime,
 					   fromMetadata,
 					   toMetadata,
