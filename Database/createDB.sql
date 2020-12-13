@@ -1,5 +1,5 @@
 create table users(
-  accounname varchar,
+  accountname varchar,
   ownername varchar,
   number varchar,
   email varchar,
