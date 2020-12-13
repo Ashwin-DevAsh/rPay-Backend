@@ -3,18 +3,18 @@ const jwt = require("jsonwebtoken");
 const { Pool } = require("pg");
 const clientDetails = require("../Database/ClientDetails");
 
+var postgres = new Pool(clientDetails);
+
 app.get("/getUsers", async (req, res) => {
-  var postgres = new Pool(clientDetails);
   await postgres.connect();
   await getUsers(postgres, req, res);
-  await postgres.end();
+  await postgres.release();
 });
 
 app.get("/getMyTransactions/:id", async (req, res) => {
-  var postgres = new Pool(clientDetails);
   await postgres.connect();
   await getMyTransactions(postgres, req, res);
-  await postgres.end();
+  await postgres.release();
 });
 
 var getUsers = async (postgres, req, res) => {
