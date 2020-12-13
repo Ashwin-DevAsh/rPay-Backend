@@ -51,7 +51,7 @@ var init = async (postgres, req, res) => {
 
     var merchants = (
       await postgres.query(
-        "select accountname,number,email,id,storeName from users where isMerchantAccount = true status='active'"
+        "select accountname,number,email,id,storeName from users where isMerchantAccount = true and status='active'"
       )
     ).rows;
 
