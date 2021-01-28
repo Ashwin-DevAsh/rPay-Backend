@@ -9,6 +9,7 @@ var sendNotification = require("./fcm");
 const PaytmChecksum = require("paytmchecksum");
 const Razorpay = require("razorpay");
 
+//add money
 app.post("/addMoney", async (req, res) => {
   var postgres = await pool.connect();
   await addMoney(postgres, req, res);
