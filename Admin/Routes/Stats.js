@@ -3,32 +3,30 @@ const jwt = require("jsonwebtoken");
 const { Pool } = require("pg");
 const clientDetails = require("../Database/ClientDetails");
 
+var pool = new Pool(clientDetails);
+
 app.get("/getTransactionStats/:days", async (req, res) => {
-  var postgres = new Pool(clientDetails);
-  await postgres.connect();
+  var postgres = await pool.connect();
   await doProcess(postgres, req, res, transactionStatsQuery);
-  await postgres.end();
+  await postgres.release();
 });
 
 app.get("/getNoTransactionStats/:days", async (req, res) => {
-  var postgres = new Pool(clientDetails);
-  await postgres.connect();
+  var postgres = await pool.connect();
   await doProcess(postgres, req, res, noTransactionStatsQuery);
-  await postgres.end();
+  await postgres.release();
 });
 
 app.get("/getGeneratedStats/:days", async (req, res) => {
-  var postgres = new Pool(clientDetails);
-  await postgres.connect();
+  var postgres = await pool.connect();
   await doProcess(postgres, req, res, generatedStatsQuery);
-  await postgres.end();
+  await postgres.release();
 });
 
 app.get("/getWithdrawStats/:days", async (req, res) => {
-  var postgres = new Pool(clientDetails);
-  await postgres.connect();
+  var postgres = await pool.connect();
   await doProcess(postgres, req, res, withdrawStatsQuery);
-  await postgres.end();
+  await postgres.release();
 });
 
 async function doProcess(postgres, req, res, queryFunction) {

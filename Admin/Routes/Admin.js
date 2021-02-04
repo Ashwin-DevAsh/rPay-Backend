@@ -4,25 +4,23 @@ const bcrypt = require("bcrypt");
 const { Pool } = require("pg");
 const clientDetails = require("../Database/ClientDetails");
 
+var pool = new Pool(clientDetails);
 app.post("/login", async (req, res) => {
-  var postgres = new Pool(clientDetails);
-  await postgres.connect();
+  var postgres = await pool.connect();
   await login(postgres, req, res);
-  await postgres.end();
+  postgres.release();
 });
 
 app.post("/addAdmin", async (req, res) => {
-  var postgres = new Pool(clientDetails);
-  await postgres.connect();
+  var postgres = await pool.connect();
   await addAdmin(postgres, req, res);
-  await postgres.end();
+  await postgres.release();
 });
 
 app.get("/getAdmins", async (req, res) => {
-  var postgres = new Pool(clientDetails);
-  await postgres.connect();
+  var postgres = await pool.connect();
   await getAdmins(postgres, req, res);
-  await postgres.end();
+  await postgres.release();
 });
 
 var getAdmins = async (postgres, req, res) => {
