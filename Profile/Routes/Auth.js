@@ -4,6 +4,7 @@ var api = require("clicksend");
 var smsMessage = new api.SmsMessage();
 const { Pool } = require("pg");
 const clientDetails = require("../Database/ClientDetails");
+const axios = require("axios");
 
 var pool = new Pool(clientDetails);
 
@@ -95,23 +96,30 @@ var sendOtp = async (postgres, req, res, otpTable, appId) => {
   }
 
   var otpNumber = Math.floor(1000 + Math.random() * 9000);
+  var apiKey = "49c888fc-671a-11eb-8153-0200cd936042";
 
-  smsMessage.from = "Rpay";
-  smsMessage.to = `+${number}`;
-  smsMessage.body = `<#> Rpay never calls you asking for otp. Sharing it with 
-                     anyone gives them full access to your Rpay wallet. 
-                     Your Login OTP is ${otpNumber} . ID: ${appId}`;
-  console.log({
-    number,
-    otpNumber,
-  });
+  // smsMessage.from = "Rpay";
+  // smsMessage.to = `+${number}`;
+  // smsMessage.body = `<#> Rpay never calls you asking for otp. Sharing it with
+  //                    anyone gives them full access to your Rpay wallet.
+  //                    Your Login OTP is ${otpNumber} . ID: ${appId}`;
+  // console.log({
+  //   number,
+  //   otpNumber,
+  // });
 
-  var smsApi = new api.SMSApi(
-    process.env.OTP_USERNAME,
-    process.env.OTP_API_KEY
-  );
-  var smsCollection = new api.SmsMessageCollection();
-  smsCollection.messages = [smsMessage];
+  // var smsApi = new api.SMSApi(
+  //   process.env.OTP_USERNAME,
+  //   process.env.OTP_API_KEY
+  // );
+  // var smsCollection = new api.SmsMessageCollection();
+  // smsCollection.messages = [smsMessage];
+
+  var response = (
+    await axios.post(
+      `https://2factor.in/API/V1/${apiKey}/SMS/${number}/${otpNumber}`
+    )
+  ).data;
 
   try {
     await postgres.query(`delete from ${otpTable} where number = $1`, [number]);
