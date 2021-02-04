@@ -48,7 +48,9 @@ export class UserService {
     this.allUsers = [];
     for (var i = 0; i < this.allUsersTemp.length; i++) {
       if (
-        this.allUsersTemp[i].name.toLowerCase().includes(query.toLowerCase())
+        this.allUsersTemp[i].accountname
+          .toLowerCase()
+          .includes(query.toLowerCase())
       ) {
         this.allUsers.push(this.allUsersTemp[i]);
       }

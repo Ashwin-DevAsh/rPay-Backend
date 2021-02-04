@@ -37,7 +37,7 @@
         </div>
         <div class="divider"></div>
 
-        <div (click)="logout()" class="listtile" style="margin-bottom: 12px;">
+        <div (click)="logout()" class="listtile" style="margin-bottom: 12px">
           <img src="../../assets/power.svg" />
           <h6>Logout</h6>
         </div>
@@ -50,7 +50,7 @@
     (click)="toggleDrawer()"
   >
     <div [ngClass]="{ drawer: true, 'drawer-open': drawerOpen }">
-      <div style="height: 50px; width: 100%;">
+      <div style="height: 50px; width: 100%">
         <div class="logo">
           <img src="../../assets/RLogo (5).png" alt="" />
           <h2>pay</h2>
@@ -77,19 +77,19 @@
 
       <div class="divider"></div>
 
-      <div
+      <!-- <div
         [ngClass]="{ options: true, selected: isCurrentPage('Nodes') }"
         (click)="selectPage('Nodes')"
       >
         <img src="../../assets/nodes.svg" alt="" />
         <h4>Nodes</h4>
-      </div>
+      </div> -->
 
       <div
         [ngClass]="{ options: true, selected: isCurrentPage('Blocks') }"
         (click)="selectPage('Blocks')"
       >
-        <img src="../../assets/blocks.svg" alt="" />
+        <img src="../../assets/nodes.svg" alt="" />
         <h4>Blocks</h4>
       </div>
 
