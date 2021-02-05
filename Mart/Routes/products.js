@@ -5,6 +5,6 @@ var productsController = new ProductsController();
 
 app.post("/addProducts", productsController.addProducts);
 
-app.post("/getAllProducts", productsController.getAllProducts);
+app.get("/getAllProducts", productsController.getAllProducts);
 
 module.exports = app;
