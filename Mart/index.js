@@ -1,5 +1,5 @@
 require("dotenv").config({ path: "./env/.env" });
-const auth = require("./Services/Auth");
+const Auth = require("./Services/Auth");
 
 const express = require("express");
 const products = require("./Routes/products");
@@ -21,7 +21,7 @@ app.use(cors(corsOptions));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use(auth);
+app.use(new Auth().isAuthenticated);
 app.use(products);
 app.use(uploadPictures);
 
