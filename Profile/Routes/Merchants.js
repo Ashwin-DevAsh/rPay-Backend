@@ -124,7 +124,7 @@ var getMerchants = async (postgres, req, res) => {
   try {
     var result = (
       await postgres.query(
-        "select ownername,number,email,id,accountname from merchants where status='active' and isMerchantAccount=true"
+        "select ownername,number,email,id,accountname from users where status='active' and isMerchantAccount=true"
       )
     ).rows;
     res.send(result);
