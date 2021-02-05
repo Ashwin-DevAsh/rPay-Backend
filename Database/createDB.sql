@@ -59,6 +59,7 @@ create table products(
    discription varchar,
    quantity int,  
    price bigint,
+   category varchar,
    imageUrl varchar,
    availableOn varchar[],
 );

@@ -24,6 +24,7 @@ class ProductsController {
       productName,
       ownerID,
       description,
+      category,
       price,
       quantity,
       imageUrl,
@@ -34,6 +35,7 @@ class ProductsController {
       !productID ||
       !productName ||
       !description ||
+      !category ||
       !ownerID ||
       !price ||
       !quantity ||
