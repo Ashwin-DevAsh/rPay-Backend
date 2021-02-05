@@ -52,16 +52,16 @@ create table recoveryMerchantsOtp(
 -- mart --
 
 
-create table products{
+create table products(
    productID bigserial primary key,
    productName varchar,
    ownerID varchar,
    discription varchar,
    quantity int,  
-   price number,
+   price bigint,
    imageUrl varchar,
    availableOn varchar[],
-}
+);
 
 create table orders(
   orederId bigserial,
