@@ -61,4 +61,4 @@ class ProductsController {
   };
 }
 
-export default ProductsController;
+module.exports = ProductsController;

@@ -1,6 +1,6 @@
 const multer = require("multer");
 
-export class ProductsPictureController {
+module.exports = class ProductsPictureController {
   storage = multer.diskStorage({
     destination: function (req, file, cb) {
       cb(null, "../profilePictures/");
@@ -33,4 +33,4 @@ export class ProductsPictureController {
   };
 
   getProductPicture = () => {};
-}
+};

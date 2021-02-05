@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-export default class Auth {
+module.exports = class Auth {
   isAuthenticated = async (req, res, next) => {
     try {
       var id = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY).id;
@@ -11,4 +11,4 @@ export default class Auth {
       return;
     }
   };
-}
+};

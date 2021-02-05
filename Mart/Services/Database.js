@@ -1,7 +1,7 @@
 const { Pool } = require("pg");
 const clientDetails = require("../Database/ClientDetails");
 
-export default class Database {
+module.exports = class Database {
   pool = new Pool(clientDetails);
 
   getAllproducts = async (req, res) => {
@@ -57,4 +57,4 @@ export default class Database {
   getProductWithID = () => {};
 
   getProducstWithMerchantID = () => {};
-}
+};
