@@ -7,7 +7,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 export class LoginService {
   constructor() {}
 
-  public url: String = 'https:admin.rajalakshmipay.com';
+  public url: String = 'https:admin.rajalakshmipay.com/';
   public endPoint: String = 'login';
   public userName: String = localStorage.getItem('userName');
   public email: String = localStorage.getItem('email');
