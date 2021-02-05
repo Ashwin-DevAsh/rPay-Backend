@@ -42,7 +42,7 @@ class ProductsController {
       !imageUrl ||
       !availableOn
     ) {
-      var isAdded = await this.databaseService.addProduct(
+      var isAdded = await this.databaseService.addProducts(
         productID,
         productName,
         description,
