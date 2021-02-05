@@ -58,9 +58,9 @@ class ProductsController {
         availableOn
       );
       if (isAdded) {
-        res.send({ message: "failed" });
-      } else {
         res.send({ message: "success" });
+      } else {
+        res.send({ message: "failed" });
       }
     }
   };
