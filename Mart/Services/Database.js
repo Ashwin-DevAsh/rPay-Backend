@@ -9,6 +9,7 @@ module.exports = class Database {
       var postgres = await postgres.query("select * from products");
       return postgres.rows;
     } catch (e) {
+      console.log(e);
       return [];
     }
   };
