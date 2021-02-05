@@ -72,6 +72,7 @@ class ProductsController {
         res.send({ message: "success" });
       }
     } else {
+      console.log(e);
       res.send({ message: "error" });
     }
   };
