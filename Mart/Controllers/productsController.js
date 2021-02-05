@@ -44,6 +44,8 @@ class ProductsController {
       !imageUrl ||
       !availableOn
     ) {
+      res.send({ message: "error" });
+    } else {
       var isAdded = await this.databaseService.addProducts(
         productID,
         productName,
@@ -59,8 +61,6 @@ class ProductsController {
       } else {
         res.send({ message: "success" });
       }
-    } else {
-      res.send({ message: "error" });
     }
   };
 }
