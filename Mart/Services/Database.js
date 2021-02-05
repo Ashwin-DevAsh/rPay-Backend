@@ -31,7 +31,7 @@ module.exports = class Database {
                            productID,
                            productName,
                            ownerID,
-                           description,
+                           discription,
                            category,
                            price,
                            quantity,
