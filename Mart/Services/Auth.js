@@ -1,18 +1,16 @@
 const jwt = require("jsonwebtoken");
 
-
 class Auth {
-  isAuthenticated = (req, res, next) => {
+  isAuthenticated = async (req, res, next) => {
     try {
-        var id = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY).id;
-        next();
-
+      var id = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY).id;
+      next();
     } catch (e) {
-        console.log(e);
-        res.send({ message: "error" });
-        return;
+      console.log(e);
+      res.send({ message: "error" });
+      return;
     }
   };
 }
 
-export default Auth
+export default Auth;
