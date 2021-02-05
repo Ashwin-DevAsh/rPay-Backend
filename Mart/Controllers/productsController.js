@@ -48,7 +48,7 @@ class ProductsController {
     if (
       !productID ||
       !productName ||
-      !description ||
+      !discription ||
       !category ||
       !ownerID ||
       !price ||
@@ -59,7 +59,7 @@ class ProductsController {
       var isAdded = await this.databaseService.addProducts(
         productID,
         productName,
-        description,
+        discription,
         ownerID,
         price,
         quantity,
