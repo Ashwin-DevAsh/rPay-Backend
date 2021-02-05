@@ -49,8 +49,9 @@ class ProductsController {
       var isAdded = await this.databaseService.addProducts(
         productID,
         productName,
-        discription,
         ownerID,
+        discription,
+        category,
         price,
         quantity,
         imageUrl,
