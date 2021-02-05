@@ -157,8 +157,6 @@ var sendOtp = async (postgres, req, res, otpTable) => {
     var emailTransactionalApi = new api.TransactionalEmailApi(
       process.env.OTP_USERNAME,
       process.env.OTP_API_KEY
-      // "ajaykrishnan.s.2018.cse@rajalakshmi.edu.in",
-      // "2617172A-B44A-4C96-7BA9-D9746E9D3230"
     );
 
     var emailRecipient = new api.EmailRecipient();
