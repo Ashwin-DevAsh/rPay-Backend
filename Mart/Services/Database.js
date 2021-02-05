@@ -5,9 +5,10 @@ module.exports = class Database {
   pool = new Pool(clientDetails);
 
   getAllProducts = async (req, res) => {
+    var postgres = await pool.connect();
     try {
-      var postgres = await postgres.query("select * from products");
-      return postgres.rows;
+      var products = await postgres.query("select * from products");
+      return products.rows;
     } catch (e) {
       console.log(e);
       return [];
