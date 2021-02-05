@@ -4,8 +4,8 @@ const clientDetails = require("../Database/ClientDetails");
 module.exports = class Database {
   pool = new Pool(clientDetails);
 
-  getAllProducts = async (req, res) => {
-    var postgres = await pool.connect();
+  getAllProducts = async () => {
+    var postgres = await this.pool.connect();
     try {
       var products = await postgres.query("select * from products");
       return products.rows;
