@@ -33,18 +33,6 @@ class ProductsController {
 
     console.log(req.body);
 
-    console.log({
-      productID,
-      productName,
-      ownerID,
-      discription,
-      category,
-      price,
-      quantity,
-      imageUrl,
-      availableOn,
-    });
-
     if (
       !productID ||
       !productName ||
@@ -72,7 +60,6 @@ class ProductsController {
         res.send({ message: "success" });
       }
     } else {
-      console.log(e);
       res.send({ message: "error" });
     }
   };
