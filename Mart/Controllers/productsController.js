@@ -31,8 +31,6 @@ class ProductsController {
       availableOn,
     } = req.body;
 
-    console.log(req);
-
     console.log(req.body);
 
     console.log({
