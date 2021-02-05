@@ -24,6 +24,17 @@ module.exports = class Database {
     imageUrl,
     avaliableOn
   ) => {
+    console.log(
+      productID,
+      productName,
+      ownerID,
+      discription,
+      category,
+      price,
+      quantity,
+      imageUrl,
+      avaliableOn
+    );
     var postgres = await this.pool.connect();
     try {
       postgres.query(
@@ -36,8 +47,7 @@ module.exports = class Database {
                            price,
                            quantity,
                            imageUrl,
-                           availableOn
-                           ) values($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
+                           availableOn) values($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
         [
           productID,
           productName,
