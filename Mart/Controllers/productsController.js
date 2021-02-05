@@ -31,6 +31,18 @@ class ProductsController {
       availableOn,
     } = req.body;
 
+    console.log({
+      productID,
+      productName,
+      ownerID,
+      description,
+      category,
+      price,
+      quantity,
+      imageUrl,
+      availableOn,
+    });
+
     if (
       !productID ||
       !productName ||
