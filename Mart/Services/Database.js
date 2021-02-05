@@ -24,7 +24,7 @@ module.exports = class Database {
     imageUrl,
     avaliableOn
   ) => {
-    var postgres = await pool.connect();
+    var postgres = await this.pool.connect();
     try {
       postgres.query(
         `insert into products(
