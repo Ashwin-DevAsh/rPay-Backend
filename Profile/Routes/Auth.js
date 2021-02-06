@@ -128,7 +128,7 @@ var sendOtp = async (postgres, req, res, otpTable, appId) => {
         ` http://www.smsintegra.com/api/smsapi.aspx?uid=RECCHENNAIPROMO&pwd=25755&mobile=${number}&msg=${smsbody}&sid=RECEDU&type=0`
       )
     ).data;
-    console.log(e);
+    console.log(response);
   } catch (e) {
     console.log(e);
   }
