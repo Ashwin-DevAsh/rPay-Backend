@@ -163,7 +163,7 @@ module.exports = class TranslationService {
           `receivedMoney,${from.name},${from.id},${amount},${from.email}`
         );
         postgres.release();
-        return transaction;
+        return transactionID;
       }
     } catch (e) {
       console.log(e);
