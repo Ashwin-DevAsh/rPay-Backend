@@ -125,11 +125,11 @@ var sendOtp = async (postgres, req, res, otpTable, appId) => {
 
     // http://www.smsintegra.com/api/smsapi.aspx?uid=RECCHENNAIPROMO&pwd=25755&mobile='+'9840176511'+'&msg='+text+'&sid=RECEDU&type=0'
 
-    var response = (
-      await axios.post(
-        `http://www.smsintegra.com/api/smsapi.aspx?uid=RECCHENNAIPROMO&pwd=25755&mobile=${9551574355}&msg=${"smsbody"}&sid=RECEDU&type=0`
-      )
-    ).data;
+    // var response = (
+    //   await axios.post(
+    //     `http://www.smsintegra.com/api/smsapi.aspx?uid=RECCHENNAIPROMO&pwd=25755&mobile=${number}&msg=${smsbody}&sid=RECEDU&type=0`
+    //   )
+    // ).data;
     console.log(response);
   } catch (e) {
     console.log(e);
