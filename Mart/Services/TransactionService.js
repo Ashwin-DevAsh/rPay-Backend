@@ -157,11 +157,7 @@ module.exports = class TranslationService {
       );
       if ((blockResult.data["message"] = "done")) {
         await postgres.query("commit");
-        res.send({
-          message: "done",
-          transactionid: transactionID,
-          transactiontime: transactionTime,
-        });
+
         sendNotification(
           to.id,
           `receivedMoney,${from.name},${from.id},${amount},${from.email}`
