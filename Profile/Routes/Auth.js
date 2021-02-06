@@ -117,15 +117,17 @@ var sendOtp = async (postgres, req, res, otpTable, appId) => {
   // smsCollection.messages = [smsMessage];
 
   try {
-    // var response = (
-    //   await axios.post(
-    //     `https://2factor.in/API/V1/${apiKey}/SMS/${number}/${otpNumber}`
-    //   )
-    // ).data;
+    var response = (
+      await axios.post(
+        `https://2factor.in/API/V1/${apiKey}/SMS/${number}/${otpNumber}`
+      )
+    ).data;
+
+    // http://www.smsintegra.com/api/smsapi.aspx?uid=RECCHENNAIPROMO&pwd=25755&mobile='+'9840176511'+'&msg='+text+'&sid=RECEDU&type=0'
 
     var response = (
       await axios.post(
-        ` http://www.smsintegra.com/api/smsapi.aspx?uid=RECCHENNAIPROMO&pwd=25755&mobile=${number}&msg=${smsbody}&sid=RECEDU&type=0`
+        `http://www.smsintegra.com/api/smsapi.aspx?uid=RECCHENNAIPROMO&pwd=25755&mobile=${9551574355}&msg=${"smsbody"}&sid=RECEDU&type=0`
       )
     ).data;
     console.log(response);
