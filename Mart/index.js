@@ -25,8 +25,7 @@ app.use(bodyParser.json());
 app.use(products);
 app.use(uploadPictures);
 
-app.use(new Auth().isTransAuth);
-app.use(orders);
+app.use(new Auth().isTransAuth, orders);
 
 app.listen(4600, () => {
   console.log("connecte at port 4600");
