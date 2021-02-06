@@ -11,4 +11,19 @@ module.exports = class Auth {
       return;
     }
   };
+
+  isTransAuth = async (req, res, next) => {
+    try {
+      var decoded = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY);
+      if (decoded.id != req.body.transactionData.from.id) {
+        console.log(decoded.id + from.id);
+        res.send({ message: "failed" });
+        return;
+      }
+    } catch (e) {
+      console.log(e);
+      res.send({ message: "failed" });
+      return;
+    }
+  };
 };

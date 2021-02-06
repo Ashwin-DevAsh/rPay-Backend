@@ -25,6 +25,7 @@ app.use(bodyParser.json());
 app.use(products);
 app.use(uploadPictures);
 
+app.use(new Auth().isTransAuth);
 app.use(orders);
 
 app.listen(4600, () => {

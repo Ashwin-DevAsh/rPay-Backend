@@ -89,34 +89,40 @@ module.exports = class TranslationService {
   };
 
   payToMerchant = async (from, merchantID, transactionID) => {
+    var postgres = await this.pool.connect();
     var toAmmount = await postgres.query(
       "select * from users where id=$1 for update",
-      [to.id]
+      [merchantID]
     );
 
+    var to = {
+      id: to["id"],
+      name: to["accountname"],
+      number: to["number"],
+      email: to["email"],
+    };
+
     var fromAmmount = await postgres.query(
-      "select * from users where id=$1 for update",
-      [from.id]
+      "select * from transactions where id=$1",
+      [transactionID]
     );
 
     if (!toAmmount || !fromAmmount) {
-      console.log("invalid users");
-      res.send({ message: "failed" });
-      return;
+      console.log("invalid");
+      postgres.release();
+      return false;
     }
 
-    if (fromAmmount < amount) {
+    if (fromAmmount["amount"] < amount) {
       console.log("insufficient balance");
       res.send({ message: "failed" });
-      return;
+      postgres.release();
+      return false;
     }
 
     try {
       await postgres.query("begin");
-      await postgres.query(
-        "update users set balance = balance - $1 where id = $2",
-        [amount, from.id]
-      );
+
       await postgres.query(
         "update users set balance = balance + $1 where id = $2",
         [amount, to.id]
@@ -160,11 +166,14 @@ module.exports = class TranslationService {
           to.id,
           `receivedMoney,${from.name},${from.id},${amount},${from.email}`
         );
+        postgres.release();
+        return transaction;
       }
     } catch (e) {
       console.log(e);
       await postgres.query("rollback");
-      res.send({ message: "failed" });
+      postgres.release();
+      return false;
     }
   };
 };
