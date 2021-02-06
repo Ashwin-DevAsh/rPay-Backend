@@ -5,7 +5,7 @@ const express = require("express");
 const products = require("./Routes/products");
 
 const bodyParser = require("body-parser");
-const uploadPictures = require("./Routes/UploadPictures");
+const uploadPictures = require("./Routes/productPictures");
 
 const app = express();
 
