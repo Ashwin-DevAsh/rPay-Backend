@@ -7,9 +7,11 @@ module.exports = class OrdersController {
   transactionsService = new TransactionsService();
   pool = new Pool(clientDetails);
   makeOrder = async (req, res) => {
+    var { products, transactionData, amount } = req.body;
+
     try {
       var decoded = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY);
-      if (decoded.id != from.id) {
+      if (decoded.id != transactionData.from.id) {
         console.log(decoded.id + from.id);
         res.send({ message: "failed" });
         return;
@@ -19,8 +21,6 @@ module.exports = class OrdersController {
       res.send({ message: "failed" });
       return;
     }
-
-    var { products, transactionData, amount } = req.body;
 
     if (!products || !transactionData || !amount) {
       console.log("Invalid body");
