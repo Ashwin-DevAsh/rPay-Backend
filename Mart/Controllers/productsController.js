@@ -3,14 +3,26 @@ const Database = require("../Services/Database");
 class ProductsController {
   databaseService = new Database();
 
-  getProducts = async (req, res) => {};
-
   getAllProducts = async (req, res) => {
     var allProducts = await this.databaseService.getAllProducts();
     if (allProducts) {
       res.send({ message: "success", allProducts });
     } else {
       res.send({ message: "failed" });
+    }
+  };
+
+  deleteProduct = async (req, res) => {
+    var { productID } = req.body;
+    if (!productID) {
+      res.send({ message: "error" });
+    } else {
+      isDeleted = await this.databaseService.deleteProduct(productID);
+      if (isDeleted) {
+        res.send({ message: "success" });
+      } else {
+        res.send({ message: "failed" });
+      }
     }
   };
 

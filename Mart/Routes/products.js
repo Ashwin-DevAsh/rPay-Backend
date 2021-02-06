@@ -7,6 +7,8 @@ app.post("/updateProduct", productsController.updateProduct);
 
 app.post("/addProducts", productsController.addProducts);
 
+app.post("/deleteProduct", productsController.deleteProduct);
+
 app.get("/getAllProducts", productsController.getAllProducts);
 
 module.exports = app;

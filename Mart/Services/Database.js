@@ -15,6 +15,20 @@ module.exports = class Database {
     }
   };
 
+  deleteProduct = async (productID) => {
+    var postgres = await this.pool.connect();
+    try {
+      postgres.query(`update from products where productID = $1`, [productID]);
+      postgres.release();
+
+      return true;
+    } catch (e) {
+      postgres.release();
+      console.log(e);
+      return false;
+    }
+  };
+
   updateProduct = async (
     productID,
     productName,
@@ -51,9 +65,11 @@ module.exports = class Database {
           avaliableOn,
         ]
       );
-
+      postgres.release();
       return true;
     } catch (e) {
+      postgres.release();
+
       console.log(e);
       return false;
     }
@@ -95,15 +111,14 @@ module.exports = class Database {
           avaliableOn,
         ]
       );
+      postgres.release();
 
       return true;
     } catch (e) {
+      postgres.release();
+
       console.log(e);
       return false;
     }
   };
-
-  getProductWithID = () => {};
-
-  getProducstWithMerchantID = () => {};
 };
