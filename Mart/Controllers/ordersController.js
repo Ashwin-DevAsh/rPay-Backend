@@ -5,13 +5,14 @@ module.exports = class OrdersController {
   pool = new Pool(clientDetails);
   makeOrder = async (req, res) => {
     var { products, transactionData, amount } = req.body;
+    console.log(req.body);
+
     if ((!products, !transactionData, !amount)) {
       console.log("Invalid body");
-      console.log(req.body);
       res.send({ message: "failed" });
       return;
     } else {
-      var isPayToMartDone = await payToMart(transactionData);
+      var isPayToMartDone = await payToMart(transactionData, req);
       if (isPayToMartDone) {
         res.send({ message: "done" });
         return;
