@@ -6,6 +6,7 @@ var axios = require("axios");
 var dateFormat = require("dateformat");
 var sendNotification = require("./fcm");
 var pool = new Pool(clientDetails);
+var dateFormat = require("dateformat");
 
 app.post("/pay", async (req, res) => {
   var postgres = await pool.connect();

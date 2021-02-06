@@ -37,6 +37,7 @@ module.exports = class OrdersController {
         return false;
       }
     } catch (e) {
+      console.log("token error");
       console.log(e);
       pool.release();
       return false;
