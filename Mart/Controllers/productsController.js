@@ -31,8 +31,6 @@ class ProductsController {
       availableOn,
     } = req.body;
 
-    console.log(req.body);
-
     if (
       !productID ||
       !productName ||
