@@ -88,7 +88,7 @@ module.exports = class TranslationService {
     }
   };
 
-  payToMerchant = async (from, merchantID, transactionID) => {
+  payToMerchant = async (from, merchantID, transactionID, amount) => {
     var postgres = await this.pool.connect();
     var toAmmount = await postgres.query(
       "select * from users where id=$1 for update",
