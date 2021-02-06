@@ -18,7 +18,7 @@ module.exports = class Database {
   deleteProduct = async (productID) => {
     var postgres = await this.pool.connect();
     try {
-      postgres.query(`update from products where productID = $1`, [productID]);
+      postgres.query(`delete from products where productID = $1`, [productID]);
       postgres.release();
 
       return true;

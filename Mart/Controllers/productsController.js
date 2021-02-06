@@ -17,7 +17,7 @@ class ProductsController {
     if (!productID) {
       res.send({ message: "error" });
     } else {
-      isDeleted = await this.databaseService.deleteProduct(productID);
+      var isDeleted = await this.databaseService.deleteProduct(productID);
       if (isDeleted) {
         res.send({ message: "success" });
       } else {
