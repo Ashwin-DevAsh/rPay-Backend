@@ -4,6 +4,7 @@ class ProductsController {
   databaseService = new Database();
 
   getAllProducts = async (req, res) => {
+    console.log("getProducts");
     var allProducts = await this.databaseService.getAllProducts();
     if (allProducts) {
       res.send({ message: "success", allProducts });
