@@ -103,7 +103,7 @@ module.exports = class TranslationService {
     };
 
     var fromAmmount = await postgres.query(
-      "select * from transactions where id=$1",
+      "select * from transactions where transactionid=$1",
       [transactionID]
     );
 
