@@ -102,6 +102,8 @@ var sendOtp = async (postgres, req, res, otpTable, appId) => {
   var smsbody = `<#> Rpay never calls you asking for otp. Sharing it with
                      anyone gives them full access to your Rpay wallet.
                      Your Login OTP is ${otpNumber} . ID: ${appId}`;
+
+  console.log(smsbody);
   // console.log({
   //   number,
   //   otpNumber,
@@ -115,17 +117,17 @@ var sendOtp = async (postgres, req, res, otpTable, appId) => {
   // smsCollection.messages = [smsMessage];
 
   try {
-    var response = (
-      await axios.post(
-        `https://2factor.in/API/V1/${apiKey}/SMS/${number}/${otpNumber}`
-      )
-    ).data;
-
     // var response = (
     //   await axios.post(
-    //     ` http://www.smsintegra.com/api/smsapi.aspx?uid=RECCHENNAIPROMO&pwd=25755&mobile=${number}&msg=${smsbody}&sid=RECEDU&type=0`
+    //     `https://2factor.in/API/V1/${apiKey}/SMS/${number}/${otpNumber}`
     //   )
     // ).data;
+
+    var response = (
+      await axios.post(
+        ` http://www.smsintegra.com/api/smsapi.aspx?uid=RECCHENNAIPROMO&pwd=25755&mobile=${number}&msg=${smsbody}&sid=RECEDU&type=0`
+      )
+    ).data;
   } catch (e) {
     console.log(e);
   }
