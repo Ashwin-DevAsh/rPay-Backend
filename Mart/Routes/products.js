@@ -3,6 +3,8 @@ const ProductsController = require("../Controllers/productsController");
 
 var productsController = new ProductsController();
 
+app.post("/updateProduct", productsController.updateProduct);
+
 app.post("/addProducts", productsController.addProducts);
 
 app.get("/getAllProducts", productsController.getAllProducts);

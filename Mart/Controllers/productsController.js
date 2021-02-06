@@ -14,9 +14,50 @@ class ProductsController {
     }
   };
 
-  getProductsWithMerchantID = async (req, res) => {};
+  updateProducts = async (req, res) => {
+    var {
+      productID,
+      productName,
+      ownerID,
+      discription,
+      category,
+      price,
+      quantity,
+      imageUrl,
+      availableOn,
+    } = req.body;
 
-  getProductsWithProductID = async (req, res) => {};
+    if (
+      !productID ||
+      !productName ||
+      !discription ||
+      !category ||
+      !ownerID ||
+      !price ||
+      !quantity ||
+      !imageUrl ||
+      !availableOn
+    ) {
+      res.send({ message: "error" });
+    } else {
+      var isUpdated = await this.databaseService.updateProduct(
+        productID,
+        productName,
+        ownerID,
+        discription,
+        category,
+        price,
+        quantity,
+        imageUrl,
+        availableOn
+      );
+      if (isUpdated) {
+        res.send({ message: "success" });
+      } else {
+        res.send({ message: "failed" });
+      }
+    }
+  };
 
   addProducts = async (req, res) => {
     var {

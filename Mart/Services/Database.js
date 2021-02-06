@@ -15,6 +15,50 @@ module.exports = class Database {
     }
   };
 
+  updateProduct = async (
+    productID,
+    productName,
+    ownerID,
+    discription,
+    category,
+    price,
+    quantity,
+    imageUrl,
+    avaliableOn
+  ) => {
+    var postgres = await this.pool.connect();
+    try {
+      postgres.query(
+        `update products set
+                           
+                           productName =$2,
+                           ownerID = $3,
+                           discription = $4,
+                           category = $5,
+                           price = $6,
+                           quantity = $7,
+                           imageUrl = $8,
+                           availableOn = $9 where productID = $1`,
+        [
+          productID,
+          productName,
+          ownerID,
+          discription,
+          category,
+          price,
+          quantity,
+          imageUrl,
+          avaliableOn,
+        ]
+      );
+
+      return true;
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
+  };
+
   addProducts = async (
     productID,
     productName,
@@ -26,17 +70,6 @@ module.exports = class Database {
     imageUrl,
     avaliableOn
   ) => {
-    console.log(
-      productID,
-      productName,
-      ownerID,
-      discription,
-      category,
-      price,
-      quantity,
-      imageUrl,
-      avaliableOn
-    );
     var postgres = await this.pool.connect();
     try {
       postgres.query(
