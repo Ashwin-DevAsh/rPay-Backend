@@ -69,10 +69,10 @@ services:
       - ./certbot/conf:/etc/nginx/ssl
       - ./certbot/data:/var/www/certbot
 
-  certbot:
-    image: certbot/certbot:latest
-    command: certonly --webroot --webroot-path=/var/www/certbot --email 2017ashwin@gmail.com --agree-tos --no-eff-email -d sync.rajalakshmipay.com -d sync.rajalakshmipay.com
-    volumes:
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/logs:/var/log/letsencrypt
-      - ./certbot/data:/var/www/certbot
+  # certbot:
+  #   image: certbot/certbot:latest
+  #   command: certonly --webroot --webroot-path=/var/www/certbot --email 2017ashwin@gmail.com --agree-tos --no-eff-email -d sync.rajalakshmipay.com -d sync.rajalakshmipay.com
+  #   volumes:
+  #     - ./certbot/conf:/etc/letsencrypt
+  #     - ./certbot/logs:/var/log/letsencrypt
+  #     - ./certbot/data:/var/www/certbot
