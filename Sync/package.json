@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "NODE_ENV=production TZ='IST' node index.js"
+    "start": "TZ='IST' node index.js"
   },
   "author": "",
   "license": "ISC",
