@@ -7,6 +7,7 @@ module.exports = class OrdersController {
     var { products, transactionData, amount } = req.body;
     if ((!products, !transactionData, !amount)) {
       console.log("Invalid body");
+      console.log(req.body);
       res.send({ message: "failed" });
       return;
     } else {
