@@ -96,10 +96,10 @@ module.exports = class TranslationService {
     );
 
     var to = {
-      id: to["id"],
-      name: to["accountname"],
-      number: to["number"],
-      email: to["email"],
+      id: toAmmount["id"],
+      name: toAmmount["accountname"],
+      number: toAmmount["number"],
+      email: toAmmount["email"],
     };
 
     var fromAmmount = await postgres.query(
