@@ -35,19 +35,19 @@ module.exports = class OrdersController {
     try {
       var decoded = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY);
       if (decoded.id != from.id) {
-        pool.release();
+        postgres.release();
         return false;
       }
     } catch (e) {
       console.log("token error");
       console.log(e);
-      pool.release();
+      postgres.release();
       return false;
     }
 
     if (!from || !amount || !to) {
       console.log("invalid body");
-      pool.release();
+      postgres.release();
       return false;
     }
 
@@ -57,19 +57,19 @@ module.exports = class OrdersController {
     );
 
     if (!fromAmmount) {
-      pool.release();
+      postgres.release();
       return false;
     }
 
     if (amount <= 0) {
       console.log("invalid amount");
-      pool.release();
+      postgres.release();
       return false;
     }
 
     if (fromAmmount < amount) {
       console.log("insufficient balance");
-      pool.release();
+      postgres.release();
       return false;
     }
 
@@ -112,13 +112,13 @@ module.exports = class OrdersController {
       );
       if ((blockResult.data["message"] = "done")) {
         await postgres.query("commit");
-        pool.release();
+        postgres.release();
         return transactionID;
       }
     } catch (e) {
       console.log(e);
       await postgres.query("rollback");
-      pool.release();
+      postgres.release();
       return false;
     }
   };
