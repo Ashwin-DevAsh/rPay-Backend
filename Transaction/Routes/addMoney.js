@@ -116,11 +116,11 @@ async function addMoney(postgres, req, res) {
     });
     if ((blockResult.data["message"] = "done")) {
       await postgres.query("commit");
-      res.send({ message: "done" });
       sendNotification(
         to.id,
         `addedMoney,${from.name},${from.id},${amount},${from.emal}`
       );
+      res.send({ message: "done" });
     }
   } catch (e) {
     console.log(e);

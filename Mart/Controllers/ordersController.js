@@ -10,10 +10,14 @@ module.exports = class OrdersController {
     try {
       var decoded = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY);
       if (decoded.id != from.id) {
+        console.log(decoded.id + from.id);
         res.send({ message: "failed" });
+        return;
       }
     } catch (e) {
+      console.log(e);
       res.send({ message: "failed" });
+      return;
     }
 
     var { products, transactionData, amount } = req.body;
