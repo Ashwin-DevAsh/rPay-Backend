@@ -71,7 +71,7 @@ async function withdraw(postgres, req, res) {
     var transactionID = (
       await postgres.query(
         `insert
-		           into transactions(
+		         into transactions(
 					   transactionTime,
 					   fromMetadata,
 					   toMetadata,
