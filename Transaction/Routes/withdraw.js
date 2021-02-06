@@ -54,7 +54,7 @@ async function withdraw(postgres, req, res) {
     return;
   }
 
-  if (fromAmmount < amount) {
+  if (fromAmmount["balance"] < amount) {
     console.log("insufficient balance");
     res.send({ message: "failed" });
     return;

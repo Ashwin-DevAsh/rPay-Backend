@@ -1,4 +1,3 @@
-const jwt = require("jsonwebtoken");
 const dateFormat = require("dateformat");
 const axios = require("axios");
 const { Pool } = require("pg");
@@ -7,30 +6,11 @@ const sendNotification = require("../Services/NotificationServices");
 
 module.exports = class TranslationService {
   pool = new Pool(clientDetails);
-  payToMart = async (transactionData, req) => {
+  payToMart = async (transactionData) => {
     var postgres = await this.pool.connect();
     var amount = transactionData.amount;
     var to = transactionData.to;
     var from = transactionData.from;
-
-    try {
-      var decoded = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY);
-      if (decoded.id != from.id) {
-        postgres.release();
-        return false;
-      }
-    } catch (e) {
-      console.log("token error");
-      console.log(e);
-      postgres.release();
-      return false;
-    }
-
-    if (!from || !amount || !to) {
-      console.log("invalid body");
-      postgres.release();
-      return false;
-    }
 
     var fromAmmount = await postgres.query(
       "select * from users where id=$1 for update",
@@ -48,7 +28,7 @@ module.exports = class TranslationService {
       return false;
     }
 
-    if (fromAmmount < amount) {
+    if (fromAmmount["balance"] < amount) {
       console.log("insufficient balance");
       postgres.release();
       return false;
@@ -105,6 +85,86 @@ module.exports = class TranslationService {
       await postgres.query("rollback");
       postgres.release();
       return false;
+    }
+  };
+
+  payToMerchant = async (from, merchantID, transactionID) => {
+    var toAmmount = await postgres.query(
+      "select * from users where id=$1 for update",
+      [to.id]
+    );
+
+    var fromAmmount = await postgres.query(
+      "select * from users where id=$1 for update",
+      [from.id]
+    );
+
+    if (!toAmmount || !fromAmmount) {
+      console.log("invalid users");
+      res.send({ message: "failed" });
+      return;
+    }
+
+    if (fromAmmount < amount) {
+      console.log("insufficient balance");
+      res.send({ message: "failed" });
+      return;
+    }
+
+    try {
+      await postgres.query("begin");
+      await postgres.query(
+        "update users set balance = balance - $1 where id = $2",
+        [amount, from.id]
+      );
+      await postgres.query(
+        "update users set balance = balance + $1 where id = $2",
+        [amount, to.id]
+      );
+      var transactionTime = dateFormat(new Date(), "mm-dd-yyyy hh:MM:ss");
+      var transactionID = (
+        await postgres.query(
+          `insert into transactions(
+					   transactionTime,
+					   fromMetadata,
+					   toMetadata,
+					   amount,
+					   isGenerated,
+					   iswithdraw)
+				    values($1,$2,$3,$4,$5,$6) returning transactionID`,
+          [transactionTime, from, to, amount, false, false]
+        )
+      ).rows[0]["transactionid"];
+
+      console.log(transactionID);
+
+      var blockResult = await axios.post(
+        "http://block:9000/addTransactionBlock/",
+        {
+          transactionID: transactionID,
+          from: from,
+          to: to,
+          isGenerated: false,
+          isWithdraw: false,
+          amount: amount,
+        }
+      );
+      if ((blockResult.data["message"] = "done")) {
+        await postgres.query("commit");
+        res.send({
+          message: "done",
+          transactionid: transactionID,
+          transactiontime: transactionTime,
+        });
+        sendNotification(
+          to.id,
+          `receivedMoney,${from.name},${from.id},${amount},${from.email}`
+        );
+      }
+    } catch (e) {
+      console.log(e);
+      await postgres.query("rollback");
+      res.send({ message: "failed" });
     }
   };
 };
