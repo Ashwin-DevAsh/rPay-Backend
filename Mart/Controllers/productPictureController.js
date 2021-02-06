@@ -16,6 +16,7 @@ module.exports = class ProductsPictureController {
   }).single("productPictures");
 
   getProductPicture = (req, res) => {
+    console.log(req);
     var imageName = req.params.imageName;
     res.download("../productPictures/" + imageName);
   };
