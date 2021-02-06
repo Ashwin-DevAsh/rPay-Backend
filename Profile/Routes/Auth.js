@@ -121,7 +121,9 @@ var sendOtp = async (postgres, req, res, otpTable, appId) => {
         `https://2factor.in/API/V1/${apiKey}/SMS/${number}/${otpNumber}`
       )
     ).data;
-  } catch (e) {}
+  } catch (e) {
+    console.log(e);
+  }
 
   try {
     await postgres.query(`delete from ${otpTable} where number = $1`, [number]);
@@ -129,7 +131,7 @@ var sendOtp = async (postgres, req, res, otpTable, appId) => {
       number,
       otpNumber,
     ]);
-    await smsApi.smsSendPost(smsCollection);
+    // await smsApi.smsSendPost(smsCollection);
     res.json([{ message: "done" }]);
   } catch (err) {
     console.log(err);
