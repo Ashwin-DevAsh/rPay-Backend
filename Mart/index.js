@@ -3,6 +3,7 @@ const Auth = require("./Services/Auth");
 
 const express = require("express");
 const products = require("./Routes/products");
+const products = require("./Routes/orders");
 
 const bodyParser = require("body-parser");
 const uploadPictures = require("./Routes/productPictures");
@@ -23,6 +24,8 @@ app.use(bodyParser.json());
 // app.use(new Auth().isAuthenticated);
 app.use(products);
 app.use(uploadPictures);
+
+app.use(orders);
 
 app.listen(4600, () => {
   console.log("connecte at port 4600");

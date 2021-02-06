@@ -14,7 +14,7 @@ module.exports = class OrdersController {
         res.send({ message: "done" });
         return;
       } else {
-        res.send({ message: "done" });
+        res.send({ message: "failed" });
         return;
       }
     }
