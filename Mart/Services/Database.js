@@ -8,8 +8,10 @@ module.exports = class Database {
     var postgres = await this.pool.connect();
     try {
       var products = await postgres.query("select * from products");
+      postgres.release();
       return products.rows;
     } catch (e) {
+      postgres.release();
       console.log(e);
       return [];
     }
