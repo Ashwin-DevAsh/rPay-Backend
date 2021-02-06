@@ -6,13 +6,12 @@ module.exports = class OrdersController {
   makeOrder = async (req, res) => {
     var { products, transactionData, amount } = req.body;
     console.log(req.body);
-
     if ((!products, !transactionData, !amount)) {
       console.log("Invalid body");
       res.send({ message: "failed" });
       return;
     } else {
-      var isPayToMartDone = await payToMart(transactionData, req);
+      var isPayToMartDone = await this.payToMart(transactionData, req);
       if (isPayToMartDone) {
         res.send({ message: "done" });
         return;
