@@ -30,7 +30,7 @@ module.exports = class OrdersController {
 
     var isPaymerchantDone = await this.transactionsService.payToMerchant(
       transactionData.to,
-      products[0].productOwner,
+      products[0].product.productOwner,
       isPayToMartDone,
       amount
     );
