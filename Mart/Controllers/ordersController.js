@@ -1,5 +1,6 @@
 const { Pool } = require("pg");
 const clientDetails = require("../Database/ClientDetails");
+const jwt = require("jsonwebtoken");
 
 module.exports = class OrdersController {
   pool = new Pool(clientDetails);
