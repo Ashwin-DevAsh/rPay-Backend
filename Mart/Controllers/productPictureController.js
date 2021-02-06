@@ -15,6 +15,11 @@ module.exports = class ProductsPictureController {
     storage: this.storage,
   }).single("productPictures");
 
+  getProductPicture = (req, res) => {
+    var imageName = req.params.imageName;
+    res.download("../productPictures/" + imageName);
+  };
+
   addProductPicture = (req, res) => {
     upload(req, res, (err, result) => {
       if (err) {
