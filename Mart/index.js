@@ -3,7 +3,7 @@ const Auth = require("./Services/Auth");
 
 const express = require("express");
 const products = require("./Routes/products");
-const products = require("./Routes/orders");
+const orders = require("./Routes/orders");
 
 const bodyParser = require("body-parser");
 const uploadPictures = require("./Routes/productPictures");
