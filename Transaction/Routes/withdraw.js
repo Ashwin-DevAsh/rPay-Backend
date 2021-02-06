@@ -37,10 +37,11 @@ async function withdraw(postgres, req, res) {
     return;
   }
 
-  var fromAmmount = await postgres.query(
-    "select * from users where id=$1 for update",
-    [from.id]
-  );
+  var fromAmmount = (
+    await postgres.query("select * from users where id=$1 for update", [
+      from.id,
+    ])
+  ).rows[0];
 
   if (!fromAmmount) {
     console.log("invalid users");
