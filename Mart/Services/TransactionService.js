@@ -95,6 +95,8 @@ module.exports = class TranslationService {
       [merchantID]
     );
 
+    console.log(merchantID);
+
     var to = {
       id: toAmmount["id"],
       name: toAmmount["accountname"],

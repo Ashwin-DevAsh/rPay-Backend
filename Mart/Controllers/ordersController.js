@@ -26,6 +26,8 @@ module.exports = class OrdersController {
       return;
     }
 
+    console.log(products);
+
     var isPaymerchantDone = await this.transactionsService.payToMerchant(
       transactionData.to,
       products[0].productOwner,
