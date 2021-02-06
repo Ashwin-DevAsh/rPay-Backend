@@ -14,6 +14,7 @@ module.exports = class Auth {
 
   isTransAuth = async (req, res, next) => {
     try {
+      console.log("TransAuth");
       var decoded = await jwt.verify(req.get("token"), process.env.PRIVATE_KEY);
       if (decoded.id != req.body.transactionData.from.id) {
         console.log(decoded.id + from.id);
