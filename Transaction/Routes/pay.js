@@ -38,13 +38,15 @@ async function pay(postgres, req, res) {
     return;
   }
 
-  var toAmmount = await postgres.query("select * from users where id=$1", [
-    to.id,
-  ]);
+  var toAmmount = await postgres.query(
+    "select * from users where id=$1 for update",
+    [to.id]
+  );
 
-  var fromAmmount = await postgres.query("select * from users where id=$1", [
-    from.id,
-  ]);
+  var fromAmmount = await postgres.query(
+    "select * from users where id=$1 for update",
+    [from.id]
+  );
 
   if (!toAmmount || !fromAmmount) {
     console.log("invalid users");

@@ -71,9 +71,10 @@ async function addMoney(postgres, req, res) {
     }
   }
 
-  var toAmmount = await postgres.query("select * from users where id=$1", [
-    to.id,
-  ]);
+  var toAmmount = await postgres.query(
+    "select * from users where id=$1 for update",
+    [to.id]
+  );
 
   if (!toAmmount) {
     console.log("invalid user");
