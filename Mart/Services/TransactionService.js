@@ -93,7 +93,9 @@ module.exports = class TranslationService {
     var toAmmount = await postgres.query(
       "select * from users where id=$1 for update",
       [merchantID]
-    )[0];
+    );
+
+    console.log(toAmmount);
 
     console.log(merchantID);
 
