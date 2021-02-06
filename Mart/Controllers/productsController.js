@@ -14,7 +14,7 @@ class ProductsController {
     }
   };
 
-  updateProducts = async (req, res) => {
+  updateProduct = async (req, res) => {
     var {
       productID,
       productName,
