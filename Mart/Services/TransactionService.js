@@ -199,7 +199,7 @@ module.exports = class TranslationService {
       postgres,
       transactionData.to,
       products[0].product.productOwner,
-      isPayToMartDone,
+      isPayToMartDone.transactionID,
       amount
     );
     if (!isPaymerchantDone) {
