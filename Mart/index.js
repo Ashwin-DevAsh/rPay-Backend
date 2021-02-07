@@ -12,6 +12,8 @@ const app = express();
 
 const cors = require("cors");
 
+process.env.TZ = "Asia/Kolkata";
+
 var corsOptions = {
   origin: "*",
   optionsSuccessStatus: 200,
