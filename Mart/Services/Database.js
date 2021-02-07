@@ -142,4 +142,32 @@ module.exports = class Database {
       return [];
     }
   };
+
+  updateStatus = async (id) => {
+    var postgres = await this.pool.connect();
+
+    try {
+      var orders = (
+        await postgres.query(`select * from orders  where orederid = $1`, [id])
+      ).rows[0];
+      if (!orders) {
+        postgres.release();
+        return "invalid token";
+      }
+      if (orders.status == "pending") {
+        await postgres.query(
+          `update orders set status = 'delivered' where orederid = $1`,
+          [id]
+        );
+        postgres.release();
+        return "success";
+      } else {
+        postgres.release();
+        return "already expeired";
+      }
+    } catch (e) {
+      postgres.release();
+      return "failed";
+    }
+  };
 };

@@ -8,4 +8,6 @@ app.post("/makeOrder", new Auth().isTransAuth, ordersController.makeOrder);
 
 app.get("/getMyOrders/:id", ordersController.getMyOrders);
 
+app.post("/makeDelivery", ordersController.makeDelivery);
+
 module.exports = app;

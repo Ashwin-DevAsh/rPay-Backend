@@ -38,4 +38,10 @@ module.exports = class OrdersController {
     var orders = await this.databaseService.getMyOrders(id);
     res.send({ message: "success", orders });
   };
+
+  makeDelivery = async (req, res) => {
+    var { id } = req.params;
+    var result = await this.databaseService.updateStatus(id);
+    res.send({ message: result, orders });
+  };
 };
