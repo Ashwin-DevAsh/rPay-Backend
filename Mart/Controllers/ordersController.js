@@ -35,7 +35,7 @@ module.exports = class OrdersController {
 
   getMyOrders = async (req, res) => {
     var { id } = req.params;
-    var orders = await databaseService.getMyOrders(id);
+    var orders = await this.databaseService.getMyOrders(id);
     res.send({ message: "success", orders });
   };
 };
