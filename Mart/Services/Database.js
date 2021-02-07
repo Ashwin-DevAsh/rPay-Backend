@@ -150,7 +150,7 @@ module.exports = class Database {
       var orders = (
         await postgres.query(`select * from orders  where orederid = $1`, [id])
       ).rows[0];
-      console.log(orders);
+      console.log(id, orders);
       if (!orders) {
         postgres.release();
         return "invalid token";
