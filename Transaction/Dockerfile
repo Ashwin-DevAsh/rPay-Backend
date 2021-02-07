@@ -9,4 +9,4 @@ COPY . .
 
 EXPOSE 9500
 
-CMD npm start
+CMD node server.js
