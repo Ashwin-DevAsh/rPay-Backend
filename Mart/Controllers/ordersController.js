@@ -40,7 +40,7 @@ module.exports = class OrdersController {
   };
 
   makeDelivery = async (req, res) => {
-    var { id } = req.params;
+    var { id } = req.body;
     var result = await this.databaseService.updateStatus(id);
     res.send({ message: result });
   };
