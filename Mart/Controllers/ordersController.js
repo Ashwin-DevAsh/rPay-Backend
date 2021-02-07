@@ -15,47 +15,19 @@ module.exports = class OrdersController {
       return;
     }
 
-    var isPayToMartDone = await this.transactionsService.payToMart(
+    var isOrderPlaced = await this.transactionsService.makeOrder(
       transactionData,
-      req
+      products,
+      amount
     );
 
-    if (!isPayToMartDone) {
+    if (!isOrderPlaced) {
       console.log("payment failed");
       res.send({ message: "failed" });
       return;
     }
 
-    console.log(products);
-
-    var isPaymerchantDone = await this.transactionsService.payToMerchant(
-      transactionData.to,
-      products[0].product.productOwner,
-      isPayToMartDone,
-      amount
-    );
-
-    if (!isPaymerchantDone) {
-      console.log("payment merchant failed");
-      res.send({ message: "failed" });
-      return;
-    }
-
-    var isPlacedOrder = await this.transactionsService.placeOrder(
-      isPayToMartDone,
-      isPaymerchantDone,
-      products,
-      transactionData.from,
-      amount
-    );
-
-    if (!isPlacedOrder) {
-      console.log("payment merchant failed");
-      res.send({ message: "failed" });
-      return;
-    }
-
-    res.send({ message: "done" });
+    res.send({ message: "done", order: isOrderPlaced });
     return;
   };
 };

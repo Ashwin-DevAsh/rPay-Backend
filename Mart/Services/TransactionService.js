@@ -6,8 +6,8 @@ const sendNotification = require("../Services/NotificationServices");
 
 module.exports = class TranslationService {
   pool = new Pool(clientDetails);
-  payToMart = async (transactionData) => {
-    var postgres = await this.pool.connect();
+
+  payToMart = async (postgres, transactionData) => {
     var amount = transactionData.amount;
     var to = transactionData.to;
     var from = transactionData.from;
@@ -19,24 +19,20 @@ module.exports = class TranslationService {
     ).rows[0];
 
     if (!fromAmmount) {
-      postgres.release();
       return false;
     }
 
     if (amount <= 0) {
       console.log("invalid amount");
-      postgres.release();
       return false;
     }
 
     if (parseInt(fromAmmount["balance"]) < parseInt(amount)) {
       console.log("insufficient balance");
-      postgres.release();
       return false;
     }
 
     try {
-      await postgres.query("begin");
       await postgres.query(
         "update users set balance = balance - $1 where id = $2",
         [amount, from.id]
@@ -58,8 +54,6 @@ module.exports = class TranslationService {
         )
       ).rows[0]["transactionid"];
 
-      console.log(transactionID);
-
       var blockResult = await axios.post(
         "http://block:9000/addWithdrawBlock/",
         {
@@ -73,34 +67,20 @@ module.exports = class TranslationService {
         }
       );
       if ((blockResult.data["message"] = "done")) {
-        await postgres.query("commit");
-        postgres.release();
-        sendNotification(
-          from.id,
-          `rmartPayment,${to.name},${to.id},${amount},${to.email}`
-        );
-        return transactionID;
+        return { transactionID };
       }
     } catch (e) {
       console.log(e);
-      await postgres.query("rollback");
-      postgres.release();
       return false;
     }
   };
 
-  payToMerchant = async (from, merchantID, transactionID, amount) => {
-    var postgres = await this.pool.connect();
+  payToMerchant = async (postgres, from, merchantID, transactionID, amount) => {
     var toAmmount = (
       await postgres.query("select * from users where id=$1 for update", [
         merchantID,
       ])
     ).rows[0];
-
-    console.log(toAmmount);
-
-    console.log(merchantID);
-
     var to = {
       id: toAmmount["id"],
       name: toAmmount["accountname"],
@@ -117,20 +97,16 @@ module.exports = class TranslationService {
 
     if (!toAmmount || !fromAmmount) {
       console.log("invalid");
-      postgres.release();
       return false;
     }
 
     if (parseInt(fromAmmount["amount"]) < parseInt(amount)) {
       console.log("insufficient balance");
       res.send({ message: "failed" });
-      postgres.release();
       return false;
     }
 
     try {
-      await postgres.query("begin");
-
       await postgres.query(
         "update users set balance = balance + $1 where id = $2",
         [amount, to.id]
@@ -164,24 +140,16 @@ module.exports = class TranslationService {
         }
       );
       if ((blockResult.data["message"] = "done")) {
-        await postgres.query("commit");
-
-        sendNotification(
-          to.id,
-          `receivedMoney,${from.name},${from.id},${amount},${from.email}`
-        );
-        postgres.release();
-        return transactionID;
+        return { transactionID, to };
       }
     } catch (e) {
       console.log(e);
-      await postgres.query("rollback");
-      postgres.release();
       return false;
     }
   };
 
   placeOrder = async (
+    postgres,
     fromTransactionID,
     toTransactionID,
     products,
@@ -211,11 +179,68 @@ module.exports = class TranslationService {
           ]
         )
       ).rows[0];
-      postgres.release();
       return orderData;
     } catch (e) {
-      postgres.release();
       return false;
     }
+  };
+
+  makeOrder = async (transactionData, products, amount) => {
+    var postgres = await this.pool.connect();
+    await postgres.query("begin");
+    var isPayToMartDone = await this.payToMart(postgres, transactionData, req);
+    if (!isPayToMartDone) {
+      await postgres.query("rollback");
+      postgres.release();
+      console.log("payment failed");
+      return false;
+    }
+    var isPaymerchantDone = await this.payToMerchant(
+      postgres,
+      transactionData.to,
+      products[0].product.productOwner,
+      isPayToMartDone,
+      amount
+    );
+    if (!isPaymerchantDone) {
+      await postgres.query("rollback");
+      postgres.release();
+
+      console.log("payment merchant failed");
+      return false;
+    }
+    var isPlacedOrder = await this.placeOrder(
+      postgres,
+      isPayToMartDone.transactionID,
+      isPaymerchantDone.transactionID,
+      products,
+      transactionData.from,
+      amount
+    );
+
+    if (!isPlacedOrder) {
+      await postgres.query("rollback");
+      postgres.release();
+      console.log("payment order failed");
+      return false;
+    }
+    await postgres.query("commit");
+    postgres.release();
+
+    var { from, to } = transactionData;
+
+    sendNotification(
+      from.id,
+      `rmartPayment,${to.name},${to.id},${amount},${to.email}`
+    );
+
+    var { from, to } = { from: transactionData.to, to: isPaymerchantDone.to };
+
+    sendNotification(
+      to.id,
+      `receivedMoney,${from.name},${from.id},${amount},${from.email}`
+    );
+
+    return isPlacedOrder;
   };
 };
