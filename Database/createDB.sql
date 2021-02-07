@@ -68,7 +68,7 @@ create table orders(
   orederId bigserial,
   status varchar,
   amount bigint,
-  orderdBy varchar,
+  orderdBy json,
   timestamp varchar,
   products json[],
   paymentMetadata json
