@@ -123,4 +123,23 @@ module.exports = class Database {
       return false;
     }
   };
+
+  getMyOrders = async (id) => {
+    var postgres = await this.pool.connect();
+
+    try {
+      var orders = (
+        await postgres.query(
+          `select * from orders  where cast(orderdby->>'id' as varchar) = $1`,
+          [id]
+        )
+      ).rows;
+      postgres.release();
+      return orders;
+    } catch (e) {
+      postgres.release();
+      console.log(e);
+      return [];
+    }
+  };
 };

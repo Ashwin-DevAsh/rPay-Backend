@@ -6,4 +6,6 @@ var ordersController = new OrdersController();
 
 app.post("/makeOrder", new Auth().isTransAuth, ordersController.makeOrder);
 
+app.get("/getMyOrders/:id", ordersController.getMyOrders);
+
 module.exports = app;
