@@ -20,8 +20,6 @@ var corsOptions = {
 
 const app = express();
 
-const PORT = process.env.PORT || 4500;
-
 var rootId = `radmin@919876543210`;
 
 (async () => {
@@ -64,6 +62,6 @@ app.use(Users);
 app.use(nodesAndBlocks);
 app.use(Stats);
 
-app.listen(PORT, () => {
+app.listen(4500, () => {
   console.log("Listining on ", PORT);
 });
