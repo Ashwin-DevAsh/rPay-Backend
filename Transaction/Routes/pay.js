@@ -61,7 +61,7 @@ async function pay(postgres, req, res) {
     return;
   }
 
-  if (fromAmmount["balance"] < amount) {
+  if (parseInt(fromAmmount["balance"]) < parseInt(amount)) {
     console.log("insufficient balance");
     res.send({ message: "failed" });
     return;

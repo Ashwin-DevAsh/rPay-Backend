@@ -29,7 +29,7 @@ module.exports = class TranslationService {
       return false;
     }
 
-    if (fromAmmount["balance"] < amount) {
+    if (parseInt(fromAmmount["balance"]) < parseInt(amount)) {
       console.log("insufficient balance");
       postgres.release();
       return false;
@@ -108,10 +108,12 @@ module.exports = class TranslationService {
       email: toAmmount["email"],
     };
 
-    var fromAmmount = await postgres.query(
-      "select * from transactions where transactionid=$1",
-      [transactionID]
-    );
+    var fromAmmount = (
+      await postgres.query(
+        "select * from transactions where transactionid=$1",
+        [transactionID]
+      )
+    ).rows[0];
 
     if (!toAmmount || !fromAmmount) {
       console.log("invalid");
@@ -119,7 +121,7 @@ module.exports = class TranslationService {
       return false;
     }
 
-    if (fromAmmount["amount"] < amount) {
+    if (parseInt(fromAmmount["amount"]) < parseInt(amount)) {
       console.log("insufficient balance");
       res.send({ message: "failed" });
       postgres.release();
