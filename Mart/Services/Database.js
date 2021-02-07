@@ -147,7 +147,7 @@ module.exports = class Database {
     var postgres = await this.pool.connect();
 
     try {
-      var orders = (await postgres.query(`select * from orders`, [id])).rows;
+      var orders = (await postgres.query(`select * from orders`)).rows;
       postgres.release();
       return orders;
     } catch (e) {
