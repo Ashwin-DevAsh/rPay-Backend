@@ -9,6 +9,8 @@ const FCM = require("fcm-node");
 
 var pool = new Pool(clientDetails);
 
+process.env.TZ = "Asia/Kolkata";
+
 io.on("connection", (client) => {
   client.on("getInformation", (data) => {
     try {

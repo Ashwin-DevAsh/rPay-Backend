@@ -11,6 +11,7 @@ const bankAccounts = require("./Routes/BankAccounts");
 const uploadPictures = require("./Routes/UploadPictures");
 const init = require("./Routes/init");
 
+process.env.TZ = "Asia/Kolkata";
 const app = express();
 
 const cors = require("cors");
