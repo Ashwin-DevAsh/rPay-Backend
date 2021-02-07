@@ -188,7 +188,7 @@ module.exports = class TranslationService {
   makeOrder = async (transactionData, products, amount) => {
     var postgres = await this.pool.connect();
     await postgres.query("begin");
-    var isPayToMartDone = await this.payToMart(postgres, transactionData, req);
+    var isPayToMartDone = await this.payToMart(postgres, transactionData);
     if (!isPayToMartDone) {
       await postgres.query("rollback");
       postgres.release();
