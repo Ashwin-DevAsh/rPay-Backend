@@ -181,13 +181,19 @@ module.exports = class TranslationService {
     }
   };
 
-  placeOrder = (fromTransactionID, toTransactionID, products, orderdBy,amount) => {
-      var postgres = await this.pool.connect();
-      var transactionTime = dateFormat(new Date(), "mm-dd-yyyy hh:MM:ss");
-      try{
-        var orderData = (
-            await postgres.query(
-            `insert into orders(
+  placeOrder = async (
+    fromTransactionID,
+    toTransactionID,
+    products,
+    orderdBy,
+    amount
+  ) => {
+    var postgres = await this.pool.connect();
+    var transactionTime = dateFormat(new Date(), "mm-dd-yyyy hh:MM:ss");
+    try {
+      var orderData = (
+        await postgres.query(
+          `insert into orders(
                         status,
                         amount,
                         orderdBy ,
@@ -195,18 +201,21 @@ module.exports = class TranslationService {
                         products ,
                         paymentMetadata)
                         values($1,$2,$3,$4,$5,$6) returning *`,
-            ["pending", amount, orderdBy, transactionTime,products, {fromTransactionID,toTransactionID}]
-            )
-        ).rows[0];
-        postgres.release();
-        return orderData;
-      }catch(e){
-          postgres.release();
-          return false;
-          
-      }
-
-
-
+          [
+            "pending",
+            amount,
+            orderdBy,
+            transactionTime,
+            products,
+            { fromTransactionID, toTransactionID },
+          ]
+        )
+      ).rows[0];
+      postgres.release();
+      return orderData;
+    } catch (e) {
+      postgres.release();
+      return false;
+    }
   };
 };
