@@ -1,5 +1,3 @@
-// const aws = require("aws-sdk");
-// const multerS3 = require("multer-s3");
 const multer = require("multer");
 const jwt = require("jsonwebtoken");
 const app = require("express").Router();
